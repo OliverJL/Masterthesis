@@ -1,0 +1,148 @@
+\begin{thebibliography}{10}
+
+\bibitem{gartnervmmarket}
+Gartner says worldwide server virtualization market is reaching its peak.
+\newblock \url{https://www.gartner.com/newsroom/id/3315817}.
+\newblock Accessed: 2018-03-04.
+
+\bibitem{statsharelinux}
+Usage statistics and market share of linux for websites.
+\newblock \url{https://w3techs.com/technologies/details/os-linux/all/all}.
+\newblock Accessed: 2018-03-03.
+
+\bibitem{h2g2}
+D.~Adams.
+\newblock {\em The Hitchhiker's Guide to the Galaxy}.
+\newblock Del Rey (reprint), 1995.
+\newblock ISBN-13: 978-0345391803.
+
+\bibitem{alt2015entropy}
+M.~Alt, W.~Barto, A.~Fasano, and A.~King.
+\newblock Entropy poisoning from the hypervisor.
+\newblock {\em Unpublished class project}, 2015.
+
+\bibitem{bittman2016magic}
+T.~J. Bittman, G.~J. Weiss, M.~A. Margevicius, and P.~Dawson.
+\newblock Magic quadrant for x86 server virtualization infrastructure.
+\newblock {\em Gartner, June}, 2016.
+
+\bibitem{celesti2010improving}
+A.~Celesti, F.~Tusa, M.~Villari, and A.~Puliafito.
+\newblock Improving virtual machine migration in federated cloud environments.
+\newblock In {\em Evolving Internet (INTERNET), 2010 Second International
+  Conference on}, pages 61--67. IEEE, 2010.
+
+\bibitem{chen2016templates}
+M.~Chen, H.~Chen, L.~Fan, and D.~Feng.
+\newblock Templates selection in non-overlapping template matching test.
+\newblock {\em Electronics Letters}, 52(18):1533--1535, 2016.
+
+\bibitem{cowan2000buffer}
+C.~Cowan, F.~Wagle, C.~Pu, S.~Beattie, and J.~Walpole.
+\newblock Buffer overflows: Attacks and defenses for the vulnerability of the
+  decade.
+\newblock In {\em DARPA Information Survivability Conference and Exposition,
+  2000. DISCEX'00. Proceedings}, volume~2, pages 119--129. IEEE, 2000.
+
+\bibitem{gorman2004linuxvmmgr}
+M.~Gorman.
+\newblock {\em Understanding the Linux virtual memory manager}.
+\newblock Prentice Hall Upper Saddle River, 2004.
+
+\bibitem{guide2017intel}
+P.~Guide.
+\newblock Intel{\textregistered} 64 and ia-32 architectures software
+  developer's manual.
+\newblock {\em Volume 3B: System programming Guide, Part}, 1, 2A, 2B, 2C, 2D,
+  3A, 3B, 3C, 3D and 4, 2017.
+
+\bibitem{hamano2007correction}
+K.~Hamano and T.~Kaneko.
+\newblock Correction of overlapping template matching test included in nist
+  randomness test suite.
+\newblock {\em IEICE transactions on fundamentals of electronics,
+  communications and computer sciences}, 90(9):1788--1792, 2007.
+
+\bibitem{kerrigan2012study}
+B.~Kerrigan and Y.~Chen.
+\newblock A study of entropy sources in cloud computers: random number
+  generation on cloud hosts.
+\newblock {\em Computer Network Security}, pages 286--298, 2012.
+
+\bibitem{lacharme2012linux}
+P.~Lacharme, A.~Rock, V.~Strubel, and M.~Videau.
+\newblock The linux pseudorandom number generator revisited.
+\newblock 2012.
+
+\bibitem{marco2013preventing}
+H.~Marco-Gisbert and I.~Ripoll.
+\newblock Preventing brute force attacks against stack canary protection on
+  networking servers.
+\newblock In {\em Network Computing and Applications (NCA), 2013 12th IEEE
+  International Symposium on}, pages 243--250. IEEE, 2013.
+
+\bibitem{marco2014effectiveness}
+H.~Marco-Gisbert and I.~Ripoll.
+\newblock On the effectiveness of full-aslr on 64-bit linux.
+\newblock In {\em In-depth security conference, DeepSec, November}, 2014.
+
+\bibitem{mueller@bsi1}
+e.~a. Mueller, Stephan.
+\newblock Analysis of random number generation in virtual environments.
+\newblock Technical Report Version 1.0, Federal Office for Information
+  Security, oct 2016.
+
+\bibitem{mueller@bsi2}
+e.~a. Mueller, Stephan.
+\newblock Dokumentation und analyse des linux- pseudozufallszahlengenerators.
+\newblock Technical Report Version 5.5, Bundesamtes fuer Sicherheit in der
+  Informationstechnik, nov 2016.
+
+\bibitem{paul2016nist}
+R.~Paul, H.~DEy, R.~Ghosh, and A.~Chakrabarti.
+\newblock Nist statistical test suite.
+\newblock {\em arXiv preprint arXiv:1609.01389}, 2016.
+
+\bibitem{pratchett06:_good_omens}
+T.~Pratchett and N.~Gaiman.
+\newblock {\em Good Omens: \emph{The Nice and Accurate Prophecies of Agnes
+  Nutter, Witch}}.
+\newblock HarperTorch (reprint), 2006.
+\newblock ISBN-13: 978-0060853983.
+
+\bibitem{ristenpart2009hey}
+T.~Ristenpart, E.~Tromer, H.~Shacham, and S.~Savage.
+\newblock Hey, you, get off of my cloud: exploring information leakage in
+  third-party compute clouds.
+\newblock In {\em Proceedings of the 16th ACM conference on Computer and
+  communications security}, pages 199--212. ACM, 2009.
+
+\bibitem{ristenpart2010good}
+T.~Ristenpart and S.~Yilek.
+\newblock When good randomness goes bad: Virtual machine reset vulnerabilities
+  and hedging deployed cryptography.
+\newblock In {\em NDSS}, 2010.
+
+\bibitem{guide2017amd64}
+A.~Staff.
+\newblock Amd64 architecture programmer's manual.
+\newblock {\em AMD Corporation, Sept}, 1 Revision 3.22, 2017.
+
+\bibitem{thompsonrandomness}
+C.~J. Thompson, I.~J. De~Silva, M.~D. Manner, M.~T. Foley, and P.~E. Baxter.
+\newblock Randomness exposed--an attack on hosted virtual machines.
+
+\bibitem{wiki}
+Wikipedia.
+\newblock Thesis or dissertation.
+\newblock URL: \url{http://en.wikipedia.org/wiki/Thesis_or_dissertation}, last
+  checked on 2010-01-07.
+
+\bibitem{wojtczuk2011following}
+R.~Wojtczuk and J.~Rutkowska.
+\newblock Following the white rabbit: Software attacks against intel vt-d
+  technology.
+\newblock {\em ITL: http://www.invisiblethingslab.com/resources/2011/Software
+  Attacks on Intel VT-d.pdf}, 2011.
+
+\end{thebibliography}
