@@ -1,0 +1,100 @@
+\chapter{The First Chapter}
+\label{cha:1}
+The following section will deliver the relevant information regarding memory management an ASLR.
+
+% EVP (Enhanced Virus Protection) – available on
+all 64-bit AMD CPUs (starting in 2003)
+\cite{guide2017amd64}
+
+% XD Bit (Execute Disable Bit) – available with
+Pentium 4 "Prescott" core (starting in 2004)1
+\cite{guide2017intel}
+If the execute-disable bit of a memory page is set, that page can be used only as data. An attempt to execute code
+from a memory page with the execute-disable bit set causes a page-fault exception.
+
+\section{Memory Management}
+Modern Operation System implement an abstraction layer.
+
+Load elf: sections -> segments.
+-------------------------------------------
+Virtual Address space (linearer Adressraum)
+--------------------------------------------
+Linear Address Space
+From a user perspective, the address space is a at linear address space but pre-
+dictably, the kernel's perspective is very different. The address space is split into
+two parts, the userspace part which potentially changes with each full context switch
+and the kernel address space which remains constant. The location of the split is
+determined by the value of PAGE\_OFFSET which is at 0xC0000000 on the x86. This
+means that 3GiB is available for the process to use while the remaining 1GiB is
+always mapped by the kernel. The linear virtual address space as the kernel sees it
+is illustrated in Figure 4.1.
+\cite{gorman2004linuxvmmgr}
+
+
+Up Down Kernel/User space
+--------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+\cite{cowan2000buffer}
+\cite{marco2014effectiveness}
+\cite{kerrigan2012study}
+\cite{guide2017intel}
+\cite{wojtczuk2011following}
+\cite{alt2015entropy}
+\cite{thompsonrandomness}
+\cite{celesti2010improving}
+\cite{mueller@bsi1}
+\cite{mueller@bsi2}
+\cite{marco2013preventing}
+
+
+\section{The First Topic of the Chapter}
+First comes the introduction to this topic.
+
+\lipsum[55]
+
+\subsection{An item}
+Please don't abuse enumerations: short enumerations shouldn't use
+``\verb|itemize|'' or ``\texttt{enumerate}'' environments.
+So \emph{never write}: 
+\begin{quote}
+  The Eiffel tower has three floors:
+  \begin{itemize}
+  \item the first one;
+  \item the second one;
+  \item the third one.
+  \end{itemize}
+\end{quote}
+But write:
+\begin{quote}
+  The Eiffel tower has three floors: the first one, the second one, and the
+  third one.
+\end{quote}
+
+\section{A Second Topic}
+\lipsum[64]
+
+\subsection{Another item}
+\lipsum[56-57]
+
+\section{Conclusion}
+The final section of the chapter gives an overview of the important results
+of this chapter. This implies that the introductory chapter and the
+concluding chapter don't need a conclusion.
+
+\lipsum[66]
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "thesis"
+%%% End: 
