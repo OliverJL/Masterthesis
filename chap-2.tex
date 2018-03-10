@@ -31,8 +31,59 @@ Similarly, the market of common server operating systems can be divided into pro
 
 
 \section{Linux RNG}
+\begin{figure}[H]
+%\centering
 \input{add-interrupt-rnd.tex}
-%\includepdf{/home/lvr/Dropbox/Master/tex/thesis/doc/template/subs/add-int-rnd/add-interrupt-randomness.pdf}
+\caption{Processing of input parameters by func. 'add\_interrupt\_randomness' (64-bit system)} \label{fig:add-int-rnd-chart}
+\end{figure}
+
+
+%\begin{mdframed}
+%\begin{tabularx}{\columnwidth}{XXl}
+%\begin{tabularx}{\textwidth}{ll}
+%%	\caption{Description of input parameters proccessed by func. 'add\_interrupt\_randomness'}
+%%	\label{tab:add-int-rnd-desc}\\
+%	\textbf{jiffies}&Igel\\
+%	\textbf{cycles counter}&Dienstag\\
+%	\textbf{irq}&\\
+%	\textbf{ip}&\textit{Instruction Pointer}
+%	\caption{Description of input parameters proccessed by func. 'add\_interrupt\_randomness'}
+%\end{tabularx}
+\begin{table}[H]
+	\begin{tabular}{ll}
+	\textbf{jiffies}&Number of ticks occured since system startup\\
+	\textbf{cycles counter}&Dienstag\\
+	\textbf{irq}&\\
+	\textbf{ip}&\textit{Instruction Pointer}
+	\end{tabular}
+	\caption{Description of input parameters proccessed by func. 'add\_interrupt\_randomness'}	
+\end{table}
+
+%	\cite{kernlrandmc}
+		
+%\end{mdframed}
+
+
+%\begin{tabularx}{\columnwidth}{XXl}
+%	jiffies&Schnecke&Igel\\
+%	cycles counter&Hier ist ein langes Wort Hier ist ein langes Wort Hier ist ein langes Wort Hier ist ein langes Wort &Dienstag\\
+%	irq&&\\
+%	ip&&
+%\end{tabularx}
+%
+%
+%
+%\begin{mdframed}
+%\begin{description}
+%	\item [jiffies] sadfasdfsadf
+%	\item [cycles counter] asdfasdfasdf
+%	\item [irq] asdfasdfasdf	
+%	\item [ip] 
+%\end{description}
+%\cite{kernlrandmc}	
+%\end{mdframed}
+
+
 
 
 \section{Conclusion}
