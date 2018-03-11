@@ -32,7 +32,7 @@ Similarly, the market of common server operating systems can be divided into pro
 
 \section{Random Number Generation by Linux x64 Kernel 4.4}
 
-Random numbers are required by a variety of security related application. An obvious purpose is encryption or signing of data, like f.e. disk encryption, Transport Socket Layer (TLS) or digital signatures of emails. In this case random numbers are used to generate cryptographically secure keys. 
+Random numbers are required by a variety of security related applications. An obvious purpose is encryption or signing of data, like f.e. disk encryption, Transport Socket Layer (TLS) or digital signatures of emails. In this case random numbers are used to generate cryptographically secure keys. Concepts like Stack Canaries (aka. Stack Guards) or Address Space Layout Randomization (ASLR) rely purely on the nondeterministic character of random numbers, applying them to make certain types of attacks on vulnerable applications much more difficult.
 
 Intro:
 valid kernel for x64  4.4. (16.04 LTS)
@@ -49,11 +49,13 @@ RDSEED
 Non-deterministic random bit generator
 NIST SP 800-90B \& C
 \cite{guide2017intel}
+\begin{comment}
 Jegliche Nutzung der RDRAND-Instruktion kann verhindert werden, wenn der Kern mit der
 Kommandozeilenoption ?nordrand? gestartet wird.
 Es ist zu beachten, dass RDRAND von einem Hypervisor im Sinne eines VM-Exits abgefangen
 und verändert beziehungsweise nicht an die CPU weitergegeben werden kann.
 \cite{mueller@bsi2}
+\end{comment}
 
 Diff: kernel/Userspace request
 
