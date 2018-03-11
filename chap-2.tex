@@ -41,7 +41,7 @@ Availability of these TRNGs does not automatically imply their application. If a
 with paramter \textsf{nordrand} (on x86/x64 architectures), the \textsf{RDRAND} instruction will have no effect. Further, if an operating system is run as a virtual machine, those instructions can by trapped by the hypervisor instead of being passed to the CPU \cite{mueller@bsi2}. Thus the analysis in this thesis does not take on-chip entropy pools into account, but refers to the pure Linux Pseudo Random Number Generator).
 
 \subsection{Linux Pseudo Random Number Generator Architecture}
-The Linux Pseudo Random Number Generator (PRNG) generates random numbers based on occurring hardware events. 
+The Linux Pseudo Random Number Generator (PRNG) generates random numbers based on occurring hardware events. Those events 
 
 
 \begin{comment}
