@@ -40,6 +40,8 @@ In general, many modern CPU-architectures implement an on-chip True Random Numbe
 Availability of these TRNGs does not automatically imply their application. If a kernel is started 
 with paramter \textsf{nordrand} (on x86/x64 architectures), the \textsf{RDRAND} instruction will have no effect. Further, if an operating system is run as a virtual machine, those instructions can by trapped by the hypervisor instead of being passed to the CPU \cite{mueller@bsi2}.\\
 
+\subsection{Linux Pseudo Random Number Generator Architecture}
+
 
 \begin{comment}
 Jegliche Nutzung der RDRAND-Instruktion kann verhindert werden, wenn der Kern mit der
