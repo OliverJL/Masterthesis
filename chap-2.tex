@@ -32,8 +32,29 @@ Similarly, the market of common server operating systems can be divided into pro
 
 \section{Random Number Generation in Linux x64 Kernel 4.4}
 
+\subsection{General}
+
 Random numbers are required by a variety of security related applications. An obvious purpose is encryption or signing of data, like f.e. disk encryption, Transport Socket Layer (TLS) or digital signatures of emails. In this case random numbers are used to generate cryptographically secure keys. Concepts like Stack Canaries (aka. Stack Guards) or Address Space Layout Randomization (ASLR) rely purely on the nondeterministic character of random numbers, applying them to make certain types of attacks on vulnerable applications much more difficult. Overall, the effectiveness of such applications depends significantly on the quality i.e. unpredictably of random numbers, provided by an operating system. \\
-In the following a comprehensive introduction to the Linux Random Number Generator (LRNG) with focus on analyzed concepts and components of this thesis will be given. It refers to Linux kernel v.4.4 which is currently used in several major Long Term Support distributions like Ubuntu Server 16.04 LTS.
+In the following a comprehensive introduction to the Linux Random Number Generator (LRNG) with focus on analyzed concepts and components of this thesis will be given. It refers to Linux kernel v.4.4 which is currently used in several major Long Term Support distributions like Ubuntu Server 16.04 LTS. If facts are valid for Intel x86/x64 platforms only, those will be noted as such.\\
+In general, many modern CPU-architectures implement an on-chip True Random Number Generator \cite{guide2017intel}. Starting with 'IvyBridge' architecture, Intel provides two instructions accessing directly those entropy sources. The \textsf{RDRAND} instruction returns random numbers that are supplied by a cryptographically secure, deterministic random bit generator (DRBG). The DRBG is designed to meet the NIST SP 800-90A standard. If an application or operating system design insists on applying in it's own Pseudo Random Number Generator (PRNG) it may apply the \textsf{RDSEED} instruction which is compliant to NIST SP 800-90B \& C standard \cite{guide2017intel}.
+Availability of these TRNGs does not automatically imply their application. If a kernel is started 
+with paramter \textsf{nordrand} (on x86/x64 architectures), the \textsf{RDRAND} instruction will have no effect. Further, if an operating system is run as a virtual machine, those instructions can by trapped by the hypervisor instead of being passed to the CPU \cite{mueller@bsi2}.\\
+
+
+\begin{comment}
+Jegliche Nutzung der RDRAND-Instruktion kann verhindert werden, wenn der Kern mit der
+Kommandozeilenoption ?nordrand? gestartet wird.
+Es ist zu beachten, dass RDRAND von einem Hypervisor im Sinne eines VM-Exits abgefangen
+und verändert beziehungsweise nicht an die CPU weitergegeben werden kann.
+
+\end{comment}
+
+
+implementation
+
+Intel IvyBridge x86 
+
+
 
 Intro:
 valid kernel for x64  4.4. (16.04 LTS)
@@ -50,13 +71,7 @@ RDSEED
 Non-deterministic random bit generator
 NIST SP 800-90B \& C
 \cite{guide2017intel}
-\begin{comment}
-Jegliche Nutzung der RDRAND-Instruktion kann verhindert werden, wenn der Kern mit der
-Kommandozeilenoption ?nordrand? gestartet wird.
-Es ist zu beachten, dass RDRAND von einem Hypervisor im Sinne eines VM-Exits abgefangen
-und verändert beziehungsweise nicht an die CPU weitergegeben werden kann.
-\cite{mueller@bsi2}
-\end{comment}
+
 
 Diff: kernel/Userspace request
 
