@@ -106,17 +106,25 @@ abmildern.
 
 
 \begin{figure}[H]
-	%\centering
+	\centering
 	\input{linux-prng-arch.tex}
-	\caption{Processing of input parameters by func. 'add\_interrupt\_randomness' before applying fast\_mix / mix\_pool\_bytes operations (valid for 64-bit Kernel only)} \label{fig:linux-prng-arch-chart}
+	\caption{Input sources and entropy pools of the Linux PRNG} 
+	\label{fig:linux-prng-arch}
 \end{figure}
 
 
 \begin{figure}[H]
 %\centering
 \input{add-interrupt-rnd.tex}
-\caption{Processing of input parameters by func. 'add\_interrupt\_randomness' before applying fast\_mix / mix\_pool\_bytes operations (valid for 64-bit Kernel only)} \label{fig:add-int-rnd-chart}
+\caption{Processing of input parameters by func. 'add\_interrupt\_randomness' before applying fast\_mix / mix\_pool\_bytes operations (valid for 64-bit Kernel only)} \label{fig:add-int-rnd}
 \end{figure}
+
+\begin{figure}[H]
+	%\centering
+	\input{get-rnd-int-long.tex}
+	\caption{Processing of input parameters by func. 'get\_random\_int/long' (valid for 64-bit Kernel only)} \label{fig:get-rnd-int-long}
+\end{figure}
+
 
 
 %\begin{mdframed}
