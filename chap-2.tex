@@ -48,6 +48,12 @@ RDSEED
 Non-deterministic random bit generator
 NIST SP 800-90B \& C
 \cite{guide2017intel}
+Jegliche Nutzung der RDRAND-Instruktion kann verhindert werden, wenn der Kern mit der
+Kommandozeilenoption ?nordrand? gestartet wird.
+Es ist zu beachten, dass RDRAND von einem Hypervisor im Sinne eines VM-Exits abgefangen
+und verändert beziehungsweise nicht an die CPU weitergegeben werden kann.
+\cite{mueller@bsi2}
+
 
 \begin{comment}
 Aktuelle Arbeiten zeigen, dass gerade im Bereich von Headless-Systemen, die beim
