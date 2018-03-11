@@ -31,10 +31,24 @@ Similarly, the market of common server operating systems can be divided into pro
 
 
 \section{Linux RNG}
+
+Intro:
+valid kernel for x64  
+MISP 
+
+
+
+Aktuelle Arbeiten zeigen, dass gerade im Bereich von Headless-Systemen, die beim
+ersten Systemstart Zufallszahlen für die Erzeugung von Schlüsseln benötigen, zu
+wenig Entropie vorhanden ist. Auch wenn von den Interrupts nicht viel Entropie zu
+erwarten ist, sollte die Verwendung der Interrupt-Ereignisse dieses Problem etwas
+abmildern.
+
+
 \begin{figure}[H]
 %\centering
 \input{add-interrupt-rnd.tex}
-\caption{Processing of input parameters by func. 'add\_interrupt\_randomness' (64-bit system)} \label{fig:add-int-rnd-chart}
+\caption{Processing of input parameters by func. 'add\_interrupt\_randomness' before applying fast\_mix / mix\_pool\_bytes operations (valid for 64-bit Kernel only)} \label{fig:add-int-rnd-chart}
 \end{figure}
 
 
@@ -49,15 +63,19 @@ Similarly, the market of common server operating systems can be divided into pro
 %	\textbf{ip}&\textit{Instruction Pointer}
 %	\caption{Description of input parameters proccessed by func. 'add\_interrupt\_randomness'}
 %\end{tabularx}
-\begin{table}[H]
-	\begin{tabular}{ll}
-	\textbf{jiffies}&Number of ticks occured since system startup\\
-	\textbf{cycles counter}&Dienstag\\
-	\textbf{irq}&\\
-	\textbf{ip}&\textit{Instruction Pointer}
-	\end{tabular}
-	\caption{Description of input parameters proccessed by func. 'add\_interrupt\_randomness'}	
-\end{table}
+%\centering
+%\begin{table}[H]
+%	\begin{tabular}{ll}
+%	\textbf{Jiffies}&Nr. of ticks occured since system startup.\\
+%	\textbf{Cycles Counter}&Nr. of CPU-cycles since system startup.\\
+%	\textbf{irq}&Interrupt Request \\
+%	\textbf{ip}&\textit{Instruction Pointer}
+%	\end{tabular}
+%	\caption{Description of input parameters proccessed by func. 'add\_interrupt\_randomness'}	
+%\end{table}
+
+% jiffies . Incremented for each timer interrupt.
+% . also known as \textit{Time Stamp Counter}.
 
 %	\cite{kernlrandmc}
 		
