@@ -52,7 +52,7 @@ The Linux Pseudo Random Number Generator's (PRNG) responsibility is to provide r
 \end{itemize}
 %	\caption{Major tasks of the Linux PRNG}
 %\end{figure}
-Depending on the type of consumer, there is a fundamental difference in the way random numbers can be requested. Applications or services running in user mode access those via different interfaces than logic running with kernel privileges does. Also the source of entropy 
+Depending on the type of consumer, there is a fundamental difference in the way random numbers can be requested. Applications or services running in user mode access those via different interfaces than logic running with kernel privileges does. Also the source of entropy varies partly, depending on the consumer type. The security components analyzed in this thesis are involved in the generation of new processes. This task is accomplished by code running on kernel level. As 
 
 % Those will be explained in XXX and YYY.  
 
@@ -103,6 +103,13 @@ erwarten ist, sollte die Verwendung der Interrupt-Ereignisse dieses Problem etwa
 abmildern.
 \cite{mueller@bsi2}
 \end{comment}
+
+
+\begin{figure}[H]
+	%\centering
+	\input{linux-prng-arch.tex}
+	\caption{Processing of input parameters by func. 'add\_interrupt\_randomness' before applying fast\_mix / mix\_pool\_bytes operations (valid for 64-bit Kernel only)} \label{fig:add-int-rnd-chart}
+\end{figure}
 
 
 \begin{figure}[H]
