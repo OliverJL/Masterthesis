@@ -43,16 +43,20 @@ with paramter \textsf{nordrand} (on x86/x64 architectures), the \textsf{RDRAND} 
 \subsection{Linux Pseudo Random Number Generator Architecture}
 The Linux Pseudo Random Number Generator's (PRNG) responsibility is to provide random numbers to requesting consumers. To ensure a certain quality of randomness the implementations activity may be divided into four major tasks:   
 
-\centering
+%\begin{figure}
 \begin{itemize}
 	\item Capturing and processing input data which is finally stored in entropy pools
 	\item Assessing the level of entropy in each pool in unit 'bits of entropy'
 	\item Diverting incoming entropy to a specific pool, depending on need
 	\item Releasing random numbers to a consumer 
 \end{itemize}
+%	\caption{Major tasks of the Linux PRNG}
+%\end{figure}
 
 
-generates random numbers based on occurring hardware events. Those events 
+
+
+%generates random numbers based on occurring hardware events. Those events 
 
 
 \begin{comment}
@@ -64,30 +68,30 @@ und verändert beziehungsweise nicht an die CPU weitergegeben werden kann.
 \end{comment}
 
 
-implementation
-
-Intel IvyBridge x86 
-
-
-
-Intro:
-valid kernel for x64  4.4. (16.04 LTS)
-MISP 
-
- 
-
-arch:
-Intel IvyBridge x86-Prozessorgeneration
-TRNG
- \cite guide2017intel
-RDRAND returns random numbers that are supplied by a cryptographically secure, deterministic random bit generator DRBG. The DRBG is designed to meet the NIST SP 800-90A standard.
-RDSEED
-Non-deterministic random bit generator
-NIST SP 800-90B \& C
-\cite{guide2017intel}
-
-
-Diff: kernel/Userspace request
+%implementation
+%
+%Intel IvyBridge x86 
+%
+%
+%
+%Intro:
+%valid kernel for x64  4.4. (16.04 LTS)
+%MISP 
+%
+% 
+%
+%arch:
+%Intel IvyBridge x86-Prozessorgeneration
+%TRNG
+% \cite guide2017intel
+%RDRAND returns random numbers that are supplied by a cryptographically secure, deterministic random bit generator DRBG. The DRBG is designed to meet the NIST SP 800-90A standard.
+%RDSEED
+%Non-deterministic random bit generator
+%NIST SP 800-90B \& C
+%\cite{guide2017intel}
+%
+%
+%Diff: kernel/Userspace request
 
 \begin{comment}
 Aktuelle Arbeiten zeigen, dass gerade im Bereich von Headless-Systemen, die beim
@@ -163,7 +167,7 @@ The final section of the chapter gives an overview of the important results
 of this chapter. This implies that the introductory chapter and the
 concluding chapter don't need a conclusion.
 
-\lipsum[66]
+%\lipsum[66]
 
 %%% Local Variables: 
 %%% mode: latex
