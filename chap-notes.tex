@@ -5,6 +5,17 @@
 Processing/Algorithm is well known, reliance on pure hardware-events input.
 ------------
 
+\section{Related Research}
+ Related Research: 
+ ------------------------
+ As a noticeable result, Fan et al. [5]
+ have proposed a corrected method to construct the statistical
+ value for runs distribution test. They have shown that there
+ exist some inaccuracies in the runs distribution test of NIST
+ SP 800-22, and the degrees of freedom of the test statistic
+ is adjusted. 
+  \cite{kangadditional}
+
 
 \section{NIST}
 
@@ -13,6 +24,31 @@ Processing/Algorithm is well known, reliance on pure hardware-events input.
 %%% mode: latex
 %%% TeX-master: "thesis"
 %%% End: 
+
+% NIST
+---------------------------------------------------------
+% https://github.com/usnistgov/SP800-90B_EntropyAssessment
+ Number od reuiqred Samples 19 / 11 \cite{turan2018nist} 
+The submitter makes an IID claim on the noise source, based on the submitter?s analysis of the design. The submitter shall provide rationale for the IID claim. \cite{turan2018nist} -> Auf MD5 verweisen
+% SP 800-90B Introduction
+ The test suite of SP 800-90B is divided into two major steps. The first step is to determine the track, IID(independent and identically distributed) or Non-IID, and the second step is to estimate the entropy of the given source. The permutation tests and additional chi-square tests are used \cite{kangadditional}
+These statistical tests are conducted under the null hypothesis that the
+given sample sequence of the PRNG?s output is independent
+and identically distributed with the uniform distribution.
+ \cite{kangadditional}
+
+
+%Hamano and Kaneko [6] have shown that the
+%overlapping template matching test included in the NIST SP
+%800-22 randomness test suite uses the inaccurate occurrence
+%probabilities of the template.
+% \cite{kangadditional} direkete Quelle bereits bekannt
+%In this paper, we concentrate on the additional chi-square tests and analyze them from the view point of the nonparametric
+% statistical method \cite{kangadditional}
+%The experimental results show that the additional chi-square tests with the corrected degrees of freedom are more effective. \cite{kangadditional}
+% Since we cannot obtain an appopriate hypothesis about the distribution of the noise source which is a component of the entropy source model, assume the distribution of the entropy source is unknown. \cite{kangadditional}
+
+
 
 
 \section{Discussion}
@@ -34,3 +70,5 @@ cycles and jiffies may provide more entropy at ungleichermassiger CPU load
 interrupt analyse ocnfidence lvele 0.05 ausreichend ?
 
 ------------
+
+ Wenn mehr samples entnommen als bis KEETYPERANDOMINTECRETSET eintritt (wegen Number od reuiqred Samples) darauf hinweisen.
