@@ -35,19 +35,19 @@ Similarly, the market of common server operating systems can be divided into pro
 \subsection{General}
 
 Random numbers are required by a variety of security related applications. An obvious purpose is encryption or signing of data, like f.e. disk encryption, Transport Socket Layer (TLS) or digital signatures of emails. In this case random numbers are used to generate cryptographically secure keys. Concepts like Stack Canaries (aka. Stack Guards) or Address Space Layout Randomization (ASLR) rely purely on the nondeterministic character of random numbers, applying them to make certain types of attacks on vulnerable applications much more difficult. Overall, the effectiveness of such applications depends significantly on the quality i.e. unpredictably of random numbers, provided by an operating system. \\
-In the following a comprehensive introduction to the Linux Random Number Generator (LRNG) with focus on analyzed concepts and components of this thesis will be given. It refers to Linux kernel v.4.4, which is currently used in several major Long Term Support distributions like Ubuntu Server 16.04 LTS. If facts are valid for Intel x86/x64 platforms only, those will be noted as such.\\
-In general, many modern CPU-architectures implement an on-chip True Random Number Generator \cite{guide2017intel}. Starting with 'IvyBridge' architecture, Intel provides two instructions accessing directly those entropy sources. The \textsf{RDRAND} instruction returns random numbers that are supplied by a cryptographically secure, deterministic random bit generator (DRBG). The DRBG is designed to meet the NIST SP 800-90A standard. If an application or operating system design insists on applying in it's own Pseudo Random Number Generator (PRNG) it may apply the \textsf{RDSEED} instruction which is compliant to NIST SP 800-90B \& C standard \cite{guide2017intel}.
+In the following, a comprehensive introduction to the Linux Random Number Generator (LRNG) with focus on analyzed concepts and components of this thesis will be given. It refers to Linux kernel v.4.4, which is currently used in several major Long Term Support distributions like Ubuntu Server 16.04 LTS. If facts are valid for Intel x86/x64 platforms only, those will be noted as such.\\
+In general, many modern CPU-architectures implement an on-chip True Random Number Generator \cite{guide2017intel}. Starting with 'IvyBridge' architecture, Intel provides two instructions accessing directly those entropy sources. The \textsf{RDRAND} instruction returns random numbers that are supplied by a cryptographically secure, deterministic random bit generator which is designed to meet the NIST SP 800-90A standard. If an application or operating system design insists on applying in it's own Pseudo Random Number Generator (PRNG) it may apply the \textsf{RDSEED} instruction which is compliant to NIST SP 800-90B \& C standard \cite{guide2017intel} for initializing i.e. seeding its state.
 Availability of these TRNGs does not automatically imply their application. If a kernel is started 
-with paramter \textsf{nordrand} (on x86/x64 architectures), the \textsf{RDRAND} instruction will have no effect. Further, if an operating system is run as a virtual machine, those instructions can by trapped by the hypervisor instead of being passed to the CPU \cite{mueller@bsi2}. Thus the analysis in this thesis does not take on-chip entropy pools into account, but refers to the pure Linux Pseudo Random Number Generator).
+with paramter \textsf{nordrand} (on x86/x64 architectures), the \textsf{RDRAND} instruction will have no effect. Further, if an operating system is run as a virtual machine, those instructions can by trapped by the hypervisor instead of being passed to the CPU \cite{mueller@bsi2}. Thus the analysis in this thesis does not take on-chip entropy pools into account, but refers to the pure Linux Pseudo Random Number Generator.
 
-\subsection{Linux Pseudo Random Number Generator Architecture}
-The Linux Pseudo Random Number Generator's (PRNG) responsibility is to provide random numbers to requesting consumers. To ensure a certain quality of randomness the implementations activity may be divided into four major tasks:   
+\subsection{Linux Pseudo Random Number Generator Architecture Overview}\label{sec:lrng-arch}
+The Linux Pseudo Random Number Generator's (PRNG) responsibility is to provide random numbers to requesting consumers. To ensure a certain quality of randomness the implementation's activity may be divided into four major tasks:   
 
 %\begin{figure}
 \begin{itemize}
-	\item Capturing and processing input data which is finally stored in entropy pools or buffers
+	\item Capturing and processing of input data which is finally stored in entropy pools or buffers
 	\item Assessing the level of entropy in each pool in unit 'bits of entropy'
-	\item Diverting incoming entropy to a specific pool, depending on need
+	\item Diverting incoming entropy to a specific pool, depending on a pools state
 	\item Releasing random numbers to a consumer 
 \end{itemize}
 %	\caption{Major tasks of the Linux PRNG}
@@ -55,7 +55,7 @@ The Linux Pseudo Random Number Generator's (PRNG) responsibility is to provide r
 Depending on the type of consumer, there is a fundamental difference in the way random numbers can be requested. Applications or services running in user mode access those via different interfaces than logic running with kernel privileges does. Also, the source of entropy varies vastly, depending on the consumer type. The security components analyzed in this thesis are involved in the generation of new processes. This task is accomplished by code running on kernel level, hence the initialization and management of entropy sources for this consumer type are in focus of this introduction, but partly overlap with those dedicated to user mode consumers.
 \\~\\
 To generate random numbers, the Linux PRNG needs to fall back on events delivered by hardware. 
-Capturing and processing of several types of hardware events starts immediately after the kernel has been loaded into the memory and is given execution by the boot loader. With the occurrence of each type of hardware event, more or less sophisticated transformations are applied in the delivered input parameters. Those may be as simple as a single XOR- or ADD-operation to more complex but lean transformations involving previously calculated results. The outcome of these operations is assigned to \textit{entropy pools}. An entropy pool is a data structure located in kernel memory. Beside storing the generated random numbers, it is also aware of it's entropy state. 
+Capturing and processing of several types of hardware events starts immediately after the kernel has been loaded into memory and is given execution by the boot loader. With the occurrence of each type of hardware event, more or less sophisticated transformations are applied on the delivered input parameters. Those may be as simple as a single XOR- or ADD-operation to more complex but lean transformations involving previously calculated results. The outcome of these operations is assigned to \textit{entropy pools}. An entropy pool is a data structure located in kernel memory. Beside storing the generated random numbers, it is also aware of its entropy state. In total, there exist three full-featured entropy pools which will be explained in the following TODO Ref??. Some hardware events are processed by a so called \textit{fast\_pool} which must be seen as some kind of transformation stage instead of an entropy pool \cite{mueller@bsi2}. Additionally, part of the the initialization process is the set up of a 16 byte \textit{random int secret buffer}, which is assigned once during system startup. This buffer is also involved in the later delivery of random numbers requested by kernel consumers. Hence it's development is of particular interest for this thesis. Figure \ref{fig:linux-prng-arch} illustrates all major components involved in the generation and management of random numbers via the Linux PRNG.
 
 \begin{figure}[H]
 	\centering
@@ -64,6 +64,7 @@ Capturing and processing of several types of hardware events starts immediately 
 	\label{fig:linux-prng-arch}
 \end{figure}
 
+\subsection{Input sources of the Linux PRNG}
 
 % In total there are X types 
 
