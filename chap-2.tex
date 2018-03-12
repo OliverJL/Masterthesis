@@ -68,10 +68,10 @@ Capturing and processing of several types of hardware events starts immediately 
 In best case the generation of random numbers is conducted by dedicated devices in terms of True Random Number Generators. The Linux RNG implementation allows to involve TRNGs in two ways: 
 \begin{itemize}
 	\item \textit{Instruction Delegation} Requests from consumers are directly translated into instructions using architecture dependent on-chip features as described in \ref{sec:lrng-general}.
-	This approach bypasses the entire logic of the Linux PRNG.
+	This approach bypasses the entire logic of the Linux PRNG and relies completely on the TRNG.
 	\item \textit{TRNG/PRNG Hybrid Mode} Random numbers are managed via the regular PRNG logic. Instead of transformed hardware events, the entropy pools are filled with data provided by a TRNG device via a special driver interface.
 \end{itemize}
-For this thesis, any of those options is out of scope. Instead, the process of generating random numbers based on regular hardware events is analyzed. As an outcome, it turned out that just two types of hardware events were able to provide input data, while the reaming did not contribute anything at all since the operating system was run as a virtual machine. Despite this, those should be mentioned for the sake of completeness.
+For this thesis, both of those options is out of scope. Instead, the process of generating random numbers based on common hardware events is analyzed. As an outcome, it turned out that just two types of hardware events were able to provide input data, while the reaming did not contribute anything at all, since the operating system was run as a virtual machine. Despite this, those should be mentioned for the sake of completeness.
 
 % In total there are X types 
 
