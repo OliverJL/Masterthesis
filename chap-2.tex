@@ -30,3 +30,33 @@ According to a study of Gartner from 2016, the market for x86 server virtualizat
 Similarly, the market of common server operating systems can be divided into proprietary and open-source solutions. While Microsoft dominates the fraction of proprietary systems with its Windows Server series, Linux based systems have a total share of \~37\%. Within this share, \~39\% of servers dedicated to host websites etc. are running an Ubuntu Distribution \cite{statsharelinux} . \\~\\
 
 
+
+
+%The non-default choices for tsc_mode are:
+%- tsc_mode=1 (always emulate). All rdtsc instructions are emulated;
+%this is the best choice when TSC-sensitive apps are running and
+%it is necessary to understand worst-case performance degradation
+%for a specific hardware environment.
+%- tsc_mode=2 (never emulate).  This is the same as prior to Xen 4.0
+%and is the best choice if it is certain that all apps running in
+%this VM are TSC-resilient and highest performance is required.
+%- tsc_mode=3 (PVRDTSCP).  High-TSC-frequency apps may be paravirtualized
+%(modified) to obtain both correctness and highest performance; any
+%unmodified apps must be TSC-resilient.
+
+
+
+The x86 "timestamp counter", or TSC, is a 64-bit register on each
+processor that increases monotonically.  Historically, TSC incremented
+every processor cycle, but on recent processors, it increases
+at a constant rate even if the processor changes frequency (for example,
+to reduce processor power usage).  TSC is known by x86 programmers
+as the fastest, highest-precision measurement of the passage of time
+so it is often used as a foundation for performance monitoring.
+And since it is guaranteed to be monotonically increasing and, at
+64 bits, is guaranteed to not wraparound within 10 years, it is
+sometimes used as a random number or a unique sequence identifier,
+such as to stamp transactions so they can be replayed in a specific
+order
+\cite{xentscmode}
+
