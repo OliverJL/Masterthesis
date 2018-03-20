@@ -11,7 +11,7 @@ Availability of these TRNGs does not automatically imply their application. If a
 with paramter \textsf{nordrand} (on x86/x64 architectures), the \textsf{RDRAND} instruction will have no effect. Further, if an operating system is run as a virtual machine, those instructions can by trapped by the hypervisor instead of being passed to the CPU \cite{mueller@bsi2}. Thus, the analysis in this thesis does not take on-chip entropy pools into account, but refers to the pure Linux Pseudo Random Number Generator.
 
 \section{Linux Pseudo Random Number Generator Architecture Overview}\label{sec:lrng-arch}
-The Linux Pseudo Random Number Generator's (PRNG) responsibility is to provide random numbers to requesting consumers. To ensure a certain quality of randomness the implementation's activity may be divided into four major tasks:   
+The Linux Pseudo Random Number Generator's (PRNG) responsibility is for providing random numbers to requesting consumers. To ensure a certain quality of randomness the implementation's activity may be divided into four major tasks:   
 
 %\begin{figure}
 \begin{itemize}
@@ -61,7 +61,7 @@ Via the concept of interrupts, system components are enabled to request an inter
 %if ((fast_pool->count < 64) && !time_after(now, fast_pool->last + HZ))
 % erwaehnen das add_interrupt_randomness abbricht wenn fast_pool->last + HZ
 
-\section{Entropy pools, Pre-processing and Vectors}
+\section{Entropy Pools, Pre-Processing and Vectors}
 \subsection{Input Pool}\label{sub:input-pool}
 512 byte \cite{kernlrandmc}
 no interface 
