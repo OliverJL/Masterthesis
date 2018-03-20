@@ -1,0 +1,271 @@
+\chapter{Random Number Generation in Linux x64 Kernel 4.4}
+\label{cha:3}
+
+\section{General}\label{sec:lrng-general}
+
+Random numbers are required by a variety of security related applications. An obvious purpose is encryption or signing of data, like f.e. disk encryption, Transport Socket Layer (TLS) or digital signatures of emails. In this case random numbers are used to generate cryptographically secure keys. Concepts like Stack Canaries (aka. Stack Guards) or Address Space Layout Randomization (ASLR) rely purely on the nondeterministic character of random numbers, applying them to make certain types of attacks on vulnerable applications much more difficult. Overall, the effectiveness of such applications depends significantly on the quality i.e. unpredictably of random numbers, provided by an operating system. \\
+In the following, a comprehensive introduction to the Linux Random Number Generator (LRNG) with focus on analyzed concepts and components of this thesis will be given. It refers to Linux kernel v.4.4, which is currently used in several major Long Term Support distributions like Ubuntu Server 16.04 LTS. If facts are valid for Intel x86/x64 platforms only, those will be noted as such.
+As the analysis of random numbers i.e. their quality in terms of entropy will be analyzed compliant to an approach (\cite{turan2018nist}) recommended by the National Institute of Standards and Technology the corresponding terminology will be used.\\
+In general, many modern CPU-architectures implement an on-chip True Random Number Generators. Starting with 'IvyBridge' architecture, Intel provides two instructions accessing directly those entropy sources. The \textsf{RDRAND} instruction returns random numbers that are supplied by a cryptographically secure, deterministic random bit generator which is designed to meet the NIST SP 800-90A standard. If an application or operating system design insists on applying in it's own Pseudo Random Number Generator (PRNG) it may apply the \textsf{RDSEED} instruction which is compliant to NIST SP 800-90B \& C standard \cite{guide2017intel} for initializing i.e. seeding its state.
+Availability of these TRNGs does not automatically imply their application. If a kernel is started 
+with paramter \textsf{nordrand} (on x86/x64 architectures), the \textsf{RDRAND} instruction will have no effect. Further, if an operating system is run as a virtual machine, those instructions can by trapped by the hypervisor instead of being passed to the CPU \cite{mueller@bsi2}. Thus, the analysis in this thesis does not take on-chip entropy pools into account, but refers to the pure Linux Pseudo Random Number Generator.
+
+\section{Linux Pseudo Random Number Generator Architecture Overview}\label{sec:lrng-arch}
+The Linux Pseudo Random Number Generator's (PRNG) responsibility is to provide random numbers to requesting consumers. To ensure a certain quality of randomness the implementation's activity may be divided into four major tasks:   
+
+%\begin{figure}
+\begin{itemize}
+	\item Capturing and processing of input data which is finally stored in entropy pools or buffers
+	\item Assessing and health checking the level of entropy in each pool in unit 'bits of entropy'
+	\item Diverting incoming entropy to specific pools, depending on a pools state
+	\item Releasing random numbers to a consumer 
+\end{itemize}
+%	\caption{Major tasks of the Linux PRNG}
+%\end{figure}
+Depending on the type of consumer, there is a fundamental difference in the way random numbers can be requested. Applications or services running in user mode access those via different interfaces than logic running with kernel privileges does. Also, the source of entropy varies vastly, depending on the consumer type. The security components analyzed in this thesis are involved in the generation of new processes. This task is accomplished by code running on kernel level, hence the initialization and management of entropy sources for this consumer type are in focus of this introduction, but partly overlap with those dedicated to user mode consumers.
+\\~\\
+To generate random numbers, the Linux PRNG needs to fall back on events delivered by hardware. 
+Capturing and processing of several types of hardware events starts immediately after the kernel has been loaded into memory and is given execution by the boot loader. With the occurrence of each type of hardware event, more or less sophisticated transformations are applied on the delivered input parameters. Those may be as simple as a single XOR- or ADD-operation to more complex but lean transformations, partly reinvolving previously calculated results. The outcome of these operations is finally assigned to entropy pools. An entropy pool is a data structure located in kernel memory. Beside storing the generated random numbers, it is also aware of its entropy state. Depending on its purpose, an entropy pool delivers data to a consumer interface, or is meant to enrich other pools. In total, in the Linux kernel exist three full-featured entropy pools which will be explained in the following TODO Ref??. Some hardware events are processed by a so called fast\_pool which must be seen as a pre-processing stage instead of a full-featured entropy pool \cite{mueller@bsi2}. Additionally, part of the initialization process is the set up of a 16 byte vector, which is assigned once during system startup. This vector is involved as a seed for conditioning i.e. more sophisticated transformations like MD5, applied on kernel level consumers requests of random numbers. Hence the development is of this vector is of particular interest for this thesis. Figure \ref{fig:linux-prng-arch} illustrates all major components involved in the generation and management of random numbers via the Linux PRNG. The following sections will explain there dedication and interaction more briefly.
+
+\begin{figure}[H]
+	\centering
+	\input{linux-prng-arch.tex}
+	\caption{Input sources and entropy pools, -vectors, interfaces of the Linux PRNG} 
+	\label{fig:linux-prng-arch}
+\end{figure}
+
+\section{Input sources of the Linux PRNG}
+In best case, the generation of random numbers is conducted by dedicated devices in terms of True Random Number Generators. The Linux RNG implementation allows to involve TRNGs in two ways: 
+\begin{itemize}
+	\item \textit{Instruction Delegation:} Requests from consumers are directly translated into instructions using architecture dependent on-chip features as described in \ref{sec:lrng-general}.
+	This approach bypasses the entire logic of the Linux PRNG and relies completely on the TRNG.
+	\item \textit{TRNG/PRNG Hybrid Mode:} Random numbers are managed via the regular PRNG logic. Instead of transformed hardware events, the entropy pools are filled with data provided by a TRNG device via a special driver interface.
+\end{itemize}
+For this thesis, both of these options are out of scope. Instead, the process of generating random numbers based on common hardware events is analyzed. As an outcome, it turned out that just two types of hardware events were able to provide input data, while the reaming did not contribute anything at all, since the operating system was run as a virtual machine. Despite this, also those should be mentioned for the sake of completeness.
+
+\subsection{Timing Variance}
+For each hardware event type a a data structure \textsf{timer\_rand\_state} is maintained tracking the occurrence of events. Depending on the event type, this information will used to enrich the 
+input pool via passing it's value to \textsf{add\_timer\_randomness} and/or to discard the event parameter if a minimum interval has not pass yet. 
+
+\subsection{Input Randomness}\label{sec:inp-rnd}
+Input events comprise any kind of parameters delivered by user input devices like a keyboard or a mouse. A keyboard the usually delivers the keycode, a mouse the coordinate of the cursor position. However the devices need to be connected locally \cite{mueller@bsi2}. Since this does not apply a an operating system run as a virtual machine, \textsf{add\_input\_randomness} is never called and further also no timer input is delivered to \textsf{add\_timer\_randomness} by this type of event.
+
+\subsection{Disk Randomness}\label{sec:disk-rnd}
+Per disk i.e. block device the amount of seek time of a block layer request  \textsf{add\_disk\_randomness} will contribute to the input pool via a call of \textsf{add\_timer\_randomness}. However, if a virtual machine is hosted on a solid state drives timing variance of events is to low and constant. Hence also this event type does not deliver any noise for this setup.
+
+\subsection{Device Randomness}\label{sec:dev-rnd}
+Function \textsf{add\_device\_randomness} is called just one, in a very early phase, when the kernel starts to initialize device drivers. In the applied virtual environment this event type's parameters where limited on BIOS/UEFI related information like manufacture name, vendor-id and the serial number. This information commonly is static. While at least some parameters may be individual on a hardware installation, the Xen-Hypervisor allows to use an identical BIOS/UEFI image for arbitrary virtual machines.   
+
+\subsection{Interrupt Randomness}\label{sec:int-rnd}
+Via the concept of interrupts, system components are enabled to request an interrupt of the system's current activity, to deliver or demand information. When an interrupt request (IRQ) is signaled, the system will halt at defined state, exchange data with requesting unit and finally or immediately proceed execution. The intention of a request is communicated via an IRQ-code. These codes are well known to the operating system, as predefined by convention and set by the BIOS. IRQ 0 f.e., signals a periodic occurring timer event. As illustrated in \ref{fig:linux-prng-arch}, detouring the fast pool, interrupt input initializes the input pool. As mentioned in \ref{sec:inp-rnd} and \ref{sec:disk-rnd}, disk- and input events don't contribute any noise at all, while entropy provided by \textsf{add\_device\_randomness} is assumed to be poor. In other words, the development of the input entropy pools depends significantly on the parameters provided by \textsf{add\_interrupt\_randomness} and is hence of particular interest, since this pool is finally responsible to initialize the \textsf{random\_int\_secret} vector, which is applied as seed for each request triggered by a kernel process. TODOC
+%if ((fast_pool->count < 64) && !time_after(now, fast_pool->last + HZ))
+% erwaehnen das add_interrupt_randomness abbricht wenn fast_pool->last + HZ
+
+\section{Entropy pools, Pre-processing and Vectors}
+\subsection{Input Pool}\label{sub:input-pool}
+512 byte
+
+\subsection{Fast Pools}
+As mentioned in \ref{sec:lrng-arch}, fast pools are no full-featured entropy pools, but have the purpose of a pre-processing stage, dedicated to initialize the input pool. As illustrated in \ref{fig:linux-prng-arch}, fast pools are feed by noise delivered by interrupt event input. They are declared by a simple data structure, which is able to store 16 byte of gained random values beside few state information, as illustrated in \ref{fig:fast-pool}.\\
+This data structure is instantiated and addressed per CPU, available to the operating system.
+TODO: Hier noch ein Verweis rein, das diese relativ fix sind (gelesen in mark..)??
+ 
+ \begin{lstlisting}[caption=Declaration of the fast\_pool structure in Linux kernel 4.4 \cite{kernlrandmc}, captionpos=b,
+ xrightmargin=.3\textwidth,
+ xleftmargin=.3\textwidth,
+ label=lst:fastspool]
+ struct fast_pool {
+ __u32 pool[4];
+ unsigned long last;
+ unsigned short reg_idx;
+ unsigned char count;
+ };
+ \end{lstlisting}
+ 
+ For this thesis, the number of available CPUs per virtual machine has been configured to one, hence the terminology will refer to a single instance in the following. By concept, in Linux Kernel 4.4, interrupt randomness is the sole source of random noise available to rise up the fast pool, which is a contributor to the input entropy pool. As observations of the experimental setup for this thesis concluded that beside interrupt events any contribution has occurred by input- or disk events. In other words, the development of the fast pool, depends completely on the input and pre-processing conducted by \textsf{add\_interrupt\_randomness} and hence will be will be described more briefly.\\
+ For each call of function \textsf{add\_interrupt\_randomness}, several parameters are processed to transform the 16 byte vector of the fast pool (labeled 'pool' in \ref{fig:fast-pool}). Thereby just one of two parameters directly passed by the caller. Surprisingly parameter \textsf{irq\_code}, is processed, while the second, \textsf{irq\_flags} is used at all (see \ref{lst:add-interrupt-randomnes-c}), for unknown reasons. Beside this input, three more runtime values are applied on pre-proccessing procedures within the function. Some of them are also applied for Component processing by XXX TODO and will be explained more detailed.
+ 
+ \begin{itemize}
+ 	\item \textbf{Cycles Counter [8 byte]} The cycles counter (see 'cycles' in  \ref{lst:add-interrupt-randomnes-c}) is a high-resolution counter of 8 byte length (on x64 plattforms), used to receive CPU timing information. It is also referred as Time Stamp Counter and is invokable via the \textsf{RDTSC} instruction \cite{guide2017intel}. Cycles Counter is managed by the CPU which monotonically increments the time-stamp counter model-specific register (MSR) every clock cycle and resets it to 0 whenever	the processor is reset. As mentioned in TODO the results retrieved by the calling \textsf{RDTSC} instruction may not be directly passed to the CPU but deliver emulation based results, depending on the Xen configuration setting \textsf{tsc\_mode} \cite{xentscmode} for a particular virtual machine. For the given Virtual Environment Setup of this thesis, per default, the cycles counter value has been provided by the underlying CPU to both virtual machines.
+ 	
+	\item \textbf{Instruction Pointer [8 byte]} On x64 platforms, the instruction pointer (see 'ip' in \ref{lst:add-interrupt-randomnes-c}) holds the 64-bit offset of the next
+	instruction to be executed, which is hold in CPU-register RIP. This architecture also support a technique called RIP-relative addressing. Using this technique, the effective address is determined by adding a displacement to the RIP of the next instruction \cite{guide2017intel}.
+	
+	\item \textbf{Jiffies [8 byte]} Jiffies (see 'now' in \ref{lst:add-interrupt-randomnes-c}) represent a kernel-internal value which is incremented at each timer interrupt. This counter may be seen as some kind of software clock maintained by the kernel which measures time in jiffies \cite{timeandtimers}. The accuracy of jiffies is determined by the value of the kernel compile-time constant \textsf{HZ} TODO Ref. On system startup, jiffies is initialized to an initial value.
+	
+ \end{itemize}
+ 
+ 
+ %TODO (nachhaken-soll das rein?)
+ 
+%  in 
+% \ref{sub:input-pool}
+ 
+ %enrichment
+ 
+% Pre-processing
+%fast_pool
+% \textsf{add\_interrupt\_randomness}
+%struct fast_pool {
+%	__u32		pool[4];
+%	unsigned long	last;
+%	unsigned short	reg_idx;
+%	unsigned char	count;
+%};
+
+%
+%{sec:int-rnd}
+%one per CPU
+%XOR 
+%solely
+
+
+%\begin{lstlisting}[float, caption={declares of the fast_pool structure},captionpos=b, xleftmargin=.4\textwidth]
+%struct fast_pool {
+%__u32		pool[4];
+%unsigned long	last;
+%unsigned short	reg_idx;
+%unsigned char	count;
+%};
+%\end{lstlisting}
+
+
+
+
+%\textsf{add\_interrupt\_randomness}
+
+
+
+% In total there are X types 
+
+% Those will be explained in XXX and YYY.  
+
+
+
+%generates random numbers based on occurring hardware events. Those events 
+
+
+\begin{comment}
+Jegliche Nutzung der RDRAND-Instruktion kann verhindert werden, wenn der Kern mit der
+Kommandozeilenoption ?nordrand? gestartet wird.
+Es ist zu beachten, dass RDRAND von einem Hypervisor im Sinne eines VM-Exits abgefangen
+und verändert beziehungsweise nicht an die CPU weitergegeben werden kann.
+
+\end{comment}
+
+
+%implementation
+%
+%Intel IvyBridge x86 
+%
+%
+%
+%Intro:
+%valid kernel for x64  4.4. (16.04 LTS)
+%MISP 
+%
+% 
+%
+%arch:
+%Intel IvyBridge x86-Prozessorgeneration
+%TRNG
+% \cite guide2017intel
+%RDRAND returns random numbers that are supplied by a cryptographically secure, deterministic random bit generator DRBG. The DRBG is designed to meet the NIST SP 800-90A standard.
+%RDSEED
+%Non-deterministic random bit generator
+%NIST SP 800-90B \& C
+%\cite{guide2017intel}
+%
+%
+%Diff: kernel/Userspace request
+
+\begin{comment}
+Aktuelle Arbeiten zeigen, dass gerade im Bereich von Headless-Systemen, die beim
+ersten Systemstart Zufallszahlen für die Erzeugung von Schlüsseln benötigen, zu
+wenig Entropie vorhanden ist. Auch wenn von den Interrupts nicht viel Entropie zu
+erwarten ist, sollte die Verwendung der Interrupt-Ereignisse dieses Problem etwas
+abmildern.
+\cite{mueller@bsi2}
+\end{comment}
+
+
+
+
+\begin{figure}[H]
+\label{fig:fast-pool}
+\centering
+\input{add-interrupt-rnd.tex}
+\caption{Pre-processing of input parameters by function 'add\_interrupt\_randomness' before applying further operations via fast\_mix / mix\_pool\_bytes (valid for x64 / 64-bit Kernel only)} \label{fig:add-int-rnd}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\input{get-rnd-int-long.tex}
+	\caption{Processing of input parameters by function 'get\_random\_int/long' (valid for x64 / 64-bit Kernel only)} \label{fig:get-rnd-int-long}
+\end{figure}
+
+
+
+%\begin{mdframed}
+%\begin{tabularx}{\columnwidth}{XXl}
+%\begin{tabularx}{\textwidth}{ll}
+%%	\caption{Description of input parameters proccessed by func. 'add\_interrupt\_randomness'}
+%%	\label{tab:add-int-rnd-desc}\\
+%	\textbf{jiffies}&Igel\\
+%	\textbf{cycles counter}&Dienstag\\
+%	\textbf{irq}&\\
+%	\textbf{ip}&\textit{Instruction Pointer}
+%	\caption{Description of input parameters proccessed by func. 'add\_interrupt\_randomness'}
+%\end{tabularx}
+%\centering
+%\begin{table}[H]
+%	\begin{tabular}{ll}
+%	\textbf{Jiffies}&Nr. of ticks occured since system startup.\\
+%	\textbf{Cycles Counter}&Nr. of CPU-cycles since system startup.\\
+%	\textbf{irq}&Interrupt Request \\
+%	\textbf{ip}&\textit{Instruction Pointer}
+%	\end{tabular}
+%	\caption{Description of input parameters proccessed by func. 'add\_interrupt\_randomness'}	
+%\end{table}
+
+% jiffies . Incremented for each timer interrupt.
+% . also known as \textit{Time Stamp Counter}.
+
+%	\cite{kernlrandmc}
+		
+%\end{mdframed}
+
+
+%\begin{tabularx}{\columnwidth}{XXl}
+%	jiffies&Schnecke&Igel\\
+%	cycles counter&Hier ist ein langes Wort Hier ist ein langes Wort Hier ist ein langes Wort Hier ist ein langes Wort &Dienstag\\
+%	irq&&\\
+%	ip&&
+%\end{tabularx}
+%
+%
+%
+%\begin{mdframed}
+%\begin{description}
+%	\item [jiffies] sadfasdfsadf
+%	\item [cycles counter] asdfasdfasdf
+%	\item [irq] asdfasdfasdf	
+%	\item [ip] 
+%\end{description}
+%\cite{kernlrandmc}	
+%\end{mdframed}
+
+
+
+
+\section{Conclusion}
+The final section of the chapter gives an overview of the important results
+of this chapter. This implies that the introductory chapter and the
+concluding chapter don't need a conclusion.
+
+%\lipsum[66]
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "thesis"
+%%% End: 
