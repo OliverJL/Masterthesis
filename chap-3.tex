@@ -11,13 +11,13 @@ Availability of these TRNGs does not automatically imply their application. If a
 with paramter \textsf{nordrand} (on x86/x64 architectures), the \textsf{RDRAND} instruction will have no effect. Further, if an operating system is run as a virtual machine, those instructions can by trapped by the hypervisor instead of being passed to the CPU \cite{mueller@bsi2}. Thus, the analysis in this thesis does not take on-chip entropy pools into account, but refers to the pure Linux Pseudo Random Number Generator.
 
 \section{Linux Pseudo Random Number Generator Architecture Overview}\label{sec:lrng-arch}
-The Linux Pseudo Random Number Generator's (PRNG) responsibility is for providing random numbers to requesting consumers. To ensure a certain quality of randomness the implementation's activity may be divided into four major tasks:   
+The Linux Pseudo Random Number Generator's (PRNG) responsibility is for providing random numbers to requesting consumers. To ensure a certain quality of randomness the implementation's activity is  divided into four major tasks:   
 
 %\begin{figure}
 \begin{itemize}
 	\item Capturing and processing of input data which is finally stored in entropy pools or buffers
 	\item Assessing and health checking the level of entropy in each pool in unit 'bits of entropy'
-	\item Diverting incoming entropy to specific pools, depending on a pools state
+	\item Diverting incoming entropy to specific pools, depending on a pool's state
 	\item Releasing random numbers to a consumer 
 \end{itemize}
 %	\caption{Major tasks of the Linux PRNG}
@@ -25,7 +25,7 @@ The Linux Pseudo Random Number Generator's (PRNG) responsibility is for providin
 Depending on the type of consumer, there is a fundamental difference in the way random numbers can be requested. Applications or services running in user mode access those via different interfaces than logic running with kernel privileges does. Also, the source of entropy varies vastly, depending on the consumer type. The security components analyzed in this thesis are involved in the generation of new processes. This task is accomplished by code running on kernel level, hence the initialization and management of entropy sources for this consumer type are in focus of this introduction, but partly overlap with those dedicated to user mode consumers.
 \\~\\
 To generate random numbers, the Linux PRNG needs to fall back on events delivered by hardware. 
-Capturing and processing of several types of hardware events starts immediately after the kernel has been loaded into memory and is given execution by the boot loader. With the occurrence of each type of hardware event, more or less sophisticated transformations are applied on the delivered input parameters. Those may be as simple as a single XOR- or ADD-operation to more complex but lean transformations, partly reinvolving previously calculated results. The outcome of these operations is finally assigned to entropy pools. An entropy pool is a data structure located in kernel memory. Beside storing the generated random numbers, it is also aware of its entropy state. Depending on its purpose, an entropy pool delivers data to a consumer interface, or is meant to enrich other pools. In total, in the Linux kernel exist three full-featured entropy pools which will be explained in the following TODO Ref??. Some hardware events are processed by a so called fast\_pool which must be seen as a pre-processing stage instead of a full-featured entropy pool \cite{mueller@bsi2}. Additionally, part of the initialization process is the set up of a 16 byte vector, which is assigned once during system startup. This vector is involved as a seed for conditioning i.e. more sophisticated transformations like MD5, applied on kernel level consumers requests of random numbers. Hence the development is of this vector is of particular interest for this thesis. Figure \ref{fig:linux-prng-arch} illustrates all major components involved in the generation and management of random numbers via the Linux PRNG. The following sections will explain there dedication and interaction more briefly.
+Capturing and processing of several types of hardware events starts immediately after the kernel has been loaded into memory and is given execution by the boot loader. With the occurrence of each type of hardware event, pre-processing routines (more or less sophisticated transformations) are applied on the delivered input parameters. Those may be as simple as a single XOR- or ADD-operation to more complex but lean transformations, partly reinvolving previously calculated results. The outcome of these operations is finally assigned to entropy pools. An entropy pool is a data structure located in kernel memory. Beside storing the generated random numbers, it is also aware of its entropy state. Depending on its purpose, an entropy pool delivers data to a consumer interface, or is meant to enrich other pools. In total, in the Linux kernel exist three full-featured entropy pools which will be explained in the following. Some hardware events are processed by a so called fast\_pool, which must be seen as a pre-processing stage instead of a full-featured entropy pool \cite{mueller@bsi2}. Additionally, part of the initialization process is the set up of a 16 byte vector, which is assigned once during system startup. This vector is involved as a seed for conditioning i.e. more sophisticated transformations like MD5, applied on kernel level consumers' requests of random numbers. Hence the development of this vector is of particular interest for this thesis. Figure \ref{fig:linux-prng-arch} illustrates all major components involved in the generation and management of random numbers via the Linux PRNG. The following sections will explain their dedication and interaction more briefly.
 
 \begin{figure}[H]
 	\centering
@@ -39,12 +39,12 @@ In best case, the generation of random numbers is conducted by dedicated devices
 \begin{itemize}
 	\item \textit{Instruction Delegation:} Requests from consumers are directly translated into instructions using architecture dependent on-chip features as described in \ref{sec:lrng-general}.
 	This approach bypasses the entire logic of the Linux PRNG and relies completely on the TRNG.
-	\item \textit{TRNG/PRNG Hybrid Mode:} Random numbers are managed via the regular PRNG logic. Instead of transformed hardware events, the entropy pools are filled with data provided by a TRNG device via a special driver interface.
+	\item \textit{TRNG/PRNG Hybrid Mode:} Random numbers are managed via the regular PRNG logic. Instead of transformed hardware events, the entropy pools are filled with data, provided by a TRNG device via a special driver interface.
 \end{itemize}
 For this thesis, both of these options are out of scope. Instead, the process of generating random numbers based on common hardware events is analyzed. As an outcome, it turned out that just two types of hardware events were able to provide input data, while the reaming did not contribute anything at all, since the operating system was run as a virtual machine. Despite this, also those should be mentioned for the sake of completeness.
 
 \subsection{Timing Variance}
-For each hardware event type a a data structure \textsf{timer\_rand\_state} is maintained tracking the occurrence of events. Depending on the event type, this information will used to enrich the 
+For each hardware event type a data structure \textsf{timer\_rand\_state} is maintained tracking the occurrence of events. Depending on the event type, this information will used to enrich the 
 input pool via passing it's value to \textsf{add\_timer\_randomness} and/or to discard the event parameter if a minimum interval has not pass yet. 
 
 \subsection{Input Randomness}\label{sec:inp-rnd}
@@ -62,12 +62,15 @@ Via the concept of interrupts, system components are enabled to request an inter
 % erwaehnen das add_interrupt_randomness abbricht wenn fast_pool->last + HZ
 
 \section{Entropy Pools, Pre-Processing and Vectors}
+An entropy pool is a complex data structure dedicated to store generated random values as well as its own state regarding the currently achieved entropy level. 
+
+
 \subsection{Input Pool}\label{sub:input-pool}
 512 byte \cite{kernlrandmc}
 no interface 
 sophisticated
 
-}
+
 
 \subsection{Fast Pools}
 As mentioned in \ref{sec:lrng-arch}, fast pools are no full-featured entropy pools, but have the purpose of a pre-processing stage, dedicated to initialize the input pool. As illustrated in \ref{fig:linux-prng-arch}, fast pools are feed by noise delivered by interrupt event input. They are declared by a simple data structure, which is able to store 16 byte of gained random values beside few state information, as illustrated in \ref{fig:fast-pool}.\\
