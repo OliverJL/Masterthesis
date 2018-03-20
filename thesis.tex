@@ -16,8 +16,7 @@
 %\pagestyle{empty}
 \usetikzlibrary{shapes.geometric}
 \usepackage{mathptmx}
-\usepackage[10pt]{moresize}
-\usepackage[acronym]{glossaries}
+\usepackage[10pt]{moresize}\usepackage[acronym]{glossaries}
 
 
 
@@ -181,9 +180,11 @@
 %\onehalfspacing
 \onehalfspacing
 
-\include{glossary.tex}
-
 \makeglossaries
+
+\include{glossary}
+
+
 
 %\includeonly{chap-n}
 \begin{document}
@@ -262,6 +263,7 @@
 % You can replace the standard "abbrv" bibliography style by another one.
 \bibliographystyle{abbrv}
 \bibliography{references}
+\printglossary
 
 \end{document}
 
