@@ -34,7 +34,7 @@ Capturing and processing of several types of hardware events starts immediately 
 	\label{fig:linux-prng-arch}
 \end{figure}
 
-\section{Input sources of the Linux PRNG}
+\section{Input sources of the Linux PRNG}\label{sec:inp-src-lprng}
 In best case, the generation of random numbers is conducted by dedicated devices in terms of True Random Number Generators. The Linux RNG implementation allows to involve TRNGs in two ways: 
 \begin{itemize}
 	\item \textit{Instruction Delegation:} Requests from consumers are directly translated into instructions using architecture dependent on-chip features as described in \ref{sec:lrng-general}.
@@ -66,7 +66,15 @@ An entropy pool is a complex data structure dedicated to store generated random 
 
 
 \subsection{Input Pool}\label{sub:input-pool}
-The input pool provides max. 512 byte of entropy which is distributed to blocking/unblocking output pool if requested. 
+The input pool is central entropy pool dedicated to accumulate noise from 
+
+\cite{lacharme2012linux}
+
+ provides max. 512 byte 
+
+
+
+of entropy which is distributed to output pools if requested. 
  
 entropy pool
 accumulated
