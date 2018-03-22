@@ -62,7 +62,7 @@ Via the concept of interrupts, system components are enabled to request an inter
 % erwaehnen das add_interrupt_randomness abbricht wenn fast_pool->last + HZ
 
 \section{Entropy Pools, Pre-Processing and Vectors}
-An entropy pool is a complex data structure dedicated to store generated random values as well as its own state regarding the currently achieved entropy level. In total, in Linux Kernel 4.4 are existing three pools based on data structure \textsf{entropy\_store}, named blocking-pool, non-blocking-pool and input-pool (see \ref{fig:linux-prng-arch}) \cite{kernlrandmc}. The blocking- and non-blocking-pool are so called output pools, directly accessibly via applications or services running in \gls{usrmd}. By contrast, code running in 
+An entropy pool is a complex data structure dedicated to store generated random values as well as its own state regarding the currently achieved entropy level. In total, in Linux Kernel 4.4 are existing three pools based on data structure \textsf{entropy\_store}, named blocking-pool, non-blocking-pool and input-pool (see \ref{fig:linux-prng-arch}) \cite{kernlrandmc}. The blocking- and non-blocking-pool are so called output pools, directly accessibly via applications or services running in \gls{usrmd}. By contrast, code running in \gls{knlmd}
 
 \textsf{get\_random\_int/long}
 
