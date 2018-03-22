@@ -66,10 +66,11 @@ An entropy pool is a complex data structure dedicated to store generated random 
 
 
 \subsection{Input Pool}\label{sub:input-pool}
-The input pool is a central entropy pool dedicated to accumulate noise from the input sources described in \ref{sec:inp-src-lprng} of length 512 byte. If noise is delivered by interrupt events it will be pre-processed by the fast pool.
+The input pool is a central entropy pool dedicated to accumulate noise from the input sources described in \ref{sec:inp-src-lprng} of length 512 byte. If noise is delivered by interrupt events it will be pre-processed by the fast pool. It is not accessible by a consumer directly, but dedicated to deliver entropy to output pools if requested. The input pool is involved in the development of all output pools, since it is responsible to deliver entropy requesting pools. As it is a conditioning pool, it applies a SHA1 transformation on the extracted data before completing delivery to the requesting output pool \cite{kernlrandmc}. The input pool tracks its internal state by an entropy counter which is incremented when entropy is added by noise i.e. decreased when extracted. 
 
+\subsection{Blocking Pool}\label{sub:blocking-pool}
 
-It is not accessible by a consumer directly, but dedicated to deliver entropy to output pools if requested.
+\ref{sub:input-pool}
 
 %\cite{lacharme2012linux}
 
