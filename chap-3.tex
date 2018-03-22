@@ -69,9 +69,9 @@ An entropy pool is a complex data structure dedicated to store generated random 
 
 512 byte \cite{kernlrandmc}
 no interface 
-sophisticated \gls{iotg}
+sophisticated 
 
-
+\cite{lacharme2012linux}
 
 \subsection{Fast Pools}
 As mentioned in \ref{sec:lrng-arch}, fast pools are no full-featured entropy pools, but have the purpose of a pre-processing stage, dedicated to initialize the input pool. As illustrated in \ref{fig:linux-prng-arch}, fast pools are feed by noise delivered by interrupt event input. They are declared by a simple data structure, which is able to store 16 byte of gained random values beside few state information, as illustrated in \ref{fig:fast-pool}.\\
