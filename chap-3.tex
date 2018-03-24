@@ -68,23 +68,20 @@ on the entropy of delivered numbers. In the following, these pools, as well as i
 
 \subsection{Input Pool}\label{sub:input-pool}
 The input pool is a central entropy pool dedicated to accumulate noise from the input sources described in \ref{sec:inp-src-lprng} and distribute it to the output pools. If noise is delivered by interrupt events, it will have been pre-processed by the fast pool. Incoming entropy is integrated into the pool (of length 512 byte) via an operation which mixes obtained values to existing. This procedure is not cryptographic safe, but a compromise between performance and the requirement for a good non-cryptographic hash \cite{kernlrandmc}. With each addition, an entropy counter which tracks the pools internal state is incremented. If a sufficient level is reached, incoming values are passed directly to the output pools, to avoid a waste of entropy. In general the  input pool is the one and only source of entropy for the output pool accessible for user mode consumers. When an output pool 
-submits a request, the input pool extracts data from its internal vector. Those values will not be delivered intermediately but transformed by a SHA1 conditioning procedure \cite{kernlrandmc}.   
-
-  It is not accessible by a consumer directly, but dedicated to develop the output pools during initialization phase and further to feed those if entropy is requested. The input pool is a conditioning pool and hence applies a SHA1 transformation on the extracted data before completing delivery to the requesting output pool . It tracks its internal state by an entropy counter which is incremented when entropy is added i.e. decreased when is extracted. 
-
-
-Indirectly the input pool is responsible for the initialization of the 
-\textsf{random\_int\_secret} vector which is highly involved in the generation of random numbers for kernel consumers (see \ref{sub:rnd-int-sec}).
+submits a request, the input pool extracts data from its internal vector. Before  delivery, those values will transformed by a SHA1 conditioning procedure \cite{kernlrandmc}. Indirectly the input pool is responsible for the initialization of the \textsf{random\_int\_secret} vector which is highly involved in the generation of random numbers for kernel consumers (see \ref{sub:rnd-int-sec}).
+%  It is not accessible by a consumer directly, but dedicated to develop the output pools during initialization phase and further to feed those if entropy is requested. The input pool is a conditioning pool and hence applies a SHA1 transformation on the extracted data before completing delivery to the requesting output pool . It tracks its internal state by an entropy counter which is incremented when entropy is added i.e. decreased when is extracted. 
 
 \subsection{Blocking- \& Unblocking Pool}\label{sub:blocking-pool}
 The blocking- \& unblocking pool are 
 
-\textsf{random\_int\_secret}
+
 
 
 \subsection{Random Int Secret Vector}\label{sub:rnd-int-sec}
 
 \ref{sub:input-pool}
+
+\textsf{random\_int\_secret}
 
 %\cite{lacharme2012linux}
 
