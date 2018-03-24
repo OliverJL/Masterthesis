@@ -72,45 +72,10 @@ submits a request, the input pool extracts data from its internal vector. Before
 %  It is not accessible by a consumer directly, but dedicated to develop the output pools during initialization phase and further to feed those if entropy is requested. The input pool is a conditioning pool and hence applies a SHA1 transformation on the extracted data before completing delivery to the requesting output pool . It tracks its internal state by an entropy counter which is incremented when entropy is added i.e. decreased when is extracted. 
 
 \subsection{Blocking- \& Unblocking Pool}\label{sub:blocking-pool}
-The blocking- \& unblocking pool are two entropy pools which are accessible to user mode components via the device interfaces \textsf{/dev/random} i.e. \textsf{/dev/urandom} having an internal length of 128 byte. Both pools are exclusively feed by the input pool (see \ref{sub:input-pool}). The fundamental difference is their behaviour in case of a poor internal state i.e. a low degree of entropy in the internal vector. Request made to \textsf{/dev/urandom} are responded immediately. Hence also a large amount of random numbers can be obtained by a user mode consumer \cite{lacharme2012linux}. Contrary \textsf{/dev/random} will deny delivery until 
+The blocking- \& unblocking pool are two entropy pools which are accessible to user mode components via the device interfaces \textsf{/dev/random} i.e. \textsf{/dev/urandom} having an internal length of 128 byte. Both pools are exclusively feed by the input pool (see \ref{sub:input-pool}). The fundamental difference is their behaviour in case of a poor internal state i.e. a low degree of entropy in the internal vector. Request made to \textsf{/dev/urandom} are responded immediately. Hence also a large amount of random numbers can be obtained by a user mode consumer \cite{lacharme2012linux}. Contrary, for this scenario, \textsf{/dev/random} will deny delivery until 
+the internal state achieved a healthy level of entropy. Thus this interface should not be used for 
+applications demanding a large amount of entropy or having time critical behaviour.
 
-
-
-
-consumer requests 
-
-
-
-
-entropy counter 
-128 byte
-
-
-
-
-\subsection{Random Int Secret Vector}\label{sub:rnd-int-sec}
-
-\ref{sub:input-pool}
-
-\textsf{random\_int\_secret}
-
-%\cite{lacharme2012linux}
-
-% provides max. 512 byte 
-
-
-
-%of entropy which is distributed to output pools if requested. 
- 
-%entropy pool
-%accumulated
-
-
-%512 byte \cite{kernlrandmc}
-%no interface 
-%sophisticated 
-%
-%\cite{lacharme2012linux}
 
 \subsection{Fast Pools}
 As mentioned in \ref{sec:lrng-arch}, fast pools are no full-featured entropy pools, but have the purpose of a pre-processing stage, dedicated to initialize the input pool. As illustrated in \ref{fig:linux-prng-arch}, fast pools are feed by noise delivered by interrupt event input. They are declared by a simple data structure, which is able to store 16 byte of gained random values beside few state information, as illustrated in \ref{fig:fast-pool}.\\
@@ -142,8 +107,18 @@ This data structure is instantiated and addressed per CPU, available to the oper
 	
  \end{itemize}
  
+ \subsection{Random Int Secret Vector}\label{sub:rnd-int-sec}
+ 
+ \ref{sub:input-pool}
+ 
+ \textsf{random\_int\_secret}
+ 
  
  \subsection{get\_random\_int/\_long}
+ 
+ 
+ 
+ 
  
  MD5-transform
  
