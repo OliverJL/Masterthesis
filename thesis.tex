@@ -8,7 +8,6 @@
 \usepackage{float}
 \usepackage{tabularx}
 \usepackage{listings}
-%\usepackage[utf8]{inputenc}
 \usetikzlibrary{positioning, arrows.meta, matrix, backgrounds, shapes.misc}
 \usetikzlibrary{calc,arrows}
 \usepackage{verbatim}
@@ -16,10 +15,15 @@
 %\pagestyle{empty}
 \usetikzlibrary{shapes.geometric}
 \usepackage{mathptmx}
-\usepackage[10pt]{moresize}\usepackage[acronym]{glossaries}
-
-
-
+\usepackage[10pt]{moresize}
+\usepackage{glossaries}
+\usepackage{longtable}
+\usepackage{tabularx,booktabs} 
+\usepackage{makecell}
+\usepackage{inputenc}
+%\usepackage[latin1]{inputenc}
+%\usepackage[ansinew]{inputenc}
+%\usepackage[T1]{fontenc}
 
 \makeatletter
 
@@ -184,7 +188,13 @@
 
 \include{glossary}
 
+\hypersetup{citecolor=black}
+\hypersetup{linkcolor=black}
+\hypersetup{urlcolor=black}
 
+%linkcolor	rot	Farbe der internen Verweise
+%citecolor	grün	Farbe der Zitate
+%urlcolor	magenta	Farbe der Links
 
 %\includeonly{chap-n}
 \begin{document}
@@ -257,6 +267,7 @@
 \include{app-A}
 % ... and so on until
 \include{app-n}
+\include{app-files}
 
 \backmatter
 % The bibliography comes after the appendices.
@@ -264,6 +275,11 @@
 \bibliographystyle{abbrv}
 \bibliography{references}
 \printglossary
+
+
+\pagebreak
+\chapter*{Erklärung der Urheberschaft}
+\input{authorship}
 
 \end{document}
 
