@@ -68,7 +68,7 @@ on the entropy of delivered numbers. In the following, these pools, as well as i
 
 \subsection{Input Pool}\label{sub:input-pool}
 The input pool is a central entropy pool dedicated to accumulate noise from the input sources described in \ref{sec:inp-src-lprng} of length 512 byte. If noise is delivered by interrupt events, it will have been pre-processed by the fast pool. Incoming entropy is integrated into the pool via a 
-an operation which mixes the new value to existing. This procedure is not cryptographic safe, but a compromise between performance and the requirement for a good non-cryptographic hash \cite{kernlrandmc}. With each addition, an entropy counter which tracks the pools internal state is incremented. If a sufficient level is reached, incoming values are passed directly to the output pools, depending on their state. 
+an operation which mixes the new value to existing. This procedure is not cryptographic safe, but a compromise between performance and the requirement for a good non-cryptographic hash \cite{kernlrandmc}. With each addition, an entropy counter which tracks the pools internal state is incremented. If a sufficient level is reached, incoming values are passed directly to the output pools, to avoid a waste of entropy.  
 
   It is not accessible by a consumer directly, but dedicated to develop the output pools during initialization phase and further to feed those if entropy is requested. The input pool is a conditioning pool and hence applies a SHA1 transformation on the extracted data before completing delivery to the requesting output pool \cite{kernlrandmc}. It tracks its internal state by an entropy counter which is incremented when entropy is added i.e. decreased when is extracted. 
 
