@@ -120,7 +120,15 @@ According to \ref{sec:lrng-arch}, fast pools are no full-featured entropy pools,
 % \textsf{random\_int\_secret}
  
 \subsection{get\_random\_int/\_long}\label{sub:get-rnd-int-long}
- The functions \textsf{get\_random\_int} and \textsf{get\_random\_long} represent interfaces for kernel consumers to access random numbers. In a standard Linux Kernel they are used primarily used by security components involved in the creation of new processes \cite{everspaugh2014not}. Stack canaries use the retrieved values directly to thwart stack-smashing attacks, while ASLR applies them randomize the memory layout of applications or libraries. \textsf{get\_random\_int/\_long} is a \gls{MD5} based and hence cryptographic safe conditioning pool. Compared to interfaces available for user mode consumers, there is significant difference in the way entropy is gained. While \textsf{/dev/random} and \textsf{/dev/urandom} are fed via the input pool, \textsf{get\_random\_int/\_long} create random numbers 'on the fly' with each call (see \ref{lst:get-random-long-c}). Thus, similar to \textsf{/dev/urandom} no internal state i.e. entropy quality is considered. A request to \textsf{get\_random\_int/\_long} 
+ The functions \textsf{get\_random\_int} and \textsf{get\_random\_long} represent interfaces for kernel consumers to access random numbers. In a standard Linux Kernel they are used primarily used by security components involved in the creation of new processes \cite{everspaugh2014not}. Stack canaries use the retrieved values directly to thwart stack-smashing attacks, while ASLR applies them randomize the memory layout of applications or libraries. \textsf{get\_random\_int/\_long} is a \gls{MD5} based and hence cryptographic safe conditioning pool. Compared to interfaces available for user mode consumers, there is significant difference in the way entropy is gained. While \textsf{/dev/random} and \textsf{/dev/urandom} are fed via the input pool, \textsf{get\_random\_int/\_long} create random numbers 'on the fly' with each call (see \ref{lst:get-random-long-c}). Thus, similar to \textsf{/dev/urandom} no internal state i.e. entropy quality is considered. A request to \textsf{get\_random\_int/\_long} generates a random number result as illustrated in \ref{fig:get-rnd-int-long}. If no TRNG is available, the LRNG processes the noise delivering sources \textsf{jiffies} and \textsf{cycles counter} introduced in \ref{itm:cycles-counter}. Beside a further parameter, the \textsf{Process Id} (\textsf{pid}) is involved. 
+ 
+ 32768
+ 
+ \cite{manproc}
+ \\
+
+ 
+ 
  
  {sub:rnd-int-sec}
  
