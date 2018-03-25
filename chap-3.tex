@@ -99,12 +99,12 @@ According to \ref{sec:lrng-arch}, fast pools are no full-featured entropy pools,
 %\ref{sec:int-rnd}
  
  \begin{itemize}
- 	\item \textbf{Cycles Counter [8 byte]} The cycles counter (see 'cycles' in  \ref{lst:add-interrupt-randomnes-c}) is a high-resolution counter of 8 byte length (on x64 plattforms), used to receive CPU timing information. It is also referred as Time Stamp Counter and is invokable via the \textsf{RDTSC} instruction \cite{guide2017intel}. Cycles Counter is managed by the CPU which monotonically increments the time-stamp counter model-specific register (MSR) every clock cycle and resets it to 0 whenever	the processor is reseted. As mentioned in TODO the results retrieved by the calling \textsf{RDTSC} instruction may not be directly passed to the CPU but deliver emulation based results, depending on the Xen configuration setting \textsf{tsc\_mode} \cite{xentscmode} for a particular virtual machine. For the given Virtual Environment Setup of this thesis, per default, the cycles counter value has been provided by the underlying CPU to both virtual machines.
+ 	\item \textbf{Cycles Counter [8 byte]}\label{itm:cycles-counter} The cycles counter (see 'cycles' in  \ref{lst:add-interrupt-randomnes-c}) is a high-resolution counter of 8 byte length (on x64 plattforms), used to receive CPU timing information. It is also referred as Time Stamp Counter and is invokable via the \textsf{RDTSC} instruction \cite{guide2017intel}. Cycles Counter is managed by the CPU which monotonically increments the time-stamp counter model-specific register (MSR) every clock cycle and resets it to 0 whenever	the processor is reseted. As mentioned in TODO the results retrieved by the calling \textsf{RDTSC} instruction may not be directly passed to the CPU but deliver emulation based results, depending on the Xen configuration setting \textsf{tsc\_mode} \cite{xentscmode} for a particular virtual machine. For the given Virtual Environment Setup of this thesis, per default, the cycles counter value has been provided by the underlying CPU to both virtual machines.
  	
-	\item \textbf{Instruction Pointer [8 byte]} On x64 platforms, the instruction pointer (see 'ip' in \ref{lst:add-interrupt-randomnes-c}) holds the 64-bit offset of the next
+	\item \textbf{Instruction Pointer [8 byte]}\label{itm:ip} On x64 platforms, the instruction pointer (see 'ip' in \ref{lst:add-interrupt-randomnes-c}) holds the 64-bit offset of the next
 	instruction to be executed, which is kept in CPU-register \textsf{RIP}. This architecture also support a technique called \textsf{RIP}-relative addressing. Using this technique, the effective address is determined by adding a displacement to the \textsf{RIP} of the next instruction \cite{guide2017intel}.
 	
-	\item \textbf{Jiffies [8 byte]} Jiffies (see 'now' in \ref{lst:add-interrupt-randomnes-c}) represent a kernel-internal value which is incremented at each timer interrupt. This counter may be seen as some kind of software clock maintained by the kernel which measures time in jiffies \cite{timeandtimers}. The accuracy of jiffies is determined by the value of the kernel compile-time constant \textsf{HZ} TODO Ref. On system startup, jiffies is initialized to a default value.
+	\item \textbf{Jiffies [8 byte]}\label{itm:jiffies} Jiffies (see 'now' in \ref{lst:add-interrupt-randomnes-c}) represent a kernel-internal value which is incremented at each timer interrupt. This counter may be seen as some kind of software clock maintained by the kernel which measures time in jiffies \cite{timeandtimers}. The accuracy of jiffies is determined by the value of the kernel compile-time constant \textsf{HZ} TODO Ref. On system startup, jiffies is initialized to a default value.
 	
  \end{itemize}
  
@@ -120,7 +120,7 @@ According to \ref{sec:lrng-arch}, fast pools are no full-featured entropy pools,
 % \textsf{random\_int\_secret}
  
 \subsection{get\_random\_int/\_long}\label{sub:get-rnd-int-long}
- The functions \textsf{get\_random\_int} and \textsf{get\_random\_long} represent interfaces to access the entropy for kernel consumers.
+ The functions \textsf{get\_random\_int} and \textsf{get\_random\_long} represent interfaces to access the entropy for kernel consumers. \ref{itm:cycles-counter}
  
  -Unterscheid: no state 
  -MD Conditiong
