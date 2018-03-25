@@ -111,17 +111,16 @@ According to \ref{sec:lrng-arch}, fast pools are no full-featured entropy pools,
   Before integrating those noise values into the fast pool, several pre-processing transformations are applied. These simple algorithms combine shift- and xor-operations to a non cryptographic safe procedure able to complicate any conclusion on the original input. The current state of the fast pool is contributed as input itself in each pre-processing activity. A detailed overview of the operations integrating the noise delivered by the cycles counter, instruction pointer, irq code and jiffies is illustrated in \ref{fig:add-int-rnd}.
  
  \subsection{Random Int Secret Vector}\label{sub:rnd-int-sec}
- At an early stage of the boot process, a global, kernel internal vector of 64 byte length is initialized once by 
+ During the \textsf{late\_init} phase of the boot process, a global, kernel internal vector of 64 byte length is initialized to values taken from the non-blocking pool. This vector is kept constant over the entire runtime of the system and used for MD5 conditioning by the kernel consumer interfaces \textsf{get\_random\_int/\_long}. Thus, the level of entropy provided by this vector has a significant impact on quality of random numbers which will be delivered by to kernel consumers.
  
-\cite{yoo2017analysis}
+% late\_initcalls
+% {sub:get-rnd-int-long}
+%\cite{yoo2017analysis}
+% \ref{sub:input-pool}
+% \textsf{random\_int\_secret}
  
- \ref{sub:input-pool}
- 
- \textsf{random\_int\_secret}
- 
- 
- \subsection{get\_random\_int/\_long}\label{sub:get-rnd-int-long}
- 
+\subsection{get\_random\_int/\_long}\label{sub:get-rnd-int-long}
+ The functions \textsf{get\_random\_int} and \textsf{get\_random\_long} represent interfaces to access the entropy for kernel consumer.
  
  
  
