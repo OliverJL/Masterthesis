@@ -120,7 +120,9 @@ According to \ref{sec:lrng-arch}, fast pools are no full-featured entropy pools,
 % \textsf{random\_int\_secret}
  
 \subsection{get\_random\_int/\_long}\label{sub:get-rnd-int-long}
- The functions \textsf{get\_random\_int} and \textsf{get\_random\_long} represent interfaces for kernel consumers to access random numbers. In a standard Linux Kernel they are used primarily used by security components involved in the creation of new processes \cite{everspaugh2014not}. Stack canaries use the retrieved values directly to thwart stack-smashing attacks, while ASLR applies them randomize the memory layout of applications or libraries. \textsf{get\_random\_int/\_long} is a \gls{MD5} based and hence cryptographic safe conditioning pool. Compared to interfaces available for user mode consumers, there is significant difference in the way entropy is gained. While \textsf{/dev/random} and \textsf{/dev/urandom} are fed 
+ The functions \textsf{get\_random\_int} and \textsf{get\_random\_long} represent interfaces for kernel consumers to access random numbers. In a standard Linux Kernel they are used primarily used by security components involved in the creation of new processes \cite{everspaugh2014not}. Stack canaries use the retrieved values directly to thwart stack-smashing attacks, while ASLR applies them randomize the memory layout of applications or libraries. \textsf{get\_random\_int/\_long} is a \gls{MD5} based and hence cryptographic safe conditioning pool. Compared to interfaces available for user mode consumers, there is significant difference in the way entropy is gained. While \textsf{/dev/random} and \textsf{/dev/urandom} are fed via the input pool, \textsf{get\_random\_int/\_long} create random numbers 'on the fly' with each call (see \ref{lst:get-random-long-c}). Thus, similar to \textsf{/dev/urandom} no internal state i.e. entropy quality is considered. A request to \textsf{get\_random\_int/\_long} 
+ 
+ {sub:rnd-int-sec}
  
    
  
@@ -300,10 +302,10 @@ abmildern.
 
 
 
-\section{Conclusion}
-The final section of the chapter gives an overview of the important results
-of this chapter. This implies that the introductory chapter and the
-concluding chapter don't need a conclusion.
+%\section{Conclusion}
+%The final section of the chapter gives an overview of the important results
+%of this chapter. This implies that the introductory chapter and the
+%concluding chapter don't need a conclusion.
 
 %\lipsum[66]
 
