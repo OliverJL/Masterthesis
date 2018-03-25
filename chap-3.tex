@@ -93,8 +93,8 @@ According to \ref{sec:lrng-arch}, fast pools are no full-featured entropy pools,
  };
  \end{lstlisting}
  
- For this thesis, the number of available CPUs per virtual machine has been configured to one, hence the terminology will refer to a single instance in the following. By concept, in Linux Kernel 4.4, interrupt randomness is the sole source of random noise available to rise up the fast pool, which is a contributor to the input entropy pool. Observations of the experimental setup for this thesis concluded that beside interrupt events any contribution has occurred by input- or disk events. In other words, the development of the fast pool, depends completely on the input and pre-processing conducted by \textsf{add\_interrupt\_randomness} and hence will be described more briefly.\\
- For each call of function \textsf{add\_interrupt\_randomness}, several parameters are processed to transform the 16 byte vector of the fast pool. Thereby just one of two parameters is directly passed by the caller. Surprisingly, parameter \textsf{irq\_code} (explained in \ref{sec:int-rnd}), is processed, while the second, \textsf{irq\_flags} is not used at all, for unknown reasons (see \ref{lst:add-interrupt-randomnes-c}). Beside this input, three more runtime values are applied on pre-proccessing procedures within the function. Some of these are also involved in the conditioning procedure of entropy interfaces for kernel consumers (see \ref{sub:get-rnd-int-long}). In the following these three noise sources are explained to give a basic understanding regarding the entropy they are able to provide.
+ For this thesis, the number of available CPUs per virtual machine has been configured to one, hence the terminology will refer to a single instance in the following. By concept, in Linux Kernel 4.4, interrupt randomness is the sole source of random noise available to rise up the fast pool, which is a contributor to the input pool. Observations of the experimental setup for this thesis concluded that beside interrupt events any contribution has occurred by input- or disk events. In other words, the development of the fast pool depends completely on the input and pre-processing conducted by \textsf{add\_interrupt\_randomness} and hence will be described more briefly.\\
+ For each call of function \textsf{add\_interrupt\_randomness}, several parameters are processed to transform the 16 byte vector of the fast pool. Thereby just two parameters are directly passed by the caller. Surprisingly, parameter \textsf{irq\_code} (explained in \ref{sec:int-rnd}), is processed, while the second, \textsf{irq\_flags} is not used at all, for unknown reasons (see \ref{lst:add-interrupt-randomnes-c}). Beside this input, three more runtime values are applied on pre-proccessing procedures within the function. Some of these are also involved in the conditioning procedure of entropy interfaces for kernel consumers (see \ref{sub:get-rnd-int-long}). In the following these three noise sources are explained to give a basic understanding regarding the entropy they are able to provide.
  
 %\ref{sec:int-rnd}
  
@@ -107,6 +107,10 @@ According to \ref{sec:lrng-arch}, fast pools are no full-featured entropy pools,
 	\item \textbf{Jiffies [8 byte]} Jiffies (see 'now' in \ref{lst:add-interrupt-randomnes-c}) represent a kernel-internal value which is incremented at each timer interrupt. This counter may be seen as some kind of software clock maintained by the kernel which measures time in jiffies \cite{timeandtimers}. The accuracy of jiffies is determined by the value of the kernel compile-time constant \textsf{HZ} TODO Ref. On system startup, jiffies is initialized to a default value.
 	
  \end{itemize}
+ 
+  Before integrating those noise values into the fast pool, several pre-processing transformations are applied. These procedures 
+ 
+ A detailed 
  
  \ref{fig:add-int-rnd}
  
