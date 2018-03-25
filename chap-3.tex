@@ -108,14 +108,12 @@ According to \ref{sec:lrng-arch}, fast pools are no full-featured entropy pools,
 	
  \end{itemize}
  
-  Before integrating those noise values into the fast pool, several pre-processing transformations are applied. These simple algorithms combine shift- and xor-operations to a non cryptographic safe procedure 
-  
- 
- A detailed 
- 
- \ref{fig:add-int-rnd}
+  Before integrating those noise values into the fast pool, several pre-processing transformations are applied. These simple algorithms combine shift- and xor-operations to a non cryptographic safe procedure able to complicate any conclusion on the original input. The current state of the fast pool is contributed as input itself in each pre-processing activity. A detailed overview of the operations integrating the noise delivered by the cycles counter, instruction pointer, irq code and jiffies is illustrated in \ref{fig:add-int-rnd}.
  
  \subsection{Random Int Secret Vector}\label{sub:rnd-int-sec}
+ 
+ 
+\cite{yoo2017analysis}
  
  \ref{sub:input-pool}
  
