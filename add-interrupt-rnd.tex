@@ -1,0 +1,305 @@
+
+
+%\makeatother
+
+
+	
+	\begin{tikzpicture}[scale=0.8, every node/.style={scale=0.8},font=\sffamily,>=triangle 45]
+	\tikzstyle{sum} = [draw, shape=circle, node distance=1.5cm, line width=1pt, minimum width=1.25em]	
+	%\Huge
+	\def\N{7}  % Number of Flip-Flops minus one
+	\def\BW{1.8} % Byte Width
+
+	% colors
+	\definecolor{cjh}{HTML}{CFD2D4}
+	\definecolor{cjl}{HTML}{DD6262}
+	\definecolor{cch}{HTML}{F7A100}
+	\definecolor{ccl}{HTML}{0288CF}
+	\definecolor{cep32}{HTML}{64FE2E}
+	\definecolor{cep1}{HTML}{1893D4}
+	\definecolor{cep0}{HTML}{A9FD2A}
+	\definecolor{cirq}{HTML}{DB15E5}
+	\definecolor{cip}{HTML}{FFF200}
+
+	% jiffies
+	\node [shape=dff,fill=cjh] (jiff7) at ($ 1.0*(0,0) $) {FF};
+	\node [shape=dff,fill=cjh] (jiff6) at ($ 1.0*(1,0) $) {EE};
+	\node [shape=dff,fill=cjh] (jiff5) at ($ 1.0*(2,0) $) {DD};
+	\node [shape=dff,fill=cjh] (jiff4) at ($ 1.0*(3,0) $) {CC};			
+	\node [shape=dff,fill=cjl] (jiff3) at ($ 1.0*(4,0) $) {BB};
+	\node [shape=dff,fill=cjl] (jiff2) at ($ 1.0*(5,0) $) {AA};
+	\node [shape=dff,fill=cjl] (jiff1) at ($ 1.0*(6,0) $) {99};
+	\node [shape=dff,fill=cjl] (jiff0) at ($ 1.0*(7,0) $) {88};	
+	\node[above=1mm of jiff3] (ljiffies) {\large $in:$jiffies (8 byte)};		
+
+	% jiffies low XOR c_high - XOR nodes
+	\node [sum, below=4.0cm of jiff0, draw] (xjlch0) {};
+	\node [sum, below=4.5cm of jiff1, draw] (xjlch1) {};	
+	\node [sum, below=5.0cm of jiff2, draw] (xjlch2) {};
+	\node [sum, below=5.5cm of jiff3, draw] (xjlch3) {};	
+	\node [rotate=45] at (xjlch0) (plus) {{\footnotesize$+$}};
+	\node [rotate=45] at (xjlch1) (plus) {{\footnotesize$+$}};	
+	\node [rotate=45] at (xjlch2) (plus) {{\footnotesize$+$}};
+	\node [rotate=45] at (xjlch3) (plus) {{\footnotesize$+$}};
+		
+	% cycles
+	\node [shape=dff,fill=cch] (cycl7) at ($ 1.0*(10,0) $) {FF};
+	\node [shape=dff,fill=cch] (cycl6) at ($ 1.0*(11,0) $) {EE};
+	\node [shape=dff,fill=cch] (cycl5) at ($ 1.0*(12,0) $) {DD};
+	\node [shape=dff,fill=cch] (cycl4) at ($ 1.0*(13,0) $) {CC};			
+	\node [shape=dff,fill=ccl] (cycl3) at ($ 1.0*(14,0) $) {BB};
+	\node [shape=dff,fill=ccl] (cycl2) at ($ 1.0*(15,0) $) {AA};
+	\node [shape=dff,fill=ccl] (cycl1) at ($ 1.0*(16,0) $) {99};
+	\node [shape=dff,fill=ccl] (cycl0) at ($ 1.0*(17,0) $) {88};
+	\node[above=1mm of cycl3] (lcycles) {\large $in:$cycles counter (8 byte)};	
+
+	%c_high
+	\node [shape=dff,fill=cch, below=2cm of jiff7, draw] (chigh3) {FF};
+	\node [shape=dff,fill=cch, below=2cm of jiff6, draw] (chigh2) {EE};
+	\node [shape=dff,fill=cch, below=2cm of jiff5, draw] (chigh1) {DD};
+	\node [shape=dff,fill=cch, below=2cm of jiff4, draw] (chigh0) {CC};
+	\node[above=3mm of chigh2] (lchigh) {\large c\_high (4 byte)};			
+
+	%j_high
+	\node [shape=dff,fill=cjh, below=2cm of cycl7, draw] (jiffh3) {FF};
+	\node [shape=dff,fill=cjh, below=2cm of cycl6, draw] (jiffh2) {EE};
+	\node [shape=dff,fill=cjh, below=2cm of cycl5, draw] (jiffh1) {DD};
+	\node [shape=dff,fill=cjh, below=2cm of cycl4, draw] (jiffh0) {CC};
+	\node[above=3mm of jiffh1] (ljhigh) {\large j\_high (4 byte)};			
+
+	% jiffies high XOR irq - XOR nodes
+	\node [sum, below=1.0cm of jiffh3, draw] (xjhi3) {};	
+	\node [rotate=45] at (xjhi3) (plus) {{\footnotesize$+$}};
+	\node [sum, below=1.0cm of jiffh2, draw] (xjhi2) {};	
+	\node [rotate=45] at (xjhi2) (plus) {{\footnotesize$+$}};
+	\node [sum, below=1.0cm of jiffh1, draw] (xjhi1) {};	
+	\node [rotate=45] at (xjhi1) (plus) {{\footnotesize$+$}};
+	\node [sum, below=1.0cm of jiffh0, draw] (xjhi0) {};	
+	\node [rotate=45] at (xjhi0) (plus) {{\footnotesize$+$}};
+			
+	%irq
+	\node [shape=dff,fill=cirq, below=1cm of xjhi3, draw] (irq3) {FF};
+	\node [shape=dff,fill=cirq, below=1cm of xjhi2, draw] (irq2) {EE};
+	\node [shape=dff,fill=cirq, below=1cm of xjhi1, draw] (irq1) {DD};
+	\node [shape=dff,fill=cirq, below=1cm of xjhi0, draw] (irq0) {CC};
+	\node[left=0mm of irq3] (lirq) {\shortstack{\large $in:$irq\\(4 byte)}};	
+	
+	% cycles low XOR irq - XOR nodes
+	\node [sum, below=8.5cm of cycl3, draw] (xcli3) {};
+	\node [sum, below=8.0cm of cycl2, draw] (xcli2) {};	
+	\node [sum, below=7.5cm of cycl1, draw] (xcli1) {};		
+	\node [sum, below=7.0cm of cycl0, draw] (xcli0) {};			
+	\node [rotate=45] at (xcli3) (plus) {{\footnotesize$+$}};
+	\node [rotate=45] at (xcli2) (plus) {{\footnotesize$+$}};	
+	\node [rotate=45] at (xcli1) (plus) {{\footnotesize$+$}};
+	\node [rotate=45] at (xcli0) (plus) {{\footnotesize$+$}};	
+	
+	% entropy pool	
+	\node [shape=dff,fill=cep32, below=11cm of jiff5, draw] (entp15) {CC};		
+	\node [shape=dff,fill=cep32, below=11cm of jiff4, draw] (entp14) {CC};
+	\node [shape=dff,fill=cep32, below=11cm of jiff3, draw] (entp13) {CC};
+	\node [shape=dff,fill=cep32, below=11cm of jiff2, draw] (entp12) {CC};
+	\node [shape=dff,fill=cep32, below=11cm of jiff1, draw] (entp11) {CC};
+	\node [shape=dff,fill=cep32, below=11cm of jiff0, draw] (entp10) {CC};
+	\node [shape=dff,fill=cep32, right=0cm of entp10, draw] (entp9) {CC};	
+	\node [shape=dff,fill=cep32, right=0cm of entp9, draw] (entp8) {CC};
+	\node [shape=dff,fill=cep1, right=0cm of entp8, draw] (entp7) {CC};
+	\node [shape=dff,fill=cep1, below=11cm of cycl6, draw] (entp6) {XX};	
+	\node [shape=dff,fill=cep1, below=11cm of cycl5, draw] (entp5) {XX};	
+	\node [shape=dff,fill=cep1, below=11cm of cycl4, draw] (entp4) {XX};	
+	\node [shape=dff,fill=cep0, below=11cm of cycl3, draw] (entp3) {XX};	
+	\node [shape=dff,fill=cep0, below=11cm of cycl2, draw] (entp2) {XX};	
+	\node [shape=dff,fill=cep0, below=11cm of cycl1, draw] (entp1) {XX};	
+	\node [shape=dff,fill=cep0, below=11cm of cycl0, draw] (entp0) {XX};	
+	\node[above=1mm of entp12] (lentp) {\large $in/out:$fast pool (16 byte)};	
+
+	%% XOR entp
+	% ch / jl 
+	\node [sum, below=2.5cm of xjlch3, draw] (xentp7) {};	
+	\node [rotate=45] at (xentp7) (plus) {{\footnotesize$+$}};
+	\node [sum, below=2.5cm of xjlch2, draw] (xentp6) {};	
+	\node [rotate=45] at (xentp6) (plus) {{\footnotesize$+$}};
+	\node [sum, below=2.5cm of xjlch1, draw] (xentp5) {};	
+	\node [rotate=45] at (xentp5) (plus) {{\footnotesize$+$}};
+	\node [sum, below=2.5cm of xjlch0, draw] (xentp4) {};	
+	\node [rotate=45] at (xentp4) (plus) {{\footnotesize$+$}};									
+	% irq/cycl 
+	\node [sum, above=1.0cm of entp3, draw] (xentp3) {};	
+	\node [rotate=45] at (xentp3) (plus) {{\footnotesize$+$}};
+	\node [sum, above=1.0cm of entp2, draw] (xentp2) {};	
+	\node [rotate=45] at (xentp2) (plus) {{\footnotesize$+$}};
+	\node [sum, above=1.0cm of entp1, draw] (xentp1) {};	
+	\node [rotate=45] at (xentp1) (plus) {{\footnotesize$+$}};
+	\node [sum, above=1.0cm of entp0, draw] (xentp0) {};	
+	\node [rotate=45] at (xentp0) (plus) {{\footnotesize$+$}};		
+	% ip
+	\node [sum, below=1.0cm of entp15, draw] (xentp15) {};	
+	\node [rotate=45] at (xentp15) (plus) {{\footnotesize$+$}};
+	\node [sum, below=1.0cm of entp14, draw] (xentp14) {};	
+	\node [rotate=45] at (xentp14) (plus) {{\footnotesize$+$}};
+	\node [sum, below=1.0cm of entp13, draw] (xentp13) {};	
+	\node [rotate=45] at (xentp13) (plus) {{\footnotesize$+$}};
+	\node [sum, below=1.0cm of entp12, draw] (xentp12) {};	
+	\node [rotate=45] at (xentp12) (plus) {{\footnotesize$+$}};		
+	\node [sum, below=1.0cm of entp11, draw] (xentp11) {};	
+	\node [rotate=45] at (xentp11) (plus) {{\footnotesize$+$}};
+	\node [sum, below=1.0cm of entp10, draw] (xentp10) {};	
+	\node [rotate=45] at (xentp10) (plus) {{\footnotesize$+$}};
+	\node [sum, below=1.0cm of entp9, draw] (xentp9) {};	
+	\node [rotate=45] at (xentp9) (plus) {{\footnotesize$+$}};
+	\node [sum, below=1.0cm of entp8, draw] (xentp8) {};	
+	\node [rotate=45] at (xentp8) (plus) {{\footnotesize$+$}};	
+
+	\node [shape=dff,fill=cip, below=1cm of xentp15, draw] (ip7) {XX};	
+	\node [shape=dff,fill=cip, below=1cm of xentp14, draw] (ip6) {XX};
+	\node [shape=dff,fill=cip, below=1cm of xentp13, draw] (ip5) {XX};
+	\node [shape=dff,fill=cip, below=1cm of xentp12, draw] (ip4) {XX};
+	\node [shape=dff,fill=cip, below=1cm of xentp11, draw] (ip3) {XX};
+	\node [shape=dff,fill=cip, below=1cm of xentp10, draw] (ip2) {XX};
+	\node [shape=dff,fill=cip, below=1cm of xentp9, draw] (ip1) {XX};
+	\node [shape=dff,fill=cip, below=1cm of xentp8, draw] (ip0) {XX};
+	\node[below=1mm of ip4] (lip) {\large $in:$ip (8 byte)};	
+
+	%%%%%% LINES >>
+	
+	% jiffies  -> c_low - lines
+	\draw [->] (jiff3.south) -- (xjlch3.north);
+	\draw [->] (jiff2.south) -- (xjlch2.north);	
+	\draw [->] (jiff1.south) -- (xjlch1.north);		
+	\draw [->] (jiff0.south) -- (xjlch0.north);		
+
+	% c_high -> xjlch
+	\draw [->] (chigh3.south)|- (xjlch3.west);
+	\draw [->] (chigh2.south)|- (xjlch2.west);
+	\draw [->] (chigh1.south)|- (xjlch1.west);
+	\draw [->] (chigh0.south)|- (xjlch0.west);			
+
+	% jiffies high -> j_high
+	\draw [->] (jiff7.south) -- (jiffh3.north);
+	\draw [->] (jiff6.south) -- (jiffh2.north);	
+	\draw [->] (jiff5.south) -- (jiffh1.north);		
+	\draw [->] (jiff4.south) -- (jiffh0.north);		
+
+	% cycles_high -> c_high
+	\draw [->] (cycl7.south) -- (chigh3.north);
+	\draw [->] (cycl6.south) -- (chigh2.north);	
+	\draw [->] (cycl5.south) -- (chigh1.north);		
+	\draw [->] (cycl4.south) -- (chigh0.north);		
+	
+	% cycles_low -> c_high
+	\draw [->] (cycl3.south) -- (xcli3.north);
+	\draw [->] (cycl2.south) -- (xcli2.north);	
+	\draw [->] (cycl1.south) -- (xcli1.north);		
+	\draw [->] (cycl0.south) -- (xcli0.north);	
+
+	% jiffies high -> j_high
+	\draw [->] (jiffh3.south) -- (xjhi3.north);
+	\draw [->] (jiffh2.south) -- (xjhi2.north);	
+	\draw [->] (jiffh1.south) -- (xjhi1.north);		
+	\draw [->] (jiffh0.south) -- (xjhi0.north);
+		
+	% xjhi -> irq
+	\draw [<->] (xjhi3.south) -- (irq3.north);
+	\draw [<->] (xjhi2.south) -- (irq2.north);	
+	\draw [<->] (xjhi1.south) -- (irq1.north);		
+	\draw [<->] (xjhi0.south) -- (irq0.north);
+	
+	% xjlch -> xentp
+	\draw [->] (xjlch3.south) -- (xentp7.north);
+	\draw [->] (xjlch2.south) -- (xentp6.north);	
+	\draw [->] (xjlch1.south) -- (xentp5.north);		
+	\draw [->] (xjlch0.south) -- (xentp4.north);
+
+	% irq -> xcli
+	\draw [->] (irq3.south) |- (xcli3.west);
+	\draw [->] (irq2.south) |- (xcli2.west);	
+	\draw [->] (irq1.south) |- (xcli1.west);		
+	\draw [->] (irq0.south) |- (xcli0.west);
+
+	% xentp -> entp
+	\draw [<->] (xentp7.south) |- ($(entp7.north)!1/2!(entp7.north |- xentp7.south)$) coordinate (C1) -| (entp7.north);			
+	\draw [<->] (xentp6.south) |- ($(entp6.north)!1/2!(entp6.north |- xentp6.south)$) coordinate (C2) -| (entp6.north);		
+	\draw [<->] (xentp5.south) |- ($(entp5.north)!1/2!(entp5.north |- xentp5.south)$) coordinate (C3) -| (entp5.north);				
+	\draw [<->] (xentp4.south) |- ($(entp4.north)!1/2!(entp4.north |- xentp4.south)$) coordinate (C4) -| (entp4.north);	
+	
+	% xcli -> xentp
+	\draw [->] (xcli3.south) -- (xentp3.north);
+	\draw [->] (xcli2.south) -- (xentp2.north);	
+	\draw [->] (xcli1.south) -- (xentp1.north);		
+	\draw [->] (xcli0.south) -- (xentp0.north);	
+
+	% xcli -> xentp
+	\draw [<->] (xentp3.south) -- (entp3.north);
+	\draw [<->] (xentp2.south) -- (entp2.north);	
+	\draw [<->] (xentp1.south) -- (entp1.north);		
+	\draw [<->] (xentp0.south) -- (entp0.north);
+	
+	% xentp -> entp
+	\draw [<->] (xentp15.north) -- (entp15.south);
+	\draw [<->] (xentp14.north) -- (entp14.south);
+	\draw [<->] (xentp13.north) -- (entp13.south);
+	\draw [<->] (xentp12.north) -- (entp12.south);
+	\draw [<->] (xentp11.north) -- (entp11.south);
+	\draw [<->] (xentp10.north) -- (entp10.south);
+	\draw [<->] (xentp9.north) -- (entp9.south);
+	\draw [<->] (xentp8.north) -- (entp8.south);
+	
+	% ip -> xentp
+	\draw [->] (ip7.north) -- (xentp15.south);
+	\draw [->] (ip6.north) -- (xentp14.south);
+	\draw [->] (ip5.north) -- (xentp13.south);
+	\draw [->] (ip4.north) -- (xentp12.south);
+	\draw [->] (ip3.north) -- (xentp11.south);
+	\draw [->] (ip2.north) -- (xentp10.south);
+	\draw [->] (ip1.north) -- (xentp9.south);
+	\draw [->] (ip0.north) -- (xentp8.south);
+	
+	%%%%%% Legende 
+\begin{scope}
+	\node [shape=dff,fill=cip, below=10mm of entp6, draw] (f8) {};
+	\node [sum, right=5mm of f8, draw] (xf8) {};	
+	\node [rotate=45] at (xf8) (plus) {{\footnotesize$+$}};	
+	\node [shape=dff,fill=cirq, right=7mm of xf8, draw] (c3) {};
+	\draw [->] (f8.east) -- (xf8.west);
+	\draw [<->] (xf8.east) -- (c3.west);
+	\node[black, below=3mm of xf8, align=left] (lf81) {XOR-Operation applied on};	
+	\node [shape=dff,fill=cip, right=0mm of lf81, draw] (rf8) {};
+	\node[black, right=0mm of rf8, align=left] (lf82) {and};	
+	
+	\node [shape=dff,fill=cirq, below=22mm of entp6, draw] (yf8) {};
+	\node[black, right=0mm of yf8, align=left] (lf83) {, result stored in};
+	\node [shape=dff,fill=cirq, right=0mm of lf83, draw] (zf8) {};	
+	\draw[black] ([xshift=-5mm, yshift=3mm ]f8.north west) rectangle ([xshift=23mm, yshift=-3mm]zf8.south east);	
+\end{scope}	
+
+\begin{scope}
+\large
+%\node [draw, align=center] {Text\\und Text};
+\node[black, below=10mm of ip7, align=left] (lghdlbl) {\textbf{Label}};	
+\node[black, right=28mm of lghdlbl.west, anchor=west, align=left] (lghddirr) {\textbf{Direction}};
+\node[black, right=18mm of  lghddirr.west, anchor=west, align=left] (lghddesc) {\textbf{Description}};
+
+%\node[black, below=10mm of ip4, align=left] (lgjif) {\textbf{cycles counter}};	
+\node[black, below=4mm of lghdlbl.west, anchor=west, align=left] (lgcc) {cycles counter};	
+\node[black, below=4mm of lgcc.west, anchor=west] (lgjif) {jiffies};	
+\node[black, below=4mm of lgjif.west, anchor=west] (lgirq) {irq};	
+\node[black, below=4mm of lgirq.west, anchor=west] (lgip) {ip};
+\node[black, below=4mm of lgip.west, anchor=west] (lgentp) {fast pool};
+
+\node[black, right=33mm of lgcc.west, align=left] (lgdircc) {in};	
+\node[black, right=33mm of lgjif.west, align=left] (lgdirjif) {in};	
+\node[black, right=33mm of lgirq.west, align=left] (lgdirirq) {in};
+\node[black, right=33mm of lgip.west, align=left] (lgdirip) {in};
+\node[black, right=30mm of lgentp.west, align=center] (lgdientp) {in/out};
+
+
+\node[black, right=24mm of lgcc, align=left] (lgcctxt) {Number of CPU-cycles since system startup.};	
+\node[black, below=4mm of lgcctxt.west, anchor=west] (lgjiftxt) {Number of ticks occured since system startup.};	
+\node[black, below=4mm of lgjiftxt.west, anchor=west] (lgirqtxt) {Interrupt Request Code};
+\node[black, below=4mm of lgirqtxt.west, anchor=west] (lgiptxt) {Instruction Pointer};
+\node[black, below=4mm of lgiptxt.west, anchor=west] (lgentptxt) {Pseudo entropy pool, initializing input- \& nonblocking Pool};
+
+\draw[black] ([xshift=-5mm, yshift=3mm ]lghdlbl.north west) rectangle ([xshift=5mm, yshift=-3mm]lgentptxt.south east);
+	
+\end{scope}
+\end{tikzpicture}
