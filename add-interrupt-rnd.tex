@@ -43,28 +43,28 @@
 	\node [rotate=45] at (xjlch3) (plus) {{\footnotesize$+$}};
 		
 	% cycles
-	\node [shape=dff,fill=cch] (cycl7) at ($ 1.0*(10,0) $) {FF};
-	\node [shape=dff,fill=cch] (cycl6) at ($ 1.0*(11,0) $) {EE};
-	\node [shape=dff,fill=cch] (cycl5) at ($ 1.0*(12,0) $) {DD};
-	\node [shape=dff,fill=cch] (cycl4) at ($ 1.0*(13,0) $) {CC};			
-	\node [shape=dff,fill=ccl] (cycl3) at ($ 1.0*(14,0) $) {BB};
-	\node [shape=dff,fill=ccl] (cycl2) at ($ 1.0*(15,0) $) {AA};
-	\node [shape=dff,fill=ccl] (cycl1) at ($ 1.0*(16,0) $) {99};
-	\node [shape=dff,fill=ccl] (cycl0) at ($ 1.0*(17,0) $) {88};
+	\node [shape=dff,fill=cch] (cycl7) at ($ 1.0*(10,0) $) {97};
+	\node [shape=dff,fill=cch] (cycl6) at ($ 1.0*(11,0) $) {1C};
+	\node [shape=dff,fill=cch] (cycl5) at ($ 1.0*(12,0) $) {38};
+	\node [shape=dff,fill=cch] (cycl4) at ($ 1.0*(13,0) $) {5F};			
+	\node [shape=dff,fill=ccl] (cycl3) at ($ 1.0*(14,0) $) {BC};
+	\node [shape=dff,fill=ccl] (cycl2) at ($ 1.0*(15,0) $) {A0};
+	\node [shape=dff,fill=ccl] (cycl1) at ($ 1.0*(16,0) $) {91};
+	\node [shape=dff,fill=ccl] (cycl0) at ($ 1.0*(17,0) $) {61};
 	\node[above=1mm of cycl3] (lcycles) {\large $in:$cycles counter (8 byte)};	
 
 	%c_high
-	\node [shape=dff,fill=cch, below=2cm of jiff7, draw] (chigh3) {FF};
-	\node [shape=dff,fill=cch, below=2cm of jiff6, draw] (chigh2) {EE};
-	\node [shape=dff,fill=cch, below=2cm of jiff5, draw] (chigh1) {DD};
+	\node [shape=dff,fill=cch, below=2cm of jiff7, draw] (chigh3) {03};
+	\node [shape=dff,fill=cch, below=2cm of jiff6, draw] (chigh2) {F7};
+	\node [shape=dff,fill=cch, below=2cm of jiff5, draw] (chigh1) {E4};
 	\node [shape=dff,fill=cch, below=2cm of jiff4, draw] (chigh0) {CC};
 	\node[above=3mm of chigh2] (lchigh) {\large c\_high (4 byte)};			
 
 	%j_high
-	\node [shape=dff,fill=cjh, below=2cm of cycl7, draw] (jiffh3) {FF};
-	\node [shape=dff,fill=cjh, below=2cm of cycl6, draw] (jiffh2) {EE};
-	\node [shape=dff,fill=cjh, below=2cm of cycl5, draw] (jiffh1) {DD};
-	\node [shape=dff,fill=cjh, below=2cm of cycl4, draw] (jiffh0) {CC};
+	\node [shape=dff,fill=cjh, below=2cm of cycl7, draw] (jiffh3) {97};
+	\node [shape=dff,fill=cjh, below=2cm of cycl6, draw] (jiffh2) {1C};
+	\node [shape=dff,fill=cjh, below=2cm of cycl5, draw] (jiffh1) {38};
+	\node [shape=dff,fill=cjh, below=2cm of cycl4, draw] (jiffh0) {5F};
 	\node[above=3mm of jiffh1] (ljhigh) {\large j\_high (4 byte)};			
 
 	% jiffies high XOR irq - XOR nodes
