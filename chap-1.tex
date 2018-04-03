@@ -1,38 +1,38 @@
 \chapter{The First Chapter}
 \label{cha:1}
-The following section will deliver the relevant information regarding memory management an ASLR.
-
-% EVP (Enhanced Virus Protection) – available on
-all 64-bit AMD CPUs (starting in 2003)
-\cite{guide2017amd64}
-
-% XD Bit (Execute Disable Bit) – available with
-Pentium 4 "Prescott" core (starting in 2004)1
-\cite{guide2017intel}
-If the execute-disable bit of a memory page is set, that page can be used only as data. An attempt to execute code
-from a memory page with the execute-disable bit set causes a page-fault exception.
-
-\section{Memory Management}
-Modern Operation System implement an abstraction layer.
-
-Load elf: sections -> segments.
--------------------------------------------
-Virtual Address space (linearer Adressraum)
---------------------------------------------
-Linear Address Space
-From a user perspective, the address space is a at linear address space but pre-
-dictably, the kernel's perspective is very different. The address space is split into
-two parts, the userspace part which potentially changes with each full context switch
-and the kernel address space which remains constant. The location of the split is
-determined by the value of PAGE\_OFFSET which is at 0xC0000000 on the x86. This
-means that 3GiB is available for the process to use while the remaining 1GiB is
-always mapped by the kernel. The linear virtual address space as the kernel sees it
-is illustrated in Figure 4.1.
-\cite{gorman2004linuxvmmgr}
-
-
-Up Down Kernel/User space
---------------------------
+%The following section will deliver the relevant information regarding memory management an ASLR.
+%
+%% EVP (Enhanced Virus Protection) – available on
+%all 64-bit AMD CPUs (starting in 2003)
+%\cite{guide2017amd64}
+%
+%% XD Bit (Execute Disable Bit) – available with
+%Pentium 4 "Prescott" core (starting in 2004)1
+%\cite{guide2017intel}
+%If the execute-disable bit of a memory page is set, that page can be used only as data. An attempt to execute code
+%from a memory page with the execute-disable bit set causes a page-fault exception.
+%
+%\section{Memory Management}
+%Modern Operation System implement an abstraction layer.
+%
+%Load elf: sections -> segments.
+%-------------------------------------------
+%Virtual Address space (linearer Adressraum)
+%--------------------------------------------
+%Linear Address Space
+%From a user perspective, the address space is a at linear address space but pre-
+%dictably, the kernel's perspective is very different. The address space is split into
+%two parts, the userspace part which potentially changes with each full context switch
+%and the kernel address space which remains constant. The location of the split is
+%determined by the value of PAGE\_OFFSET which is at 0xC0000000 on the x86. This
+%means that 3GiB is available for the process to use while the remaining 1GiB is
+%always mapped by the kernel. The linear virtual address space as the kernel sees it
+%is illustrated in Figure 4.1.
+%\cite{gorman2004linuxvmmgr}
+%
+%
+%Up Down Kernel/User space
+%--------------------------
 
 
 
