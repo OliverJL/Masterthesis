@@ -1,0 +1,30 @@
+\chapter{NIST Special Publication 800-90B}
+\label{chap:NIST800-90B}
+\section{Generall}
+
+Topic of this thesis is an analysis of a Linux Random Number Generator's outcome delivering values to kernel consumers.
+
+
+In Information theory, for a set of information units, entropy in generall describes the level of disorder i.e. the unpredicatbility of each single unit's state at a given alphabet. Various formal defintions of entropy exist \cite{hagerty2012entropy}, while the definition of Shannon (see \ref{fig:form-entropy-shan}) is quite common for a binary alphabet. 
+
+\begin{figure}[H]
+	\begin{align*}
+	\displaystyle H(X) := \sum_{s \in {0,1}} I(p_s) p_s = \sum_{s \in {0,1}} -\lg_2 \frac{1}{p_s} p_s && \text{$p_s$ = P(X=s)}
+	\end{align*}
+	\caption{Formal definiton of entropy by Shannon for binary alphabet}
+	\label{fig:form-entropy-shan}
+\end{figure}
+According to Shannon, entropy is defined as the product of self-information \textit{I} multiplied by the expected value. For a binary alphabet, it can be measured in unit bits. 
+
+Estimating entropy is a difficult (if not impossible) problem, and we've been working to create
+usable guidance that will give conservative estimates on the amount of entropy in an entropy
+source.
+\cite{turan2015random}
+
+%-----------------------------------------------
+%NIST Special Publication (SP) 800-90 (a series consisting of three documents) is all about
+%generating random numbers for cryptography. In SP 800-90, this is a two-stage process: first, an
+%entropy source provides an impossible-to-guess seed. Then, a deterministic cryptographic
+%algorithm (called a DRBG--deterministic random bit generator--in SP 800-90) expands the seed
+%into a long sequence of values that may be safely used for keys, IVs, nonces, etc.
+%\cite{turan2015random}
