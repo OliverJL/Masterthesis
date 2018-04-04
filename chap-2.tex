@@ -8,14 +8,14 @@ According to a study of Gartner from 2016, the market for x86 server virtualizat
 \\~\\
 Xen or also Xen-Project is an open source project developed and maintained by the Linux Foundation
 . It originally was started at the University of Cambridge in 2003 and is supported by several 
-big players in the IT-industry like Citrix$^\text{\textregistered}$ or Intel$^\text{\textregistered}$ \cite{xenprjct}. One of the core requirement of operating system virtualization is the management and scheduling of available hardware for concurring virtual machines. This is accomplished by an abstraction layer located between the a virtual machine and the hardware itself. There are two types of common virtualization architectures:
+big players in the IT-industry like Citrix$^\text{\textregistered}$ or Intel$^\text{\textregistered}$ \cite{xenprjct}. One of the core requirement of operating system virtualization is the management and scheduling of available hardware for concurring virtual machines. This is accomplished by an abstraction layer located between virtual machines and the hardware itself, the so called hypervisor. There are two types of common virtualization architectures:
 
 \begin{itemize}
 	\item \textbf{Type I Hypervisor} The hypervisor is running directly on the provided hardware, hence also called Bare Metal Hypervisor/Virtualization. Xen is a Type I Hypervisor. 
 	\item \textbf{Type II Hypervisor} The abstraction layer of a is realized further up, between a virtual machine and a hosting operating system, directly installed on hardware, like VMWare, f.e. 
 \end{itemize}
 
-In the following an introduction to the architecture of an Xen based virtual environment will be given with a focus on components and configurations relevant for this thesis. 
+In the following an introduction to the architecture of a minimal Xen based virtual environment setup will be given with a focus on components and configurations relevant for this thesis. 
 
 \section{Xen Architecture}
 A Xen based virtual environment consist at least of the components mentioned in the following. In a productive i.e. commercial environment, those components are usually embedded into a framework like \gls{openstck}, providing a variety of features like identity-, access-, resource- and recovery-management. For this thesis, an experimental setup has been composed getting along with components of a virtual environment. A general overview of a basic Xen-Architecture is given in \ref{fig:xen-arch}.
