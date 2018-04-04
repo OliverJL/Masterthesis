@@ -47,10 +47,10 @@ Domain U is the Xen terminilogy for the actual virtual machine instances provide
 In generall, code beeing run by an operrating system is executed in \gls{usrmd} or \gls{knlmd}. During the runtime of an application or service, countless switches between both modes occure. An ftp server in general is running in usermode. However, to communicate a network-interface, the needs to use a device driver which is running in kernel mode. User and kernel mode vary in their priviliges regarding the access to hardware ressources. While code running in kernel mode is allowed to access any ressource at any time, priviliges within the boundaries of user mode are restricted to f.e. a certain memory range. The motivation for this concept is an increase in system stability and security since not every application can 'do whatever it wants'. The x86 plattform enables seperate privileged modes by a hardware implementation of a ring-concept \cite{guide2017intel}.\\
 A fundamental challenge in the developement of a hypervisor is how kernel mode operations of virtual guests (Dom U{\small \textit{s}}) are handled. The creation of a new domain (which requires \gls{root} priviliges) starts a process in user mode. Thus any kernel mode operation conducted by a Domain U would crash immediately. The Xen hypervisor offers several solutions which address this issue. Two important concepts will be presented in the following.  
 
-\subsection{Paravirtualization (PV)}
+\subsection{Paravirtualization (PV)}\label{sub:pv}
 On paravirtualized operating system, a call requiring higher priviliges is delegated via a special interface through Domain 0 to the hypervisor. This presupposes, that the Dom U kernel implements this interface i.e. uses corresponding device drivers. Depending on the operating system running as guest this approach is not an option. Compared to other virtualization modes the caused overhead comapred to an on hardware installed operating system is quite reasonable \cite{xenprjct}.
 
-\subsection{Hardware Virtual Machine (HVM)}
+\subsection{Hardware Virtual Machine (HVM)}\label{sub:hvm}
 This concept, also known as hardware-assisted virtualization, enables full virtualization. In other words, no further modification of the guest operating system is required. Thus, also proprietary systems, lacking implementations supporting PV, can be virtualized. In HVM mode, critical calls of the guest, requiring higher priviliges, are translated into instructions belonging to a special instruction set, dedicated to support hardware-assisted virtualization. Intel$^\text{\textregistered}$ labeled these Virtual Machine Extensions 'Intel VT-x'. Performance of virtual machines running in HVM mode depends on the applied guest operating system \cite{xenprjct}.  
 
 
@@ -59,7 +59,11 @@ The creation of a Domain U instance can be configured by a variety of parameters
 those are passed to the create command via configuration file. In the following the settings relevant for this thesis i.e. deviating from default will be described.
 
 \begin{itemize}
+	\item \textbf{builder} The domain build function
 	\item \textbf{nr\_cpus} twezrtwezr 
+	
+	builder='hvm'
+	
 	\item \textbf{Time Stamp Counter Mode [\textsf{tsc\_mode}]} The x86 "timestamp counter", or TSC, is a 64-bit register on each processor that increases monotonically \cite{xentscmode} (TSC is further explained in \ref{itm:cycles-counter}). The current value of the register can be retrieved via the \textsf{RDTSC} instruction. Depending on the required accuracy, \textsf{tsc\_mode} can be set to one of the following values:
 	\begin{itemize}
 		\item \textit{always emulate} All \textsf{RDTSC} instructions are emulated. Recommended for TSC-sensitive applications at the price of a performance overhead \cite{xentscmode}.
