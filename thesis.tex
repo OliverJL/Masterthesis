@@ -26,6 +26,10 @@
 %\usepackage[T1]{fontenc}
 \usepackage[T1]{fontenc}
 \usepackage{ragged2e}
+%\usepackage{cleveref}
+\usepackage{lettrine}
+\usepackage{mathtools}
+\usepackage{caption}
 
 
 \makeatletter
@@ -200,6 +204,10 @@
 %urlcolor	magenta	Farbe der Links
 
 %\includeonly{chap-n}
+
+\DeclareCaptionType{equ}[][]
+\captionsetup[equ]{labelformat=empty}
+
 \begin{document}
 
 
@@ -267,10 +275,13 @@
 % If you have appendices:
 \appendixpage*          % if wanted
 \appendix
+\include{app-evaluation}
 \include{app-A}
 % ... and so on until
-\include{app-n}
+%\include{app-n}
 \include{app-files}
+\include{app-add-interrupt-rnd}
+
 
 \backmatter
 % The bibliography comes after the appendices.
