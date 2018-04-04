@@ -18,50 +18,7 @@ big players in the IT-industry like Citrix$^\text{\textregistered}$ or Intel$^\t
 In the following an introduction to the architecture of an Xen based virtual environment will be given with a focus on components and configurations relevant for this thesis. 
 
 \section{Xen Architecture}
-A basic Xen based virtual environment consist at least of the following components. In a productive/commercial environment those components are usually embedded in framework like \gls{openstck} providing a variety of features like identity-, resource- backup-management etc. For this thesis, an experimental setup has been composed consisting of the basic components of a virtual environment.
-
-\subsection{Xen-Hypervisor}
-The Xen-Hypervisor is a lightweight software layer (<150,000 lines of code \cite{xenprjct}) managing any kind of requests/responses from or to system hardware.
-
-\subsection{Domain 0}
-\subsection{Domain U}
-
-
-
-
-\section{Virtualization Modes}
-Hardware support
-
-\section{Dom U Configuration}
-
-
-
-\ref{sec:xen-generall}
-
-
-
-Historie
-
-xenprjct
-
-- Open Source
-- Amazon
-- Verbreitung 
-- HVM / PVM
-- Architektur
-
-------------------------------------
-\cite{everspaugh2014not}
-Second,aVM  can be repeatedly executed froma ?xed image which is the default for amazon
-Dort auch: infos zu regualr boot/snapshot/masterimage
-------------------------------------
-
-Xen Domu KOnfiguration erwahnen, zB. Anzahl an CPUS
-
-However, while there are many reasons to utilize virtual machines, most of the standard security practices of operating systems are based on assumptions that hold true for physical machines, but don't translate immediately into the domain of virtualized machines \cite{kerrigan2012study}. A virtual hosted Linux server f.e. will never receive a user triggered event during the boot process, which is a critical period within the initialization of the internal Linux PRNG. Further, new virtual machine instances are usually provided by cloning a master image, instead of running an installation setup, leading to a higher degree of homogeneity among virtual machine instances. While provisioning time and maintenance benefit from this practice, it may be regarded critical. If this approach f.e. is applied as the standard process of a cloud hosting provider, it`s customers may be delivered a vulnerable system from the outset, since one customer might gain insights regarding another customers system, just by analyzing his own. These insights can be used to exploit VM reset vulnerabilities which take advantage of the reuse of  operating system snapshots, so called snapshot replay. Thomas Ristenpart et. al. describe this type of attack and apply it on TSL implementations with disastrous results. Relevant reasons they identified are the exposure of randomness, as well as the inability to find sufficient entropy in virtual systems environments \cite{ristenpart2010good, ristenpart2009hey}. \\~\\
-According to a study of Gartner from 2016, the market for x86 server virtualization infrastructure software is partitioned among few competitors, led by VMWare, Microsoft, Oracle and Red Hat. While VMWare and Microsoft offer proprietary solutions, Oracle and Red Hat adopted the open-source Xen-hypervisor technology. For cloud infrastructures, the Xen-hypervisor remains the most widely used architecture for public infrastructure as a service (IaaS) cloud provider. This fact is predominantly attributable to Amazon's utilization of the Xen-hypervisor for its cloud solutions "Amazon Web Services" \cite{bittman2016magic}. 
-
-Similarly, the market of common server operating systems can be divided into proprietary and open-source solutions. While Microsoft dominates the fraction of proprietary systems with its Windows Server series, Linux based systems have a total share of \~37\%. Within this share, \~39\% of servers dedicated to host websites etc. are running an Ubuntu Distribution \cite{statsharelinux} . \\~\\
+A Xen based virtual environment consist at least of the components mentioned in the following. In a productive i.e. commercial environment, those components are usually embedded into a framework like \gls{openstck}, providing a variety of features like identity-, access-, resource- and recovery-management. For this thesis, an experimental setup has been composed getting along with components of a virtual environment. A general overview of a basic Xen-Architecture is given in \ref{fig:xen-arch}.
 
 \begin{figure}[H]
 	\centering
@@ -70,31 +27,99 @@ Similarly, the market of common server operating systems can be divided into pro
 \end{figure}
 
 
-%The non-default choices for tsc_mode are:
-%- tsc_mode=1 (always emulate). All rdtsc instructions are emulated;
-%this is the best choice when TSC-sensitive apps are running and
-%it is necessary to understand worst-case performance degradation
-%for a specific hardware environment.
-%- tsc_mode=2 (never emulate).  This is the same as prior to Xen 4.0
-%and is the best choice if it is certain that all apps running in
-%this VM are TSC-resilient and highest performance is required.
-%- tsc_mode=3 (PVRDTSCP).  High-TSC-frequency apps may be paravirtualized
-%(modified) to obtain both correctness and highest performance; any
-%unmodified apps must be TSC-resilient.
+\subsection{Xen-Hypervisor}
+The Xen-Hypervisor is a lightweight software layer (<150,000 lines of code \cite{xenprjct}) managing any kind of ressource access between virtual machines and system hardware. Thinking in a layered architecture, it is located between the hardware and the environment of virtual machine instances, so called domains. This seup is achived by a modified behaviour in the boot loader logic. Instead of loading an operating system kernel, the Xen-Hypervisor is bootstraped at first. When initialized, Xen starts loading a priviliged virtual machine, the Domain 0 (Dom 0)
+which is dedicated to administer further non-priviliged virtual machines, so called Domain U{\small \textit{s}} (Dom U).
+
+\subsection{Domain 0}\label{sub:dom0}
+In the Xen-Architecture, Domain 0 is a virtual machine having special privileges. As illustarted in \ref{fig:xen-arch} Dom 0 is a meditaor between Domain U instances and the hypervisor. Since it is required for any adminstrative tasks, it is automatically started with and by the hypervisor. To manage and configure Domain U instances, a control stack, also called Toolstack, is integrated in Domain 0. To accomplish adminstrative tasks, a commandline- and graphical interface is available. For frameworks like \gls{openstck} an additional cloud orchestration stack can be added.
+
+\subsection{Domain U}\label{sub:domu}
+Domain U is the Xen terminilogy for the actual virtual machine instances provided to clients to host their applications or services. The lifecycle i.e. state of a Dom U is managed by Dom 0 (see \ref{sub:dom0}). Physically a Dom U constist of one or more images, depending on operating system. Those must be accessible to Domain 0. For the experimenatl setup of this thesis the Dom U images where stored in Dom 0 filesystem. Another approach is to keep the Dom U physical representation in an own partition on Dom 0. To mention again, a Domain is a virtual environemnt in which a virtualized operation system is running. This environment is described via a parameters per Dom U, usually persisted in configuration files accessible to Dom 0. Each Domain U can have i.e. be transfered to a certain state, controlled via commands provided by the toolstack (see \cite{xenxl}). As far as applied in the setup for this theisis, those will be described in the following.
+
+\begin{itemize}
+	\item \textbf{create (command)} Create a new virtual enviroment to bring up a virtual machine instance. All parameters required to initialize the environment are passed. Per default, the configured operating system image would be booted automatically within the created Domain. Though, a switch allowes set Domain in state Pause, i.e. to interrupt the startup process after the new Domain has been allocated, but before the virtual machine 'is powered on'. At this point, various runtime parameters can be set, f.e. BIOS serial number, BIOS vendor ID etc.
+	\item \textbf{unpause (command)} Resume execution of a Domain which has previously been set to state paused.
+	\item \textbf{destroy (command)} This command terminates the Domain quite radicaly. The virtualized operating system is given no chance for any shut-down procedure etc. The effect of destroy can be compared to the one pulling the plug has on an opertaing system installed on a physicaly machine \cite{xenxl}.
+\end{itemize}
+
+\section{Virtualization Modes}
+In generall, code beeing run by an operrating system is executed in \gls{usrmd} or \gls{knlmd}. During the runtime of an application or service, countless switches between both modes occure. An ftp server in general is running in usermode. However, to communicate a network-interface, the needs to use a device driver which is running in kernel mode. User and kernel mode vary in their priviliges regarding the access to hardware ressources. While code running in kernel mode is allowed to access any ressource at any time, priviliges within the boundaries of user mode are restricted to f.e. a certain memory range. The motivation for this concept is an increase in system stability and security since not every application can 'do whatever it wants'. The x86 plattform enables seperate privileged modes by a hardware implementation of a ring-concept \cite{guide2017intel}.\\
+A fundamental challenge in the developement of a hypervisor is how kernel mode operations of virtual guests (Dom U{\small \textit{s}}) are handled. The creation of a new domain (which requires \gls{root} priviliges) starts a process in user mode. Thus any kernel mode operation conducted by a Domain U would crash immediately. The Xen hypervisor offers several solutions which address this issue. Two important concepts will be presented in the following.  
+
+\subsection{Paravirtualization (PV)}
+On paravirtualized operating system, a call requiring higher priviliges is delegated via a special interface through Domain 0 to the hypervisor. This presupposes, that the Dom U kernel implements this interface i.e. uses corresponding device drivers. Depending on the operating system running as guest this approach is not an option. Compared to other virtualization modes the caused overhead comapred to an on hardware installed operating system is quite reasonable \cite{xenprjct}.
+
+\subsection{Hardware Virtual Machine (HVM)}
+This concept, also known as hardware-assisted virtualization, enables full virtualization. In other words, no further modification of the guest operating system is required. Thus, also proprietary systems, lacking implementations supporting PV, can be virtualized. In HVM mode, critical calls of the guest, requiring higher priviliges, are translated into instructions belonging to a special instruction set, dedicated to support hardware-assisted virtualization. Intel$^\text{\textregistered}$ labeled these Virtual Machine Extensions 'Intel VT-x'. Performance of virtual machines running in HVM mode depends on the applied guest operating system \cite{xenprjct}.  
+
+
+\section{Dom U Configuration}
+The creation of a Domain U instance can be configured by a variety of parameters (see \cite{xenxl}). Commonly 
+those are passed to the create command via configuration file. In the following the settings relevant for this thesis i.e. deviating from default will be described.
+
+\begin{itemize}
+	\item \textbf{nr\_cpus} twezrtwezr 
+	\item \textbf{Time Stamp Counter Mode [\textsf{tsc\_mode}]} The x86 "timestamp counter", or TSC, is a 64-bit register on each processor that increases monotonically \cite{xentscmode} (TSC is further explained in \ref{itm:cycles-counter}). The current value of the register can be retrieved via the \textsf{RDTSC} instruction. Depending on the required accuracy, \textsf{tsc\_mode} can be set to one of the following values:
+	\begin{itemize}
+		\item \textit{always emulate} All \textsf{RDTSC} instructions are emulated. Recommended for TSC-sensitive applications at the price of a performance overhead \cite{xentscmode}.
+		\item \textit{never emulate} If applications are TSC-resilient can be choosen. This mode offers best performance.
+		\item \textit{Paravirtualized TSC} To achive high accuracy at high performance a hybrid mode can be applied. This requires a modification of TSC-sensitiv applications.
+	\end{itemize}
+\end{itemize}
+
+% xenstore-write /bios-strings/system-manufacturer
+% xenstore-write /bios-strings/system-serial-number 
+
+\section{Virtual Machine States and Startups}
+Compared to an operating system classicly installed on hardware, virtual machines can be brought up in serveral ways. Depending on the purpose i.e. the requirements of applications and services regarding availability and persistability one of the following virtual machine startup models may be applied:
+
+\begin{itemize}
+	\item \textbf{Statefull Startup} The system is started and shut down traditionally. With the shutdown the system's filesystem state is persisted. Applications and services are signaled to run termination procedures to ensure data integrity if required. With the next system start, this state will be the baseline. This startup model may be applied if f.e. database systems (i.e. database files) are hosted.
+	\item \textbf{Fixed Image Startup} For a scenario not requiring any state persistence this model may be applied. With each startup, a fixed image having the same baseline is brought up. This approach makes sense if a service like a proxy-sever is hosted (log files etc. may be kept on a remote machine). For a provider this practice has a major advantage regarding maintainability. Even for a large number of clients a single fixed image may be sufficient. This simplifies f.e. provision of up to date versions and is the default of Amazons EC2 TODOP gls{IaaS} systems \cite{everspaugh2014not}.
+	\item \textbf{Snapshot Startup} As mentioned in \ref{sub:domu} a Xen Domain U can be paused. If a running virtual machine is transfered to pause state, a snapshot of the entire system state is persisted. This includes filesystem, memory content, cpu registeres etc. When a machine is unpaused this state is resumed.	
+\end{itemize}
+%------------------------------------sdfasfd
+%\cite{everspaugh2014not}
+%Second,aVM  can be repeatedly executed froma ?xed image which is the default for amazon
+%Dort auch: infos zu regualr boot/snapshot/masterimage
+%------------------------------------
+%
+%Xen Domu KOnfiguration erwahnen, zB. Anzahl an CPUS
+%
+%However, while there are many reasons to utilize virtual machines, most of the standard security practices of operating systems are based on assumptions that hold true for physical machines, but don't translate immediately into the domain of virtualized machines \cite{kerrigan2012study}. A virtual hosted Linux server f.e. will never receive a user triggered event during the boot process, which is a critical period within the initialization of the internal Linux PRNG. Further, new virtual machine instances are usually provided by cloning a master image, instead of running an installation setup, leading to a higher degree of homogeneity among virtual machine instances. While provisioning time and maintenance benefit from this practice, it may be regarded critical. If this approach f.e. is applied as the standard process of a cloud hosting provider, it`s customers may be delivered a vulnerable system from the outset, since one customer might gain insights regarding another customers system, just by analyzing his own. These insights can be used to exploit VM reset vulnerabilities which take advantage of the reuse of  operating system snapshots, so called snapshot replay. Thomas Ristenpart et. al. describe this type of attack and apply it on TSL implementations with disastrous results. Relevant reasons they identified are the exposure of randomness, as well as the inability to find sufficient entropy in virtual systems environments \cite{ristenpart2010good, ristenpart2009hey}. \\~\\
+%According to a study of Gartner from 2016, the market for x86 server virtualization infrastructure software is partitioned among few competitors, led by VMWare, Microsoft, Oracle and Red Hat. While VMWare and Microsoft offer proprietary solutions, Oracle and Red Hat adopted the open-source Xen-hypervisor technology. For cloud infrastructures, the Xen-hypervisor remains the most widely used architecture for public infrastructure as a service (IaaS) cloud provider. This fact is predominantly attributable to Amazon's utilization of the Xen-hypervisor for its cloud solutions "Amazon Web Services" \cite{bittman2016magic}. 
+%
+%Similarly, the market of common server operating systems can be divided into proprietary and open-source solutions. While Microsoft dominates the fraction of proprietary systems with its Windows Server series, Linux based systems have a total share of \~37\%. Within this share, \~39\% of servers dedicated to host websites etc. are running an Ubuntu Distribution \cite{statsharelinux} . \\~\\
 
 
 
-The x86 "timestamp counter", or TSC, is a 64-bit register on each
-processor that increases monotonically.  Historically, TSC incremented
-every processor cycle, but on recent processors, it increases
-at a constant rate even if the processor changes frequency (for example,
-to reduce processor power usage).  TSC is known by x86 programmers
-as the fastest, highest-precision measurement of the passage of time
-so it is often used as a foundation for performance monitoring.
-And since it is guaranteed to be monotonically increasing and, at
-64 bits, is guaranteed to not wraparound within 10 years, it is
-sometimes used as a random number or a unique sequence identifier,
-such as to stamp transactions so they can be replayed in a specific
-order
-\cite{xentscmode}
+
+%%The non-default choices for tsc_mode are:
+%%- tsc_mode=1 (always emulate). All rdtsc instructions are emulated;
+%%this is the best choice when TSC-sensitive apps are running and
+%%it is necessary to understand worst-case performance degradation
+%%for a specific hardware environment.
+%%- tsc_mode=2 (never emulate).  This is the same as prior to Xen 4.0
+%%and is the best choice if it is certain that all apps running in
+%%this VM are TSC-resilient and highest performance is required.
+%%- tsc_mode=3 (PVRDTSCP).  High-TSC-frequency apps may be paravirtualized
+%%(modified) to obtain both correctness and highest performance; any
+%%unmodified apps must be TSC-resilient.
+%
+%
+%
+%The x86 "timestamp counter", or TSC, is a 64-bit register on each
+%processor that increases monotonically.  Historically, TSC incremented
+%every processor cycle, but on recent processors, it increases
+%at a constant rate even if the processor changes frequency (for example,
+%to reduce processor power usage).  TSC is known by x86 programmers
+%as the fastest, highest-precision measurement of the passage of time
+%so it is often used as a foundation for performance monitoring.
+%And since it is guaranteed to be monotonically increasing and, at
+%64 bits, is guaranteed to not wraparound within 10 years, it is
+%sometimes used as a random number or a unique sequence identifier,
+%such as to stamp transactions so they can be replayed in a specific
+%order
+%\cite{xentscmode}
 
