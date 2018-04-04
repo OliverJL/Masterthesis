@@ -62,6 +62,8 @@ those are passed to the create command via configuration file. In the following 
 	\item \textbf{Virtualization mode [\textsf{builder}]} The domain build function. This very fundamental setting defines which kind of virtualization mode should be applied ('hvm', 'pvm', ..).
 	\item \textbf{Number of CPUs [\textsf{vcpus}]} The number of CPUs assigned to the Domain U.
 	
+	\item \textbf{Persistent Memory [\textsf{disk}]} The disk devices the domain has access to. This is where the virtualized operating system is installed. Valid settings can reference a file in Domain 0's file system or a dedicated partition.
+
 	\item \textbf{Time Stamp Counter Mode [\textsf{tsc\_mode}]} The x86 "timestamp counter", or TSC, is a 64-bit register on each processor that increases monotonically \cite{xentscmode} (TSC is further explained in \ref{itm:cycles-counter}). The current value of the register can be retrieved via the \textsf{RDTSC} instruction. Depending on the required accuracy, \textsf{tsc\_mode} can be set to one of the following values:
 	\begin{itemize}
 		\item \textit{always emulate} All \textsf{RDTSC} instructions are emulated. Recommended for TSC-sensitive applications at the price of a performance overhead \cite{xentscmode}.
