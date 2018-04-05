@@ -30,7 +30,9 @@
 \usepackage{lettrine}
 \usepackage{mathtools}
 \usepackage{caption}
-\usepackage{biblatex}
+%\usepackage{natbib}
+%{\renewcommand{\bibname}{References}}  
+%\usepackage[backend=biber,style=numeric]{biblatex}  %backend=biber is 'better' 
 
 \makeatletter
 
@@ -207,7 +209,8 @@
 
 \DeclareCaptionType{equ}[][]
 \captionsetup[equ]{labelformat=empty}
-\bibliography{references}
+%\bibliographystyle{abbrv}
+%\bibliography{references}
 \begin{document}
 
 
@@ -288,10 +291,11 @@
 \backmatter
 % The bibliography comes after the appendices.
 % You can replace the standard "abbrv" bibliography style by another one.
-%\bibliographystyle{abbrv}  orginal!! nicht loeschen 
-%\bibliography{references} orginal!! nicht loeschen 
+%\bibliographystyle{abbrv} ORG!!
+\bibliographystyle{unsrtnat} 
+\bibliography{references} 
 
-
+%\printbibliography
 \printglossary
 
 
