@@ -71,13 +71,13 @@ According to Shannon, entropy is defined as the product of self-information \tex
 In literature, terms describing the in- and output of RNGs are sometimes used in an alternating and partially confusing manner. For this thesis, the following terminology will be used:
 
 \begin{itemize}
-	\item \textbf{Entropy} Values having a certain degree of unpredictability. Not to be confused with randomness.
-	\item \textbf{Noise} Noise is the raw input passed to an RNG. The noise sources of the Linux RNG are described in \ref{sec:inp-src-lprng}. While there might be a wide range, in general, noise is not assumed to provide a cryptographic safe degree of entropy.
+	\item \textbf{Entropy} Values having a certain degree of unpredictability. The referred NIST 800 Special Publications use the term \textit{Entropy Source} for \textit{Noise Source} as well as \textit{Randomness Source} sources, which is correct but sometimes confusing.
+	\item \textbf{Noise} Noise is the raw input passed to an RNG. The noise sources of the Linux RNG are described in \ref{sec:inp-src-lprng}. While there might be a wide range, in general, noise is not assumed to provide a cryptographic safe degree of entropy. 
 	\item \textbf{Randomness} The outcome of an RNG. The Linux RNG generates random numbers on basis of noise being prepared by pre-processors and conditioning components. This output is assumed to provide a cryptographic safe degree of entropy.  
 \end{itemize}
 
 \section{NIST Special Publication 800-90 B}
 
 The NIST Special Publication (SP) 800-90 series of Recommendations provides 
-guidance on the validation and construction of Pseudo- and Non-deterministic Random Number Generators and that can be used for cryptographic applications. The Recommendation specifies how to design and test entropy 
+guidance on the validation and construction of Pseudo- and Non-deterministic Random Number Generators and that can be used for cryptographic secure applications. The Recommendation specifies how to design and test noise sources that can be used as input for RNGs. 
 \cite{rukhin2010nist}
