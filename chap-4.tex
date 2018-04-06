@@ -85,8 +85,24 @@ According to Shannon, entropy is defined as the product of self-information \tex
 The NIST Special Publication (SP) 800-90 series of recommendations provides 
 guidance on the validation and construction of Pseudo- and Non-deterministic Random Number Generators that can be used for cryptographic secure applications. The recommendation specifies how to design and test noise sources that are be used as input for RNGs. The series consist of three parts. NSP800-90A and NSP800-90C refer to the construction of RNG mechanisms, while NSP800-90B addresses the analysis and validation of noise sources. A noise source that conforms to this recommendation can be used by RNGs to produce a sequence of random values \cite{rukhin2010nist}.
 
+\subsection{Min-Entropy}
 
+\begin{equation}
+	A = \{x_1, x_2, x_3, ..., x_k\}
+	\label{eq:min-ent-A}
+\end{equation}
+\begin{equation}
+	Pr(X=x_i) = p_i 
+	\Domain{i=\{1,...,k}}
+\end{equation}
+\begin{equation}
+%	H = min_{1\le i \le k}(-\log_2p_i) = -\log_2 max_{1\le i \le k}p_i	
+	H = \underset{1\leq i\leq k}{\mathrm{min}}(-\log_2p_i) = -\log_2 \underset{1\leq i\leq k}{\mathrm{max}}p_i
+\end{equation}
 
+\begin{equation}
+\lim_{d \rightarrow \infty} \left [ \underset{a\leq x\leq b}{\mathrm{max}_p} \left | f(x) - m(x) \right | \right ] = 0
+\end{equation}
 
 
 \begin{figure}[H]
