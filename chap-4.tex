@@ -54,8 +54,19 @@ two different tracks. Depending on an assumption regarding an entropy source, wh
 %into a long sequence of values that may be safely used for keys, IVs, nonces, etc.
 %\cite{turan2015random}
 
-\section{Terminology}
-\subsection{A Definition of Entropy}
+\section{Definitions \& Terminology}
+
+\subsection{Distinction: Noise / Entropy / Randomness}
+In literature, terms describing the in- and output of RNGs are sometimes used in an alternating and partially confusing manner. For this thesis, the following terminology will be used:
+
+\begin{itemize}
+	\item \textbf{Entropy} Values having a certain degree of unpredictability. The referred NIST 800 Special Publications use the term \textit{Entropy Source} for \textit{Noise Source} as well as \textit{Randomness Source}, which is correct but sometimes confusing.
+	\item \textbf{Noise} Noise is the raw input passed to an RNG. The noise sources of the Linux RNG are described in \ref{sec:inp-src-lprng}. While there might be a wide range, in general, noise is not assumed to provide a cryptographic safe degree of entropy. 
+	\item \textbf{Randomness} The outcome of an RNG. The Linux RNG generates random numbers on basis of noise being prepared by pre-processors and conditioning components. This output is assumed to provide a cryptographic safe degree of entropy.  
+	\item \textbf{RBG/RNG} NIST 800 uses the more generalizing term \textit{RBG (Random Bit Generator)} instead of \textit{RNG (Random Number Generator)}. Since this thesis relates to Linux x86 Kernel where random numbers are always obtained and applied on at least byte level \textit{RNG} will used.
+\end{itemize}
+
+\subsection{The Definition of Entropy}
 In Information theory, for a set of information units, entropy in generall describes the level of disorder i.e. the unpredicatbility of each single unit's state at a given alphabet. Various formal defintions of entropy exist \cite{hagerty2012entropy}, while the definition of Shannon (see \ref{fig:form-entropy-shan}) is quite common for a binary alphabet. 
 
 \begin{figure}[H]
@@ -67,17 +78,24 @@ In Information theory, for a set of information units, entropy in generall descr
 \end{figure}
 According to Shannon, entropy is defined as the product of self-information \textit{I} multiplied by the expected value. For a binary alphabet, it can be measured in unit bits. 
 
-\subsection{Distinction: Noise / Entropy / Randomness}
-In literature, terms describing the in- and output of RNGs are sometimes used in an alternating and partially confusing manner. For this thesis, the following terminology will be used:
 
-\begin{itemize}
-	\item \textbf{Entropy} Values having a certain degree of unpredictability. The referred NIST 800 Special Publications use the term \textit{Entropy Source} for \textit{Noise Source} as well as \textit{Randomness Source}, which is correct but sometimes confusing.
-	\item \textbf{Noise} Noise is the raw input passed to an RNG. The noise sources of the Linux RNG are described in \ref{sec:inp-src-lprng}. While there might be a wide range, in general, noise is not assumed to provide a cryptographic safe degree of entropy. 
-	\item \textbf{Randomness} The outcome of an RNG. The Linux RNG generates random numbers on basis of noise being prepared by pre-processors and conditioning components. This output is assumed to provide a cryptographic safe degree of entropy.  
-\end{itemize}
 
 \section{NIST Special Publication 800-90 B}
 
 The NIST Special Publication (SP) 800-90 series of recommendations provides 
-guidance on the validation and construction of Pseudo- and Non-deterministic Random Number Generators that can be used for cryptographic secure applications. The recommendation specifies how to design and test noise sources that are be used as input for RNGs. The series consist of three parts. NSP800-90A and NSP800-90C refer to the construction of RNG mechanisms. 
-\cite{rukhin2010nist}
+guidance on the validation and construction of Pseudo- and Non-deterministic Random Number Generators that can be used for cryptographic secure applications. The recommendation specifies how to design and test noise sources that are be used as input for RNGs. The series consist of three parts. NSP800-90A and NSP800-90C refer to the construction of RNG mechanisms, while NSP800-90B addresses the analysis and validation of noise sources. A noise source that conforms to this recommendation can be used by RNGs to produce a sequence of random values \cite{rukhin2010nist}.
+
+
+
+
+
+\begin{figure}[H]
+	\label{fig:entropy-est-strategy}
+	\centering
+	\includegraphics[scale=0.6]{img/nsp800-90b-entropy-est-strategy.png}
+	\caption{Entropy Estimation Strategy according to NIST SP 800-90B (from \cite{turan2018nist})}
+\end{figure}
+
+
+
+
