@@ -67,12 +67,13 @@ In Information theory, for a set of information units, entropy in generall descr
 \end{figure}
 According to Shannon, entropy is defined as the product of self-information \textit{I} multiplied by the expected value. For a binary alphabet, it can be measured in unit bits. 
 
-\subsection{Distinction: Noise / Entropy / Random Number}
+\subsection{Distinction: Noise / Entropy / Randomness}
 In literature, terms describing the in- and output of RNGs are sometimes used in an alternating and partially confusing manner. For this thesis, the following terminology will be used:
 
 \begin{itemize}
 	\item \textbf{Entropy} Values having a certain degree of unpredictability. Not to be confused with randomness.
-	\item \textbf{Noise} Noise is the raw 
+	\item \textbf{Noise} Noise is the raw input passed to an RNG. The noise sources of the Linux RNG are described in \ref{sec:inp-src-lprng}. In general noise is not assumed to provide a  cryptographic safe degree of entropy.
+	\item \textbf{Randomness} Randomness is the outcome of an RNG. The Linux RNG generates random numbers on basis of noise being prepared by pre-processors and conditioning components.   
 \end{itemize}
 
 \section{NIST Special Publication 800-90 B}
