@@ -84,7 +84,13 @@ According to Shannon, entropy is defined as the product of self-information \tex
 
 The NIST Special Publication (SP) 800-90 series of recommendations provides 
 guidance on the validation and construction of Pseudo- and Non-deterministic Random Number Generators that can be used for cryptographic secure applications. More precisely the recommendation specifies how to design and validate noise delivering sources that are used as input for RNGs. Transfered to the Linux RNG this verification approach can be applied to the raw sources described in \ref{sec:inp-src-lprng} as well as on conditioned or pre-processed noise of the fast-pool (\ref{sub:input-pool}, \ref{sub:fast-pool}). The series consist of three parts. NSP800-90A and NSP800-90C refer to the construction of RNG mechanisms, while NSP800-90B addresses the analysis and validation of sources delivering noise. A source that conforms to this recommendation can be used by RNGs to produce a sequence of random values \cite{rukhin2010nist} i.e. randomness.\\
-The validation process described by NSP800-90B consist of sequential and iterative steps. For each step a number of prerequisites and assumption is defined. A step can be a task required to prepare the next step or a test procedure. In general, the validation process is all about determining entropy estimates, which are the outcome of particular test procedures. Figure \ref{fig:entropy-est-strategy} gives a overview of the entire Entropy Estimation Strategy of NSP800-90B. The following sections will explain relevant components of this strategy more detailed.
+The validation process described by NSP800-90B consist of sequential and iterative steps. For each step a number of prerequisites and assumption is defined. A step can be a task required to prepare the next step or a test procedure. In general, the validation process is all about determining entropy estimates, which are the outcome of particular test procedures applied on recorded noise datasets.
+
+
+Figure \ref{fig:entropy-est-strategy} gives a overview of the entire Entropy Estimation Strategy of NSP800-90B. 
+
+
+The following sections will explain relevant components of this strategy more detailed.
 
  
 
