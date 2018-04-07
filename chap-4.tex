@@ -55,19 +55,19 @@ In literature, terms describing the in- and output of RNGs are sometimes used in
 \begin{itemize}
 	\item \textbf{Entropy} Entropy is a property of a variable or value describing a certain degree of unpredictability. 
 	\item \textbf{Noise} Noise is the input passed to an RNG or and intermediate processing stage.
-	While there might be a wide range, in general, noise is not assumed to provide a cryptographic safe degree of entropy. Since the Linux RNG has enriches entropy via various steps (see \ref{fig:linux-prng-arch}) depending on the stage \textit{Noise} will be subdivided into:
+	While there might be a wide range, in general, noise is not assumed to provide a cryptographic safe degree of entropy. Since the Linux RNG enriches entropy via various steps (see \ref{fig:linux-prng-arch}) depending on the stage \textit{Noise} will be subdivided into:
 	\begin{itemize}
 		\item \textbf{Raw Noise} Noise sources of the Linux RNG, delivering external physical states like interrupts (see \ref{sec:inp-src-lprng}).
 		\item \textbf{Pre-processed Noise} Raw Noise being pre-processed via the fast-pool (see \ref{sub:fast-pool}).
 		\item \textbf{Conditioned Noise} Noise prepared by a conditioning component and hence providing an advanced level of entropy, like the input-pool (see \ref{sub:input-pool}).	
 	\end{itemize}
-	\item \textbf{Randomness} The outcome of an RNG delivered to a . The Linux RNG generates random numbers on basis of noise being prepared by pre-processors and conditioning components. This output is assumed to provide a cryptographic safe degree of entropy.  
-	\item \textit{Entropy Source}The referred NIST 800 Special Publications use the term \textit{Entropy Source} The generic term for any kind of sources dedicated to deliver values assumed to provide a certain degree of \textit{Entropy}. This includes all kind of \textit{Noise Sources} as well as \textit{Randomness Sources}.	
+	\item \textbf{Randomness} The outcome of an RNG delivered to a user mode or kernel consumer. This output is assumed to provide a cryptographic safe degree of entropy.
+	\item \textbf{Entropy Source} The generic term for any kind of sources dedicated to deliver values assumed to provide a certain degree of entropy. This includes all kind of \textit{Noise Sources} as well as \textit{Randomness Sources}.	
 	\item \textbf{RBG/RNG} NIST 800 uses the more generalizing term \textit{RBG (Random Bit Generator)} instead of \textit{RNG (Random Number Generator)}. Since this thesis relates to Linux x86 Kernel where random numbers are always obtained and applied on at least byte level \textit{RNG} will used.
 \end{itemize}
 
 \subsection{The Definition of Entropy}
-In Information theory, for a set of information units, entropy in generall describes the level of disorder i.e. the unpredicatbility of each single unit's state at a given alphabet. Various formal defintions of entropy exist \cite{hagerty2012entropy}, while the definition of Shannon (see \ref{fig:form-entropy-shan}) is quite common for a binary alphabet. 
+In Information theory, for a set of information units, entropy in generall describes the level of disorder i.e. the unpredictability of each single unit's state at a given alphabet. Various formal definitions of entropy exist \cite{hagerty2012entropy}, while the definition of Shannon (see \ref{fig:form-entropy-shan}) is quite common for a binary alphabet. 
 
 \begin{figure}[H]
 	\begin{align*}
