@@ -83,7 +83,7 @@ According to Shannon, entropy is defined as the product of self-information \tex
 \section{NIST Special Publication 800-90 B}
 
 The NIST Special Publication (SP) 800-90 series of recommendations provides 
-guidance on the validation and construction of Pseudo- and Non-deterministic Random Number Generators that can be used for cryptographic secure applications. More precisely the recommendation specifies how to design and validate noise delivering sources that are used as input i.e. for RNGs. Transfered to the Linux RNG this verification approach can be applied to the raw sources described in \ref{sec:inp-src-lprng} as well as conditioned or pre-processed noise of the  
+guidance on the validation and construction of Pseudo- and Non-deterministic Random Number Generators that can be used for cryptographic secure applications. More precisely the recommendation specifies how to design and validate noise delivering sources that are used as input for RNGs. Transfered to the Linux RNG this verification approach can be applied to the raw sources described in \ref{sec:inp-src-lprng} as well as conditioned or pre-processed noise of the  
 fast-pool (\ref{sub:input-pool}, \ref{sub:fast-pool}). The series consist of three parts. NSP800-90A and NSP800-90C refer to the construction of RNG mechanisms, while NSP800-90B addresses the analysis and validation of sources delivering noise. A source that conforms to this recommendation can be used by RNGs to produce a sequence of random values \cite{rukhin2010nist} i.e. randomness.\\
 
 
@@ -121,7 +121,7 @@ expected statistical behavior of the correctly operating noise source.
 	\label{fig:entropy-est-strategy}
 	\centering
 	\includegraphics[scale=0.6]{img/nsp800-90b-entropy-est-strategy.png}
-	\caption{Entropy Estimation Strategy according to NIST SP 800-90B (from \cite{turan2018nist}, references illustrated refer to the document)}
+	\caption{Entropy Estimation Strategy according to NIST SP 800-90B (from \cite{turan2018nist}, references illustrated refer to the publication)}
 \end{figure}
 
 
