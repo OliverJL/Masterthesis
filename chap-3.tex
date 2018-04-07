@@ -34,12 +34,12 @@ Capturing and processing of several types of hardware events starts immediately 
 	\label{fig:linux-prng-arch}
 \end{figure}
 
-\section{Input sources of the Linux PRNG}\label{sec:inp-src-lprng}
+\section{Noise sources of the Linux PRNG}\label{sec:inp-src-lprng}
 In best case, the generation of random numbers is conducted by dedicated devices in terms of True Random Number Generators. The Linux RNG implementation allows to involve TRNGs in two ways: 
 \begin{itemize}
-	\item \textit{Instruction Delegation:} Requests from consumers are directly translated into instructions using architecture dependent on-chip features as described in \ref{sec:lrng-general}.
+	\item \textbf{Instruction Delegation:} Requests from consumers are directly translated into instructions using architecture dependent on-chip features as described in \ref{sec:lrng-general}.
 	This approach bypasses the entire logic of the Linux PRNG and relies completely on the TRNG.
-	\item \textit{TRNG/PRNG Hybrid Mode:} Random numbers are managed via the regular PRNG logic. Instead of transformed hardware events, the entropy pools are filled with data, provided by a TRNG device via a special driver interface.
+	\item \textbf{TRNG/PRNG Hybrid Mode:} Random numbers are managed via the regular PRNG logic. Instead of transformed hardware events, the entropy pools are filled with data, provided by a TRNG device via a special driver interface.
 \end{itemize}
 For this thesis, both of these options are out of scope. Instead, the process of generating random numbers based on common hardware events is analyzed. As an outcome, it turned out that just two types of hardware events were able to provide input data, while the reaming did not contribute anything at all, since the operating system was run as a virtual machine. Despite this, also those should be mentioned for the sake of completeness.
 
@@ -81,9 +81,10 @@ applications demanding a large amount of entropy or having time critical behavio
 According to \ref{sec:lrng-arch}, fast pools are no full-featured entropy pools, but have the purpose of a pre-processing stage, dedicated to initialize the input pool. As illustrated in \ref{fig:linux-prng-arch}, fast pools are fed by noise delivered by interrupt event input. They are declared by a simple data structure, which is able to store 16 byte of gained random values beside few state information, as shown in \ref{fig:fast-pool}. This data structure is instantiated and maintained per CPU, available to the virtualized operating system.
 %TODO: Hier noch ein Verweis rein, das diese relativ fix sind (gelesen in mark..)??
  
+\begin{minipage}[t]{.95\textwidth}
  \begin{lstlisting}[caption=Declaration of the fast\_pool structure in Linux kernel 4.4 \cite{kernlrandmc}, captionpos=b,
- xrightmargin=.3\textwidth,
- xleftmargin=.3\textwidth,
+ xrightmargin=0\textwidth,
+ xleftmargin=0.2\textwidth,
  label=lst:fastspool]
  struct fast_pool {
     __u32 pool[4];
@@ -92,6 +93,7 @@ According to \ref{sec:lrng-arch}, fast pools are no full-featured entropy pools,
     unsigned char count;
  };
  \end{lstlisting}
+\end{minipage}
  
  For this thesis, the number of available CPUs per virtual machine has been configured to one, hence the terminology will refer to a single instance in the following. By concept, in Linux Kernel 4.4, interrupt randomness is the sole source of random noise available to rise up the fast pool, which is a contributor to the input pool. Observations of the experimental setup for this thesis concluded that beside interrupt events any contribution has occurred by input- or disk events. In other words, the development of the fast pool depends completely on the input and pre-processing conducted by \textsf{add\_interrupt\_randomness} and hence will be described more briefly.\\
  For each call of function \textsf{add\_interrupt\_randomness}, several parameters are processed to transform the 16 byte vector of the fast pool. Thereby just two parameters are directly passed by the caller. Surprisingly, parameter \textsf{irq\_code} (explained in \ref{sec:int-rnd}), is processed, while the second, \textsf{irq\_flags} is not used at all, for unknown reasons (see \ref{lst:add-interrupt-randomnes-c}). Beside this input, three more runtime values are applied on pre-proccessing procedures within the function. Some of these are also involved in the conditioning procedure of entropy interfaces for kernel consumers (see \ref{sub:get-rnd-int-long}). In the following these three noise sources are explained to give a basic understanding regarding the entropy they are able to provide.
