@@ -84,54 +84,58 @@ According to Shannon, entropy is defined as the product of self-information \tex
 
 The NIST Special Publication (SP) 800-90 series of recommendations provides 
 guidance on the validation and construction of Pseudo- and Non-deterministic Random Number Generators that can be used for cryptographic secure applications. More precisely the recommendation specifies how to design and validate noise delivering sources that are used as input for RNGs. Transfered to the Linux RNG this verification approach can be applied to the raw sources described in \ref{sec:inp-src-lprng} as well as on conditioned or pre-processed noise of the fast-pool (\ref{sub:input-pool}, \ref{sub:fast-pool}). The series consist of three parts. NSP800-90A and NSP800-90C refer to the construction of RNG mechanisms, while NSP800-90B addresses the analysis and validation of sources delivering noise. A source that conforms to this recommendation can be used by RNGs to produce a sequence of random values \cite{rukhin2010nist} i.e. randomness.\\
-The validation process described by NSP800-90B consist of sequential and iterative steps. For each step a number of prerequisites and assumption is defined. A step can be a task required to prepare the next step or a test procedure. In general, the validation process is all about determining entropy estimates, which are the outcome of particular test procedures applied on recorded noise datasets.
+The validation process described by NSP800-90B consist of sequential and iterative steps. For each step a number of prerequisites and assumption is defined. A step can be a task required to prepare the next step or a test procedure consisting of several statistical test. In general, the validation process is all about determining entropy estimates, which are the outcome of particular test procedures applied on recorded noise datasets. Traditional statistical procedures like applied by NSP800-22 would fail, since testing under the hypothesis of unbiased, independent distributed values. The statistical test procedures of NSP800-90B are aware that noise sources will most likely not deliver entropy at a high level and hence assess accordingly. Figure \ref{fig:entropy-est-strategy} gives a overview of the entire Entropy Estimation Strategy of NSP800-90B. The following sections will explain relevant components of this strategy more detailed.
 
-
-Figure \ref{fig:entropy-est-strategy} gives a overview of the entire Entropy Estimation Strategy of NSP800-90B. 
-
-
-The following sections will explain relevant components of this strategy more detailed.
-
- 
-
-  \ref{sub:min-entropy}
-
- taking into account the
- expected statistical 
-
-the noise source will not produce unbiased, independent binary data
-
-NIST SP 800-22
-
-Since, in most cases,
-the noise source will not produce unbiased, independent binary data, traditional statistical
-procedures (e.g., the randomness tests described in NIST SP 800-22) that test the hypothesis of
-unbiased, independent bits will almost always fail, and thus are not useful for monitoring the noise
-source. In general, tests on the noise source need to be tailored carefully, taking into account the
-expected statistical behavior of the correctly operating noise source.
+ \begin{figure}[H]
+ 	\label{fig:entropy-est-strategy}
+ 	\centering
+ 	\includegraphics[scale=0.6]{img/nsp800-90b-entropy-est-strategy.png}
+ 	\caption{Entropy Estimation Strategy according to NIST SP 800-90B (from \cite{turan2018nist}, references illustrated refer to the publication)}
+ \end{figure}
 
 \subsection{Min-Entropy}\label{sub:min-entropy}
+In NSP800-90B statistical test are bundled to test procedures. Each single test within a procedure delivers two related values, $p_{max}$ and min-entropy. The min-entropy of an independent discrete random variable $X$
+that takes values from the set $A$ with probability $p_i$ is defined as $H$.
 
 \begin{equation}
-	A = \{x_1, x_2, x_3, ..., x_k\}
-	\label{eq:min-ent-A}
+A = \{x_1, x_2, x_3, ..., x_k\}
+\label{eq:min-ent-A}
 \end{equation}
 \begin{equation}
-	Pr(X=x_i) = p_i 
-	\Domain{i=\{1,...,k\}}
+Pr(X=x_i) = p_i 
+\Domain{i=\{1,...,k\}}
 \end{equation}
 \begin{equation}
-	H = \underset{1\leq i\leq k}{\mathrm{min}}(-\log_2p_i) = -\log_2 \underset{1\leq i\leq k}{\mathrm{max}}p_i
+H = \underset{1\leq i\leq k}{\mathrm{min}}(-\log_2p_i) = -\log_2 \underset{1\leq i\leq k}{\mathrm{max}}p_i
 \end{equation}
 
+If $X$ has min-entropy $H$, then the probability $p_{max}$ of observing any particular value for $X$ is $\le$ $2^{-H}$ \cite{turan2018nist}. The outcome of a test procedure is a single min-entropy value, representing the lowest min-entropy delivered by a specific statistical test.
+
+% the lowest  
+
+%  \ref{sub:min-entropy}
+
+% taking into account the
+% expected statistical 
+%
+%the noise source will not produce unbiased, independent binary data
+%
+%NIST SP 800-22
+%
+%Since, in most cases,
+%the noise source will not produce unbiased, independent binary data, traditional statistical
+%procedures (e.g., the randomness tests described in NIST SP 800-22) that test the hypothesis of
+%unbiased, independent bits will almost always fail, and thus are not useful for monitoring the noise
+%source. In general, tests on the noise source need to be tailored carefully, taking into account the
+%expected statistical behavior of the correctly operating noise source.
 
 
-\begin{figure}[H]
-	\label{fig:entropy-est-strategy}
-	\centering
-	\includegraphics[scale=0.6]{img/nsp800-90b-entropy-est-strategy.png}
-	\caption{Entropy Estimation Strategy according to NIST SP 800-90B (from \cite{turan2018nist}, references illustrated refer to the publication)}
-\end{figure}
+
+
+
+
+
+
 
 
 
