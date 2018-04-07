@@ -58,7 +58,7 @@ In literature, terms describing the in- and output of RNGs are sometimes used in
 	While there might be a wide range, in general, noise is not assumed to provide a cryptographic safe degree of entropy. Since the Linux RNG enriches entropy via various steps (see \ref{fig:linux-prng-arch}) depending on the stage \textit{Noise} will be subdivided into:
 	\begin{itemize}
 		\item \textbf{Raw Noise} Noise sources of the Linux RNG, delivering external physical states like interrupts (see \ref{sec:inp-src-lprng}).
-		\item \textbf{Pre-processed Noise} Raw Noise being pre-processed via the fast-pool (see \ref{sub:fast-pool}).
+		\item \textbf{Pre-processed Noise} Raw Noise being pre-processed via the fast-pool, assumed to have a poor level of entropy (see \ref{sub:fast-pool}).
 		\item \textbf{Conditioned Noise} Noise prepared by a conditioning component and hence providing an advanced level of entropy, like the input-pool (see \ref{sub:input-pool}).	
 	\end{itemize}
 	\item \textbf{Randomness} The outcome of an RNG delivered to a user mode or kernel consumer. This output is assumed to provide a cryptographic safe degree of entropy.
