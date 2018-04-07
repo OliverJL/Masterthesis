@@ -50,17 +50,17 @@ two different tracks. Depending on an assumption regarding an entropy source, wh
 \section{Definitions \& Terminology}
 
 \subsection{Distinction: Noise / Entropy / Randomness / RNG}
-In literature, terms describing the in- and output of RNGs are sometimes used in an alternating and partially confusing manner. For this thesis, the following terminology will be used, intending to distinguish regarding the maturity, source and purpose of (pseudo)random numbers.
+In literature, terms describing the in- and output of RNGs are sometimes used in a generic and partially confusing manner. For this thesis, the following terminology will be used, intending to distinguish regarding the maturity, source and purpose of (pseudo) random numbers.
 
 \begin{itemize}
 	\item \textbf{Entropy} Entropy is a property of a variable or value describing a certain degree of unpredictability. 
-	\item \textbf{Noise} Noise is the input passed to an RNG or and . Since 
-	{fig:linux-prng-arch}
-	
-	The noise sources of the Linux RNG are described in \ref{sec:inp-src-lprng}. While there might be a wide range, in general, noise is not assumed to provide a cryptographic safe degree of entropy. 
-	
-	or any intermediate stage of pre-processing or conditioning
-	
+	\item \textbf{Noise} Noise is the input passed to an RNG or and intermediate processing stage.
+	While there might be a wide range, in general, noise is not assumed to provide a cryptographic safe degree of entropy. Since the Linux RNG has enriches entropy via various steps (see \ref{fig:linux-prng-arch}) depending on the stage \textit{Noise} will be subdivided into:
+	\begin{itemize}
+		\item \textbf{Raw Noise} Noise sources of the Linux RNG, delivering external physical states like interrupts (see \ref{sec:inp-src-lprng}).
+		\item \textbf{Pre-processed Noise} Raw Noise being pre-processed via the fast-pool (see \ref{sub:fast-pool}).
+		\item \textbf{Conditioned Noise} Noise prepared by a conditioning component and hence providing an advanced level of entropy, like the input-pool (see \ref{sub:input-pool}).	
+	\end{itemize}
 	\item \textbf{Randomness} The outcome of an RNG delivered to a . The Linux RNG generates random numbers on basis of noise being prepared by pre-processors and conditioning components. This output is assumed to provide a cryptographic safe degree of entropy.  
 	\item \textit{Entropy Source}The referred NIST 800 Special Publications use the term \textit{Entropy Source} The generic term for any kind of sources dedicated to deliver values assumed to provide a certain degree of \textit{Entropy}. This includes all kind of \textit{Noise Sources} as well as \textit{Randomness Sources}.	
 	\item \textbf{RBG/RNG} NIST 800 uses the more generalizing term \textit{RBG (Random Bit Generator)} instead of \textit{RNG (Random Number Generator)}. Since this thesis relates to Linux x86 Kernel where random numbers are always obtained and applied on at least byte level \textit{RNG} will used.
