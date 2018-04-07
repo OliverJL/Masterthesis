@@ -53,9 +53,16 @@ two different tracks. Depending on an assumption regarding an entropy source, wh
 In literature, terms describing the in- and output of RNGs are sometimes used in an alternating and partially confusing manner. For this thesis, the following terminology will be used:
 
 \begin{itemize}
-	\item \textbf{Entropy} Entropy is a of a variable or value describing a certain degree of unpredictability. The referred NIST 800 Special Publications use the term \textit{Entropy Source} for \textit{Noise Source} as well as \textit{Randomness Source}, which is correct but sometimes confusing.
-	\item \textbf{Noise} Noise is the raw input passed to an RNG. The noise sources of the Linux RNG are described in \ref{sec:inp-src-lprng}. While there might be a wide range, in general, noise is not assumed to provide a cryptographic safe degree of entropy. 
-	\item \textbf{Randomness} The outcome of an RNG. The Linux RNG generates random numbers on basis of noise being prepared by pre-processors and conditioning components. This output is assumed to provide a cryptographic safe degree of entropy.  
+	\item \textbf{Entropy} Entropy is a property of a variable or value describing a certain degree of unpredictability. 
+	\item \textbf{Noise} Noise is the input passed to an RNG. 
+	
+	
+	The noise sources of the Linux RNG are described in \ref{sec:inp-src-lprng}. While there might be a wide range, in general, noise is not assumed to provide a cryptographic safe degree of entropy. 
+	
+	or any intermediate stage of pre-processing or conditioning
+	
+	\item \textbf{Randomness} The outcome of an RNG delivered to a . The Linux RNG generates random numbers on basis of noise being prepared by pre-processors and conditioning components. This output is assumed to provide a cryptographic safe degree of entropy.  
+	\item \textit{Entropy Source}The referred NIST 800 Special Publications use the term \textit{Entropy Source} for any kind of source dedicated to deliver values assumed to provide a certain degree of \textit{Entropy}. This includes \textit{Noise Sources} as well as \textit{Randomness Sources}.	
 	\item \textbf{RBG/RNG} NIST 800 uses the more generalizing term \textit{RBG (Random Bit Generator)} instead of \textit{RNG (Random Number Generator)}. Since this thesis relates to Linux x86 Kernel where random numbers are always obtained and applied on at least byte level \textit{RNG} will used.
 \end{itemize}
 
@@ -76,9 +83,8 @@ According to Shannon, entropy is defined as the product of self-information \tex
 \section{NIST Special Publication 800-90 B}
 
 The NIST Special Publication (SP) 800-90 series of recommendations provides 
-guidance on the validation and construction of Pseudo- and Non-deterministic Random Number Generators that can be used for cryptographic secure applications. More precisely the recommendation specifies how to design and validate entropy delivering sources that are be used as input i.e. for RNGs. Translated to the Linux GRNG 
-
- The series consist of three parts. NSP800-90A and NSP800-90C refer to the construction of RNG mechanisms, while NSP800-90B addresses the analysis and validation of noise sources. A noise source that conforms to this recommendation can be used by RNGs to produce a sequence of random values \cite{rukhin2010nist}.
+guidance on the validation and construction of Pseudo- and Non-deterministic Random Number Generators that can be used for cryptographic secure applications. More precisely the recommendation specifies how to design and validate entropy delivering sources that are be used as input i.e. for RNGs. Transfered to the Linux RNG this verification approach can be applied to the raw noise sources described in \ref{sec:inp-src-lprng} as well as conditioned input-pool or pre-processed noise of the  
+fast-pool (\ref{sub:input-pool}, \ref{sub:fast-pool}). The series consist of three parts. NSP800-90A and NSP800-90C refer to the construction of RNG mechanisms, while NSP800-90B addresses the analysis and validation of sources delivering (prepared) noise. A source that conforms to this recommendation can be used by RNGs to produce a sequence of random values \cite{rukhin2010nist}.
 
 \subsection{Min-Entropy}
 
