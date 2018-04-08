@@ -11,6 +11,30 @@
 %  sudo xenstore-write "/local/domain/$xvuhv02_domu_id/bios-strings/system-manufacturer" "GSRN 2015 - MBA Thesis - Oliver Jessl"
 %  sudo xenstore-write "/local/domain/$xvuhv02_domu_id/bios-strings/system-serial-number" "01234567-89ab-cdef-fedc-9876543210ff"
 
+\begin{figure}[H]
+	\label{fig:fast-pool}
+	\centering
+	\includegraphics[scale=0.8]{img/diff_cycles.png}
+	\caption{Pre-processing of input parameters by function 'add\_interrupt\_randomness' before applying further operations via fast\_mix / mix\_pool\_bytes (valid for x64 / 64-bit Kernel only)}
+\end{figure}
+
+%\begin{figure}[H]
+%	\label{fig:fast-pool}
+%	\centering
+%	\includegraphics{img/diff-cycles-dom0102.png}
+%	\caption{Pre-processing of input parameters by function 'add\_interrupt\_randomness' before applying further operations via fast\_mix / mix\_pool\_bytes (valid for x64 / 64-bit Kernel only)}
+%\end{figure}
+%
+%\begin{figure}[H]
+%	\label{fig:fast-pool}
+%	\centering
+%	\includegraphics{img/diff-cycles-dom0102-v2.png}
+%	\caption{Pre-processing of input parameters by function 'add\_interrupt\_randomness' before applying further operations via fast\_mix / mix\_pool\_bytes (valid for x64 / 64-bit Kernel only)}
+%\end{figure}
+
+\include{iids-restart-interr-final.tex}
+%iids-restart-interr-final.tex
+
 
 \chapter{Security Components}
 \label{chap:sec-components}
