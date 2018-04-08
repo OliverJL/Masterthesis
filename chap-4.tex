@@ -116,12 +116,12 @@ The test procedures of NSP800-90B are applied on data sets resulting from record
 NSP800-90B does not require i.e. recommend to pass the recorded (merged) data directly to the test procedures. After recording values from a noise source, data may be vetted. If it is obvious, also by the nature of a an analyzed noise source, that there might be a variation in a fixed pattern regarding the obtained values, those may be trimmed at a fix pattern. Though it is essential that the sequence is kept, i.e. the trimmed values are aligned in the same order as delivered by the noise source. The standard requires to document and advocate this approach, since the analysis result is reduced to those bytes. If a noise source f.e. delivers four byte values based on simple incrementation, it is obvious that the higher bytes of each value in the sequence will have less variation than the lower ones. In this case, trimming is recommended.
 
 \subsection{IID vs. Non-IID Track}\label{sub:iid-noniid-track}
-When conducting an analysis via NSP800-90B an assumption to the \textit{Independent and identically Distribution} of the analyzed noise source has to be delivered. Subsequently one of the two tracks illustrated in \ref{fig-entropy-est-strategy} needs to be chosen: The non-IID- i.e. the IID-track. Both tracks basically deviate regarding the assumed maturity of entropy a noise source is able to deliver. An independent and identically distributed noise source is characterized by the following properties: 
+When conducting an analysis by NSP800-90B a fundamental assumption to the \textit{independency and identically distribution} of the analyzed noise source has to be delivered. Subsequently one of the two tracks illustrated in \ref{fig-entropy-est-strategy} needs to be chosen to proceed: The non-IID- i.e. the IID-track. Both tracks basically deviate regarding the assumed maturity of entropy a noise source is able to deliver. An independent and identically distributed noise source is characterized by the following properties: 
 \begin{itemize}
-	\item \textit{Independence}
-		\item \textit{Identically Distribution }
+	\item \textit{Independence} All values obtained by the noise source have no dependency to each other.
+		\item \textit{Identically Distribution} All series of values obtained by a noise source fit within the same distribution.
 \end{itemize}
-
+The reach a decision, NSP800-90B defines 
 
 The values delivered by an noise source able to provide IID values
 
