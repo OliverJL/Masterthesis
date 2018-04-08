@@ -53,9 +53,9 @@ two different tracks. Depending on an assumption regarding an entropy source, wh
 In literature, terms describing the in- and output of RNGs are sometimes used in a generic and partially confusing manner. For this thesis, the following terminology will be used, intending to distinguish regarding the maturity, source and purpose of (pseudo) random numbers.
 
 \begin{itemize}
-	\item \textbf{Entropy} Entropy is a property of a variable or value describing a certain degree of unpredictability. 
-	\item \textbf{Noise} Noise is the input passed to an RNG or and intermediate processing stage.
-	While there might be a wide range, in general, noise is not assumed to provide a cryptographic safe degree of entropy. Since the Linux RNG enriches entropy via various steps (see \ref{fig:linux-prng-arch}) depending on the stage \textit{Noise} will be subdivided into:
+	\item \textbf{Entropy} Entropy is a property of a variable or value describing its certain degree of unpredictability. 
+	\item \textbf{Noise} Noise is the input passed to an RNG or the state of an intermediate processing stage.
+	While there might be a wide range in maturity, in general, noise is not assumed to provide a cryptographic safe degree of entropy. Since the Linux RNG enriches entropy via various steps (see \ref{fig:linux-prng-arch}) depending on the stage \textit{Noise} will be subdivided into:
 	\begin{itemize}
 		\item \textbf{Raw Noise} \textit{Noise} sources of the Linux RNG, delivering external physical states like interrupts (see \ref{sec:inp-src-lprng}).
 		\item \textbf{Pre-processed Noise} Raw Noise being pre-processed via the fast-pool, assumed to have a poor level of \textit{Entropy} (see \ref{sub:fast-pool}).
@@ -63,7 +63,7 @@ In literature, terms describing the in- and output of RNGs are sometimes used in
 	\end{itemize}
 	\item \textbf{Randomness} The outcome of an RNG delivered to a user mode or kernel consumer. This output is assumed to provide a cryptographic safe degree of \textit{Entropy}.
 	\item \textbf{Entropy Source} The generic term for any kind of sources dedicated to deliver values assumed to provide a certain degree of \textit{Entropy}. This includes all kind of \textit{Noise Sources} as well as \textit{Random Sources}.	
-	\item \textbf{RBG/RNG} NIST 800 uses the more generalizing term \textit{RBG (Random Bit Generator)} instead of \textit{RNG (Random Number Generator)}. Since this thesis relates to Linux x86 Kernel where random numbers are always obtained and applied on at least byte level \textit{RNG} will used.
+	\item \textbf{RBG/RNG} NIST 800 uses the more generalizing term \textit{RBG (Random Bit Generator)} instead of \textit{RNG (Random Number Generator)}. Since this thesis relates to Linux x86 Kernel where random numbers are always obtained and applied on at least byte level, the term \textit{RNG} will be used.
 \end{itemize}
 
 \subsection{The formal Definition of Entropy}
@@ -83,18 +83,18 @@ According to Shannon, entropy is defined as the product of self-information \tex
 \section{NIST Special Publication 800-90 B}
 
 The NIST Special Publication (SP) 800-90 series of recommendations provides 
-guidance on the validation and construction of Pseudo- and Non-deterministic Random Number Generators that can be used for cryptographic secure applications. More precisely the recommendation specifies how to design and validate noise delivering sources that are used as input for RNGs. Transfered to the Linux RNG this verification approach can be applied to the raw sources described in \ref{sec:inp-src-lprng} as well as on conditioned or pre-processed noise of the fast-pool (\ref{sub:input-pool}, \ref{sub:fast-pool}). The series consist of three parts. NSP800-90A and NSP800-90C refer to the construction of RNG mechanisms, while NSP800-90B addresses the analysis and validation of sources delivering noise. A source that conforms to this recommendation can be used by RNGs to produce a sequence of random values \cite{rukhin2010nist} i.e. randomness.\\
-The validation process described by NSP800-90B consist of sequential and iterative steps. For each step a number of prerequisites and assumption is defined. A step can be a task required to prepare the next step or a test procedure consisting of several statistical test. In general, the validation process is all about determining entropy estimates, which are the outcome of particular test procedures applied on recorded noise datasets. Traditional statistical procedures like applied by NSP800-22 would fail, since testing under the hypothesis of unbiased, independent distributed values. The statistical test procedures of NSP800-90B are aware that noise sources will most likely not deliver entropy at a high level and hence assess accordingly. Figure \ref{fig:entropy-est-strategy} gives a overview of the entire Entropy Estimation Strategy of NSP800-90B. The following sections will explain relevant components of this strategy more detailed.
+guidance on the validation and construction of Pseudo- and Non-deterministic Random Number Generators that can be used for cryptographic secure applications. More precisely, the recommendation specifies how to design and validate noise delivering sources that are used as input for RNGs. Transfered to the Linux RNG this verification approach can be applied to the raw sources described in \ref{sec:inp-src-lprng} as well as on conditioned or pre-processed noise of the input- i.e. fast-pool (\ref{sub:input-pool}, \ref{sub:fast-pool}). The series consist of three parts. NSP800-90A and NSP800-90C refer to the construction of RNG mechanisms, while NSP800-90B addresses the analysis and validation of sources delivering noise. A source that conforms to this recommendation can be used by RNGs to produce a sequence of random values \cite{rukhin2010nist} i.e. randomness.\\
+The validation process described by NSP800-90B consist of several sequential and iterative steps. For each step, a number of prerequisites and assumption is defined. A step can be a task required to prepare the next step or a test procedure consisting of several statistical test. In general, the validation process is all about determining entropy estimates, which are the outcome of particular test procedures applied on recorded noise datasets. Traditional statistical procedures like applied by NSP800-22 would fail, since this frameworf is testing under the hypothesis of unbiased, independent distributed values. The statistical test procedures of NSP800-90B are aware that noise sources will most likely not deliver entropy at a high level and hence assess accordingly. Figure \ref{fig-entropy-est-strategy} gives a overview of the entire Entropy Estimation Strategy of NSP800-90B. The following sections will explain relevant components of this strategy more detailed.
 
  \begin{figure}[H]
- 	\label{fig:entropy-est-strategy}
  	\centering
  	\includegraphics[scale=0.6]{img/nsp800-90b-entropy-est-strategy.png}
  	\caption{Entropy Estimation Strategy according to NIST SP 800-90B (from \cite{turan2018nist}, references illustrated refer to the publication)}
+ 	\label{fig-entropy-est-strategy}
  \end{figure}
 
 \subsection{Min-Entropy}\label{sub:min-entropy}
-In NSP800-90B statistical test are bundled to test procedures. Each single test within a procedure delivers two related values, $p_{max}$ and min-entropy. The min-entropy of an independent discrete random variable $X$
+In NSP800-90B, statistical test are bundled to test procedures. Each single test within a procedure delivers two related values, $p_{max}$ and min-entropy. The min-entropy of an independent discrete random variable $X$
 that takes values from the set $A$ with probability $p_i$ is defined as $H$.
 
 \begin{equation}
@@ -111,6 +111,15 @@ H = \underset{1\leq i\leq k}{\mathrm{min}}(-\log_2p_i) = -\log_2 \underset{1\leq
 
 If $X$ has min-entropy $H$, then the probability $p_{max}$ of observing any particular value for $X$ is $\le$ $2^{-H}$ \cite{turan2018nist}. The outcome of a test procedure is a single min-entropy value, representing the lowest min-entropy delivered by a specific statistical test.
 
+\subsection{Data Records}\label{sub:data-records}
+The test procedures of NSP800-90B are applied on data sets resulting from recording sequential produced values from the noise sources to be analyzed. A data record should at least provide 1.000.000 samples directly obtained from the source. If this number can not be achieved, which is the case for the interrupt noise source analyzed in this thesis, several smaller sets may be concatenated, while each set shall contain at least 1000 samples. In total the data record shall finally contain 1.000.000 samples \cite{turan2018nist}. A downstream test procedure, required to be conducted for a comprehensive result is the \textit{restart test}. This procedure requires to record the value sequences delivered by a noise source 1000 times. For each restart, 1000 samples shall be tracked. The recorded data is merged to a single binary data file, the restart matrix. 
+NSP800-90B does not require i.e. recommend to pass the recorded (merged) data directly to the test procedures. After recording values from a noise source, data may be vetted. If it is obvious, also by the nature of a an analyzed noise source, that there might be a variation in a fixed pattern regarding the obtained values, those may be trimmed at a fix pattern. Though it is essential that the sequence is kept, i.e. the trimmed values are aligned in the same order as delivered by the noise source. The standard requires to document and advocate this approach, since the analysis result is reduced to those bytes. If a noise source f.e. delivers four byte values based on simple incrementation, it is obvious that the higher bytes of each value in the sequence will have less variation than the lower ones. In this case, trimming is recommended.
+
+\subsection{IID vs. Non-IID Track}\label{sub:iid-noniid-track}
+\ref{fig-entropy-est-strategy}
+ sdfsdf
+ \gls{python}
+Independent and identically distributed random variables
 % the lowest  
 
 %  \ref{sub:min-entropy}
