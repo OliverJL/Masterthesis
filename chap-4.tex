@@ -121,12 +121,12 @@ When conducting an analysis by NSP800-90B a fundamental assumption to the \texti
 	\item \textit{Independence} All values obtained by the noise source have no dependency to each other.
 		\item \textit{Identically Distribution} All series of values obtained by a noise source fit within the same distribution.
 \end{itemize}
-As any pre-processing i.e. conditioning components of an RNG are deterministic algorithms, a noise source having IID properties is desirable to ensure reliable random output. Hence, a proper classification regarding the maturity of 'random' noise is required. The recommendation supposes a IID providing source which needs to be proven. if the the prerequisites of IID can not be confirmed, the Non-IID track has to be applied. To reach a decision, NSP800-90B defines three criteria which must be met to comply in order to take the IID-track.
+As any pre-processing i.e. conditioning components of an RNG are deterministic algorithms, a noise source having IID properties is desirable to ensure reliable random output. Hence, a proper classification regarding the maturity of 'random' noise is required. The recommendation supposes an IID providing source which needs to be proven. If the the prerequisites of IID can not be confirmed, the Non-IID track has to be applied. To reach a decision, NSP800-90B defines three criteria which must be complied in order to take the IID-track.
 
 \begin{enumerate}
 	\item \textit{Noise Source Design} A fundamental IID claim needs to be stated i.e. to be rejected, based on the design of the noise source. If assumed, the appropriate test procedure should be applied.
-	\item \textit{IID-Test 1 Pass} The test procedure dedicated to verify the IID assumption on the sequential dataset confirms an acceptable degree of independency and identically distribution.
-	\item \textit{IID-Test 2 Pass} The 
+	\item \textit{Sequential IID-Test Pass} The test procedure dedicated to verify the IID assumption on the \textit{sequential dataset} confirms an acceptable degree of independency and identically distribution.
+	\item \textit{Restart IID-Test Pass} The test procedure dedicated to verify the IID assumption on the \textit{restart datatset} (1000 samples of 1000 restarts) confirms an acceptable degree of independency and identically distribution.
 \end{enumerate}
 
 The values delivered by an noise source able to provide IID values
