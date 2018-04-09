@@ -110,12 +110,12 @@ H = \underset{1\leq i\leq k}{\mathrm{min}}(-\log_2p_i) = -\log_2 \underset{1\leq
 \end{equation}
 
 If $X$ has min-entropy $H$, then the probability $p_{max}$ of observing any particular value for $X$ is $\le$ $2^{-H}$ \cite{turan2018nist}. The outcome of a test procedure is a single min-entropy value, representing the lowest min-entropy delivered by a specific statistical test.
-
-\subsection{Data Records}\label{sub:data-records}
+_{
+\subsection{Data Records}\label{sub:data-records}}
 The test procedures of NSP800-90B are applied on data sets resulting from recording sequential produced values from the noise sources to be analyzed. A data record should at least provide 1.000.000 samples directly obtained from the source. If this number can not be achieved, which is the case for the interrupt noise source analyzed in this thesis, several smaller sets may be concatenated, while each set shall contain at least 1000 samples. In total the data record shall finally contain 1.000.000 samples \cite{turan2018nist}. A downstream test procedure, required to be conducted for a comprehensive result is the \textit{restart test}. This procedure requires to record the value sequences delivered by a noise source 1000 times. For each restart, 1000 samples shall be tracked. The recorded data is merged to a single binary data file, the restart matrix. 
 NSP800-90B does not require i.e. recommend to pass the recorded (merged) data directly to the test procedures. After recording values from a noise source, data may be vetted. If it is obvious, also by the nature of a an analyzed noise source, that there might be a variation in a fixed pattern regarding the obtained values, those may be trimmed at a fix pattern. Though it is essential that the sequence is kept, i.e. the trimmed values are aligned in the same order as delivered by the noise source. The standard requires to document and advocate this approach, since the analysis result is reduced to those bytes. If a noise source f.e. delivers four byte values based on simple incrementation, it is obvious that the higher bytes of each value in the sequence will have less variation than the lower ones. In this case, trimming is recommended.
 
-\subsection{IID vs. Non-IID Track}\label{sub:iid-noniid-track}
+\subsection{Determining the Track - IID vs. Non-IID}\label{sub:iid-noniid-track}
 When conducting an analysis by NSP800-90B a fundamental assumption to the \textit{independency and identically distribution} of the analyzed noise source has to be delivered. Subsequently one of the two tracks illustrated in \ref{fig-entropy-est-strategy} needs to be chosen to proceed: The non-IID- i.e. the IID-track. Both tracks basically deviate regarding the assumed maturity of entropy a noise source is able to deliver. An independent and identically distributed noise source is characterized by the following properties: 
 \begin{itemize}
 	\item \textit{Independence} All values obtained by the noise source have no dependency to each other.
@@ -124,12 +124,17 @@ When conducting an analysis by NSP800-90B a fundamental assumption to the \texti
 As any pre-processing i.e. conditioning components of an RNG are deterministic algorithms, a noise source having IID properties is desirable to ensure reliable random output. Hence, a proper classification regarding the maturity of 'random' noise is required. The recommendation supposes an IID providing source which needs to be proven. If the the prerequisites of IID can not be confirmed, the Non-IID track has to be applied. To reach a decision, NSP800-90B defines three criteria which must be complied in order to take the IID-track.
 
 \begin{enumerate}
-	\item \textit{Noise Source Design} A fundamental IID claim needs to be stated i.e. to be rejected, based on the design of the noise source. If assumed, the appropriate test procedure should be applied.
-	\item \textit{Sequential IID-Test Pass} The test procedure dedicated to verify the IID assumption on the \textit{sequential dataset} confirms an acceptable degree of independency and identically distribution.
-	\item \textit{Restart IID-Test Pass} The test procedure dedicated to verify the IID assumption on the \textit{restart datatset} (1000 samples of 1000 restarts) confirms an acceptable degree of independency and identically distribution.
+	\item \textit{Noise Source Design} A fundamental IID claim needs to be stated i.e. to be rejected, based on the design of the noise source. In both cases the assumption regrading IID i.e. Non-IID needs to be documented. If IID is assumed, the appropriate test procedure should be applied.
+	\item \textit{Sequential IID-Test Pass} The test procedure dedicated to verify the IID assumption on the sequential dataset confirms an acceptable degree of independency and identically distribution.
+	\item \textit{Restart IID-Test Pass} The test procedure dedicated to verify the IID assumption on the restart datatset (1000 samples of 1000 restarts) confirms an acceptable degree of independency and identically distribution.
 \end{enumerate}
 
-The values delivered by an noise source able to provide IID values
+If validation doesn't fail, the test procedure will deliver a an entropy estimate which will be used to parametrize the next iteration of the appropriate test procedure.
+
+\subsection{The Non-IID test procedure}\label{sub:non-iid-test-proc}}
+
+
+%The values delivered by an noise source able to provide IID values
 
 %\cite{gnedenko1954independent}
 
