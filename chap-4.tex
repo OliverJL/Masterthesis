@@ -84,12 +84,12 @@ According to Shannon, entropy is defined as the product of self-information \tex
 
 The NIST Special Publication (SP) 800-90 series of recommendations provides 
 guidance on the validation and construction of Pseudo- and Non-deterministic Random Number Generators that can be used for cryptographic secure applications. More precisely, the recommendation specifies how to design and validate noise delivering sources that are used as input for RNGs. Transfered to the Linux RNG this verification approach can be applied to the raw sources described in \ref{sec:inp-src-lprng} as well as on conditioned or pre-processed noise of the input- i.e. fast-pool (\ref{sub:input-pool}, \ref{sub:fast-pool}). The series consist of three parts. NSP800-90A and NSP800-90C refer to the construction of RNG mechanisms, while NSP800-90B addresses the analysis and validation of sources delivering noise. A source that conforms to this recommendation can be used by RNGs to produce a sequence of random values \cite{rukhin2010nist} i.e. randomness.\\
-The validation process described by NSP800-90B consist of several sequential and iterative steps. For each step, a number of prerequisites and assumption is defined. A step can be a task required to prepare the next step or a test procedure consisting of several statistical test. In general, the validation process is all about determining entropy estimates, which are the outcome of particular test procedures applied on recorded noise datasets. Traditional statistical procedures like applied by NSP800-22 would fail, since this frameworf is testing under the hypothesis of unbiased, independent distributed values. The statistical test procedures of NSP800-90B are aware that noise sources will most likely not deliver entropy at a high level and hence assess accordingly. Figure \ref{fig-entropy-est-strategy} gives a overview of the entire Entropy Estimation Strategy of NSP800-90B. The following sections will explain relevant components of this strategy more detailed.
+The validation process described by NSP800-90B consist of several sequential and iterative steps. For each step, a number of prerequisites and assumption is defined. A step can be a task required to prepare the next step or a test procedure consisting of several statistical test. In general, the validation process is all about determining entropy estimates, which are the outcome of particular test procedures applied on recorded noise datasets. Traditional statistical procedures like applied by NSP800-22 would fail, since this framework is testing under the hypothesis of unbiased, independent distributed values. The statistical test procedures of NSP800-90B are aware that noise sources will most likely not deliver entropy at a high level and hence assess accordingly. Figure \ref{fig-entropy-est-strategy} gives a overview of the entire Entropy Estimation Strategy of NSP800-90B. The following sections will explain relevant components of this strategy more detailed.
 
  \begin{figure}[H]
  	\centering
  	\includegraphics[scale=0.6]{img/nsp800-90b-entropy-est-strategy.png}
- 	\caption{Entropy Estimation Strategy according to NIST SP 800-90B (from \cite{turan2018nist}, references illustrated refer to the publication)}
+ 	\caption{Entropy Estimation Strategy according to NIST SP 800-90B (from \cite{turan2018nist}, references illustrated refer to the origin publication)}
  	\label{fig-entropy-est-strategy}
  \end{figure}
 
@@ -110,8 +110,8 @@ H = \underset{1\leq i\leq k}{\mathrm{min}}(-\log_2p_i) = -\log_2 \underset{1\leq
 \end{equation}
 
 If $X$ has min-entropy $H$, then the probability $p_{max}$ of observing any particular value for $X$ is $\le$ $2^{-H}$ \cite{turan2018nist}. The outcome of a test procedure is a single min-entropy value, representing the lowest min-entropy delivered by a specific statistical test.
-_{
-\subsection{Data Records}\label{sub:data-records}}
+
+\subsection{Data Records}\label{sub:data-records}
 The test procedures of NSP800-90B are applied on data sets resulting from recording sequential produced values from the noise sources to be analyzed. A data record should at least provide 1.000.000 samples directly obtained from the source. If this number can not be achieved, which is the case for the interrupt noise source analyzed in this thesis, several smaller sets may be concatenated, while each set shall contain at least 1000 samples. In total the data record shall finally contain 1.000.000 samples \cite{turan2018nist}. A downstream test procedure, required to be conducted for a comprehensive result is the \textit{restart test}. This procedure requires to record the value sequences delivered by a noise source 1000 times. For each restart, 1000 samples shall be tracked. The recorded data is merged to a single binary data file, the restart matrix. 
 NSP800-90B does not require i.e. recommend to pass the recorded (merged) data directly to the test procedures. After recording values from a noise source, data may be vetted. If it is obvious, also by the nature of a an analyzed noise source, that there might be a variation in a fixed pattern regarding the obtained values, those may be trimmed at a fix pattern. Though it is essential that the sequence is kept, i.e. the trimmed values are aligned in the same order as delivered by the noise source. The standard requires to document and advocate this approach, since the analysis result is reduced to those bytes. If a noise source f.e. delivers four byte values based on simple incrementation, it is obvious that the higher bytes of each value in the sequence will have less variation than the lower ones. In this case, trimming is recommended.
 
@@ -129,11 +129,11 @@ As any pre-processing i.e. conditioning components of an RNG are deterministic a
 	\item \textit{Restart IID-Test Pass} The test procedure dedicated to verify the IID assumption on the restart datatset (1000 samples of 1000 restarts) confirms an acceptable degree of independency and identically distribution.
 \end{enumerate}
 
-If validation doesn't fail, the test procedure will deliver a an entropy estimate which will be used to parametrize the next iteration of the appropriate test procedure.
+If validation doesn't fail, the test procedure will deliver an entropy estimate which will be used to parametrize the next iteration of the appropriate test procedure. If the IID track failed, the Non-IID track needs to be applied. If this also fails, the data record is assessed to provide not sufficient entropy at all.
 
-\subsection{The Non-IID test procedure}\label{sub:non-iid-test-proc}}
+\subsection{The Non-IID test procedure}\label{sub:non-iid-test-proc}
 
-
+anticipate the
 %The values delivered by an noise source able to provide IID values
 
 %\cite{gnedenko1954independent}
