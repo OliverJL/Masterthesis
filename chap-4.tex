@@ -121,7 +121,7 @@ When conducting an analysis by NSP800-90B a fundamental assumption to the \texti
 	\item \textit{Independence} All values obtained by the noise source have no dependency to each other.
 		\item \textit{Identically Distribution} All series of values obtained by a noise source fit within the same distribution.
 \end{itemize}
-As any pre-processing i.e. conditioning components of an RNG are deterministic algorithms, a noise source having IID properties is desirable to ensure reliable random output. Hence, a proper classification regarding the maturity of 'random' noise is required. The recommendation supposes an IID providing source which needs to be proven. If the the prerequisites of IID can not be confirmed, the Non-IID track has to be applied. To reach a decision, NSP800-90B defines three criteria which must be complied in order to take the IID-track.
+As any pre-processing i.e. conditioning components of an RNG are deterministic algorithms, a noise source having IID properties is desirable i.e. essential to ensure reliable random output. Hence, a proper classification regarding the maturity of 'random' noise is required. The recommendation supposes an IID providing source which needs to be proven. If the the prerequisites of IID can not be confirmed, the Non-IID track has to be applied. To reach a decision, NSP800-90B defines three criteria which must be complied in order to take the IID-track.
 
 \begin{enumerate}
 	\item \textit{Noise Source Design} A fundamental IID claim needs to be stated i.e. to be rejected, based on the design of the noise source. In both cases the assumption regrading IID i.e. Non-IID needs to be documented. If IID is assumed, the appropriate test procedure should be applied.
@@ -129,43 +129,71 @@ As any pre-processing i.e. conditioning components of an RNG are deterministic a
 	\item \textit{Restart IID-Test Pass} The test procedure dedicated to verify the IID assumption on the restart datatset (1000 samples of 1000 restarts) confirms an acceptable degree of independency and identically distribution.
 \end{enumerate}
 
-If validation doesn't fail, the test procedure will deliver an entropy estimate which will be used to parametrize the next iteration of the appropriate test procedure. If the IID track failed, the Non-IID track needs to be applied. If this also fails, the data record is assessed to provide not sufficient entropy at all.
+If validation doesn't fail, the test procedure will deliver an entropy estimate which will be used to parametrize the next iteration of the appropriate test procedure. If the IID track failed, the Non-IID track needs to be applied. If this also fails, the data record is assessed to provide not sufficient entropy at all.\\
+To anticipate the analysis in SEC TODO, the IID-assumption had to be rejected for noise delivered by the interrupt sources. Consequently the Non-IID test procedure has been applied and thus will be introduced briefly in the following section.
 
-\subsection{The Non-IID test procedure}\label{sub:non-iid-test-proc}
+\subsection{The Non-IID test procedure according to NIST 900-20B}\label{sub:non-iid-test-proc}
+If a noise source is delivering values confirming the IID-assumption min-entropy estimation is determined by the \textit{Most Common Value Estimate} procedure. The verification process for Non-IID values investigates into several directions and thus is more complex. In total the procedures are applied. An overview is given in \ref{non-iid-est:tab-overview}. Each procedure calculates a min-entropy estimate describing the minimum entropy each single unit, in this case byte, can be confirmed. The minimum of each estimates is finally delivered as the outcome for the entire test procedure. 
+ 
 
-
-\begin{table}[]
+\begin{table}[H]
 	\centering
-	\caption{My caption}
-	\label{my-label}
-	\begin{tabular}{|r|l|l|}
-		\hline
-		(I.)& Most Common Value Estimate & see \ref{non-iid-est:mcve} \\ \hline
-		(II.)& Collision Estimate & see \ref{non-iid-est:colle} \\ \hline
-		(III.)& Markov Estimate & see \ref{non-iid-est:marke} \\ \hline
-		(IV.)& Compression Estimate & see \ref{non-iid-est:compe} \\ \hline
-		(V.)& t-Tuple Estimate & see \ref{non-iid-est:tte} \\ \hline
-		(VI.)& LRS Estimate & see \ref{non-iid-est:lrs} \\ \hline
-		(VII.)& MultiMCW Prediction Estimate & see \ref{non-iid-est:mmcwpe} \\ \hline
-		(VIII.)& Lag Prediction Estimate & see \ref{non-iid-est:lpe} \\ \hline
-		(IX.)& MultiMMC Prediction Estimate & see \ref{non-iid-est:mmcpe} \\ \hline
-		(X.)& LZ78Y Prediction Estimate & see \ref{non-iid-est:lz78y} \\ \hline
+	\begin{tabular}{|rll|}
+		\hline \hline
+		(I.)& Most Common Value Estimate & see \ref{non-iid-est:mcve} \\ 
+		(II.)& Collision Estimate & see \ref{non-iid-est:colle} \\ 
+		(III.)& Markov Estimate & see \ref{non-iid-est:marke} \\ 
+		(IV.)& Compression Estimate & see \ref{non-iid-est:compe} \\ 
+		(V.)& t-Tuple Estimate & see \ref{non-iid-est:tte} \\ 
+		(VI.)& LRS Estimate & see \ref{non-iid-est:lrs} \\ 
+		(VII.)& MultiMCW Prediction Estimate & see \ref{non-iid-est:mmcwpe} \\ 
+		(VIII.)& Lag Prediction Estimate & see \ref{non-iid-est:lpe} \\ 
+		(IX.)& MultiMMC Prediction Estimate & see \ref{non-iid-est:mmcpe} \\ 
+		(X.)& LZ78Y Prediction Estimate & see \ref{non-iid-est:lz78y} \\ \hline \hline
 	\end{tabular}
+	\label{non-iid-est:tab-overview}
+	\caption{Overview of non-iid entropy estimation tests recommended in NIST 900-20B}
 \end{table}
 
 \subsubsection{Most Common Value Estimate}\label{non-iid-est:mcve}
+This procedure consists of two steps:
+\begin{enumerate}
+	\item Determine the proportion of the most common value in the entire dataset.
+	\item Construct a confidence interval for this proportion.
+\end{enumerate}
+The min-entropy is determined by the upper bound of this confidence interval.
+
 \subsubsection{Collision Estimate}\label{non-iid-est:colle}
+This procedure estimates the probability of the most-likely output value regrading collision times. In this context, a collision is defined as a repetition of any value when conducting a binary search. The estimate is described be the mean number of samples to the first collision in the dataset. For a noise source having a bias toward a particular output, the mean distance to the occurrence of a collision will be short and hence deliver a low min-entropy estimate. 
+
 \subsubsection{Markov Estimate}\label{non-iid-est:marke}
+To determine the min-entropy an n$^{th}$-order Markov model is applied on bit sequences obtained from the noise source. Thereby, the value for each bit is compared to the predicted value based to the previous $n$ bits within the sequence. The min-entropy is determined by the highest probability $\hat{p}$ at fixed sequence length $L$:
+
+\begin{equation}
+entropy_{min} = min(\frac{-log_2(\hat{p})}{L})
+%\Domain{\hat{p} : highest probability, L : sequence length}
+\end{equation}
+
 \subsubsection{Compression Estimate}\label{non-iid-est:compe}
+The Compression Estimate determines the min-entropy by investigating how strong the dataset can be compressed. To do so, two disjunct value groups are build: The dictionary and the test group. The average number of samples required delivers the mean value is applied identically to the collision estimate procedure to calculate the min-entropy.
+
 \subsubsection{t-Tuple Estimate}\label{non-iid-est:tte}
+This procedure examines the frequency of $t$-tuples (pairs, triples, ...) occurring in the dataset, while tuples can overlap. The algorithm determines the tuple having maximum length $t_{max}$ and occurring at least 35 times. For all tuples of length $\le t_{max}$ an estimate on the maximum individual sample value probability $p_{t} ... p_{1}$ is ascertained by which the most common value $p_u$ can be obtained as following ($L$ corresponds to the number pf samples):
+\begin{equation}
+p_u = min\left(\hat{p}_{max} + 2.576 \sqrt{\frac{\hat{p}_{max}(1-\hat{p}_{max})}{L-1}}\right)
+\end{equation}
+The min-entropy estimation is finally determined by $-log_2(p_u)$.
+
 \subsubsection{LRS Estimate}\label{non-iid-est:lrs}
+
+
 \subsubsection{MultiMCW Prediction Estimate}\label{non-iid-est:mmcwpe}
 \subsubsection{Lag Prediction Estimate}\label{non-iid-est:lpe}
 \subsubsection{MultiMMC Prediction Estimate}\label{non-iid-est:mmcpe}
 \subsubsection{LZ78Y Prediction Estimate}\label{non-iid-est:lz78y}
 
 
-anticipate the
+
 %The values delivered by an noise source able to provide IID values
 
 %\cite{gnedenko1954independent}
