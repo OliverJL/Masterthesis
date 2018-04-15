@@ -133,12 +133,12 @@ If validation doesn't fail, the test procedure will deliver an entropy estimate 
 To anticipate the analysis in SEC TODO, the IID-assumption had to be rejected for noise delivered by the interrupt sources. Consequently the Non-IID test procedure has been applied and thus will be introduced briefly in the following section.
 
 \subsection{The Non-IID test procedure according to NIST 900-20B}\label{sub:non-iid-test-proc}
+\setcounter{secnumdepth}{3}
 If a noise source is delivering values confirming the IID-assumption min-entropy estimation is determined by the \textit{Most Common Value Estimate} procedure. The verification process for Non-IID values investigates into several directions and thus is more complex. In total the procedures are applied. An overview is given in \ref{non-iid-est:tab-overview}. Each procedure calculates a min-entropy estimate describing the minimum entropy each single unit, in this case byte, can be confirmed. The minimum of each estimates is finally delivered as the outcome for the entire test procedure. 
  
-
 \begin{table}[H]
 	\centering
-	\begin{tabular}{|rll|}
+	\begin{tabular}{rll}
 		\hline \hline
 		(I.)& Most Common Value Estimate & see \ref{non-iid-est:mcve} \\ 
 		(II.)& Collision Estimate & see \ref{non-iid-est:colle} \\ 
@@ -146,7 +146,7 @@ If a noise source is delivering values confirming the IID-assumption min-entropy
 		(IV.)& Compression Estimate & see \ref{non-iid-est:compe} \\ 
 		(V.)& t-Tuple Estimate & see \ref{non-iid-est:tte} \\ 
 		(VI.)& LRS Estimate & see \ref{non-iid-est:lrs} \\ 
-		(VII.)& MultiMCW Prediction Estimate & see \ref{non-iid-est:mmcwpe} \\ 
+		(VII.)& Multi Most Common in Window Prediction Estimate & see \ref{non-iid-est:mmcwpe} \\ 
 		(VIII.)& Lag Prediction Estimate & see \ref{non-iid-est:lpe} \\ 
 		(IX.)& MultiMMC Prediction Estimate & see \ref{non-iid-est:mmcpe} \\ 
 		(X.)& LZ78Y Prediction Estimate & see \ref{non-iid-est:lz78y} \\ \hline \hline
@@ -178,18 +178,35 @@ entropy_{min} = min(\frac{-log_2(\hat{p})}{L})
 The Compression Estimate determines the min-entropy by investigating how strong the dataset can be compressed. To do so, two disjunct value groups are build: The dictionary and the test group. The average number of samples required delivers the mean value is applied identically to the collision estimate procedure to calculate the min-entropy.
 
 \subsubsection{t-Tuple Estimate}\label{non-iid-est:tte}
-This procedure examines the frequency of $t$-tuples (pairs, triples, ...) occurring in the dataset, while tuples can overlap. The algorithm determines the tuple having maximum length $t_{max}$ and occurring at least 35 times. For all tuples of length $\le t_{max}$ an estimate on the maximum individual sample value probability $p_{t} ... p_{1}$ is ascertained by which the most common value $p_u$ can be obtained as following ($L$ corresponds to the number pf samples):
+This procedure examines the frequency of $t$-tuples (pairs, triples, ...) occurring in the dataset, while tuples can overlap. The algorithm determines the tuple having maximum length $t_{max}$ and occurring at least 35 times. For all tuples of length $\le t_{max}$ an estimate on the maximum individual sample value probability $p_{t} ... p_{1}$ is ascertained by which the most common value $p_u$ can be obtained as following ($L$ corresponds to the number pf samples, constant 2.576 to a confidence interval of 99\%):
 \begin{equation}
-p_u = min\left(\hat{p}_{max} + 2.576 \sqrt{\frac{\hat{p}_{max}(1-\hat{p}_{max})}{L-1}}\right)
+p_u = min\left(1,\hat{p}_{max} + 2.576 \sqrt{\frac{\hat{p}_{max}(1-\hat{p}_{max})}{L-1}}\right)
 \end{equation}
 The min-entropy estimation is finally determined by $-log_2(p_u)$.
 
-\subsubsection{LRS Estimate}\label{non-iid-est:lrs}
+\subsubsection{Longest Repeated Estimate}\label{non-iid-est:lrs}
+This procedure is a complementary estimate to the $t$-tuple estimate, which is not able to handle large tuple sizes. To successfully determine the Longest Repeated Estimate the dataset need to provide repeating patterns with the following properties:
+\begin{itemize}
+	\item $u:$ The smallest length of all tuples occurring less then 35 times in the dataset.
+	\item $v:$ The largest length of all tuples occurring at least twice in the dataset.
+\end{itemize}
+If $v < u$ the estimate can not computed. Otherwise a range $W$ is defined as $W = {u,..,v}$.
+\begin{equation}
+	P_w = \frac{\displaystyle\sum_{i=u}^{v}\binom{C_i}{2}}{\binom{L-W+1}{2}}
+\end{equation}
+The estimated average collision probability per string symbol is calculated as $P_{max,W} = P_{W}^{\frac{1}{W}}$, while $C_i$ is the number of occurrences of the $i^{th}$ value in $W$. 
+$\hat{p}_{max}$ is the maximum value i.e. $max(P_{max,u}...P_{max,v})$ which is used to determine $p_u$ and finally the min-entropy equivalent to the t-Tuple estimation procedure (see \ref{non-iid-est:tte}).
 
+\subsubsection{Multi Most Common in Window Prediction Estimate}\label{non-iid-est:mmcwpe}
+The Multi Most Common in Window Prediction Estimate (MultiMCW Prediction Estimate) addresses datasets in which the most common value changes over time, but remains relatively stationary over a reasonable length. To determine the min-entropy, several subpredictors are applied. Each subpredictor is used to guess the next value in the dataset based on the last $w$ values, while the length of $w$ varies. The MultiMCW predictor maintains an internal scoreboard, recording whether a prediction was correct. If prediction collides, i.e. for the next prediction, several values have the same probability, the most common sample value that has appeared most recently is chosen. For each subpredictor, a global $P_{global}$ and local $P_{local}$ performance value is calculated.
+The min-entropy of the MultiMCW Prediction Estimate procedure is finally the negative logarithm of the greater performance metric:
+\begin{equation}
+entropy_{min} = -log_2\left(max\left(P'_{global}, P'_{local}, \frac{1}{k}\right)\right)
+\end{equation}
 
-\subsubsection{MultiMCW Prediction Estimate}\label{non-iid-est:mmcwpe}
 \subsubsection{Lag Prediction Estimate}\label{non-iid-est:lpe}
 \subsubsection{MultiMMC Prediction Estimate}\label{non-iid-est:mmcpe}
+(MultiMMC Prediction Estimate)
 \subsubsection{LZ78Y Prediction Estimate}\label{non-iid-est:lz78y}
 
 
