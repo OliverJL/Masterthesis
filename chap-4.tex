@@ -205,6 +205,8 @@ entropy_{min} = -log_2\left(max\left(P'_{global}, P'_{local}, \frac{1}{k}\right)
 \end{equation}
 
 \subsubsection{Lag Prediction Estimate}\label{non-iid-est:lpe}
+Similar to the MultiMCW Prediction Estimate, the Lag Prediction Estimate procedure uses several subpredictors predicting the next value in the dataset, depending on a specific lag. Also in this case, an internal scoreboard tracks whether prediction was correct. Based on a global $P_{global}$ and local $P_{local}$ performance value, the min-entropy is calculated identical to the MultiMCW Prediction Estimate procedure. 
+
 \subsubsection{MultiMMC Prediction Estimate}\label{non-iid-est:mmcpe}
 (MultiMMC Prediction Estimate)
 \subsubsection{LZ78Y Prediction Estimate}\label{non-iid-est:lz78y}
