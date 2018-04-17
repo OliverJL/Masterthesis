@@ -207,9 +207,44 @@ entropy_{min} = -log_2\left(max\left(P'_{global}, P'_{local}, \frac{1}{k}\right)
 \subsubsection{Lag Prediction Estimate}\label{non-iid-est:lpe}
 Similar to the MultiMCW Prediction Estimate, the Lag Prediction Estimate procedure uses several subpredictors predicting the next value in the dataset, depending on a specific lag. Also in this case, an internal scoreboard tracks whether prediction was correct. Based on a global $P_{global}$ and local $P_{local}$ performance value, the min-entropy is calculated identical to the MultiMCW Prediction Estimate procedure. 
 
-\subsubsection{MultiMMC Prediction Estimate}\label{non-iid-est:mmcpe}
-(MultiMMC Prediction Estimate)
+\subsubsection{Multiple Markov Model with Counting Prediction Estimate}\label{non-iid-est:mmcpe}
+In a typical Markov model the probability of a transition from one state to another is tracked to predict the next output. Contrary in the Multiple MMC Prediction Estimate procedure, the observed frequencies of transitions from one value to the next are recorded. Prediction for the next output is made by several subpredictors, based on the most frequently observed transition from the current output. Each subpredictors has a specific depth which is defined by their total number. The first one has depth 1, the n$h$ subpredictor depth n. Also in this case, min-entropy is determined by the global $P_{global}$ and local $P_{local}$ performance, tracked via an internal scoreboard analogues to the MultiMCW Prediction Estimate procedure (see \ref{non-iid-est:mmcwpe}).
+
 \subsubsection{LZ78Y Prediction Estimate}\label{non-iid-est:lz78y}
+LZ78 is a dictionary based compression algorithm. Each subsequent string in a dataset is added to the dictionary if not contained. Otherwise the position is returned. 
+
+
+\subsection{NIST 800-22}
+
+standard normal and the chi-square 
+\subsubsection{Frequency (Monobit) Test}\label{ss:freq-monobit}
+\begin{itemize}
+	\item \textbf{Test Domain}
+	On bitlevel, the Frequency (Monobit) Test analysis whether the proportion of zeros and ones are approximately equal within the entire dataset. It is recommended that this test is run first, since it supplies most basic evidence for the presence of non-randomness in the dataset: non-uniformity. If the test fails, it is most likely that other tests will fail as well. 
+	\item \textbf{Reference Distribution}
+	\item \textbf{Test statistic}	
+\end{itemize}
+\subsubsection{Frequency Test within a Block}
+\begin{itemize}
+	\item \textbf{Test Domain}
+\end{itemize}
+
+
+Similar to the Frequency (Monobit) Test, the Frequency Test within a Block checks the proportion of zeros and ones within serveral M-bit block extracted from the dataset. 
+\subsubsection{Runs Test}
+A run is defined as a sequence of subequent bits havinn the same value. An assumed characteristic for randomness is that the oscillation of bits should neither occur to fast, nor to slow. Internally the Runs Test conducts a Frequency Monobit Test at first. If it failes, $p$ is set to 0.
+\subsubsection{Tests for the Longest-Run-of-Ones in a Block}
+\subsubsection{Binary Matrix Rank Test}
+\subsubsection{Discrete Fourier Transform (Spectral) Test}
+\subsubsection{Non-overlapping Template Matching Test}
+\subsubsection{Overlapping Template Matching Test}
+\subsubsection{Maurer's "Universal Statistical" Test}
+\subsubsection{Linear Complexity Test}
+\subsubsection{Serial Test}
+\subsubsection{Approximate Entropy Test}
+\subsubsection{Cumulative Sums (Cusums) Test}
+\subsubsection{Random Excursions Test}
+\subsubsection{Random Excursions Variant Test}
 
 
 
@@ -217,11 +252,11 @@ Similar to the MultiMCW Prediction Estimate, the Lag Prediction Estimate procedu
 
 %\cite{gnedenko1954independent}
 
-Independent and identically Distribution
-
- sdfsdf
- \gls{python}
-Independent and identically distributed random variables
+%Independent and identically Distribution
+%
+% sdfsdf
+% \gls{python}
+%Independent and identically distributed random variables
 % the lowest  
 
 %  \ref{sub:min-entropy}
