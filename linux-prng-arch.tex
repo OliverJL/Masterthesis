@@ -1,0 +1,108 @@
+\begin{tikzpicture}[scale=0.8, every node/.style={scale=0.8},font=\sffamily,>=triangle 45]
+\tikzstyle{sum} = [draw, shape=circle, node distance=1.5cm, line width=1pt, minimum width=1.25em]	
+%\Huge
+\def\N{7}  % Number of Flip-Flops minus one
+\def\BW{1.8} % Byte Width
+
+% colors
+\definecolor{rc-input}{HTML}{E8B50C}
+\definecolor{gr-input}{HTML}{E8B50C}
+\definecolor{rc-input-pool}{HTML}{0DFF11}
+\definecolor{rc-user-pool}{HTML}{52ABE8}
+\definecolor{rc-kernel-pool}{HTML}{0D38FF}
+\definecolor{rc-fast-pool-col}{HTML}{CFD2D4}
+\definecolor{rc-rnd-int-sec-vect-col}{HTML}{4B0CE8}
+%4B0CE8
+
+%4B0CE8
+%B8FFF7
+
+\definecolor{cjh}{HTML}{CFD2D4}
+\definecolor{cjl}{HTML}{DD6262}
+\definecolor{cch}{HTML}{F7A100}
+\definecolor{ccl}{HTML}{0288CF}
+\definecolor{cep32}{HTML}{64FE2E}
+\definecolor{cep1}{HTML}{1893D4}
+\definecolor{cep0}{HTML}{A9FD2A}
+\definecolor{cirq}{HTML}{DB15E5}
+\definecolor{cip}{HTML}{FFF200}
+
+% blocing pool
+%\node [shape=dff,fill=cjh, width=30mm] (jiff7) at ($ 1.0*(0,0) $) {blocking pool};
+% rect rc-blocking-pool
+\node (rc-blocking-pool) [rectangle, rounded corners, fill=rc-user-pool!60, draw, minimum width=35mm, minimum height=10mm, anchor= south west] at (0,0) {\shortstack{blocking pool\\/dev/random}};
+% rect get_random_int/long
+\node (rc-getrandomintlong) [rectangle, rounded corners, right=10mm of rc-blocking-pool, fill=rc-kernel-pool!50, draw, minimum width=35mm, minimum height=10mm, anchor= west] {\shortstack{get\_random\_int/long\\kernel mode only}};		
+% rect rc-nonblocking-pool
+\node (rc-nonblocking-pool) [rectangle, rounded corners, right=50mm of rc-blocking-pool, fill=rc-user-pool!60, draw, minimum width=35mm, minimum height=10mm, anchor= west] {\shortstack{non-blocking pool\\/dev/urandom}};	
+% rect rc-input-pool	
+\node (rc-input-pool) [rectangle, rounded corners, below right=23mm and 10mm of rc-blocking-pool, fill=rc-input-pool!50, draw, minimum width=35mm, minimum height=10mm, anchor= west] {input pool};
+% rc-input-pool -> rect rc-blocking-pool
+\draw [->] (rc-input-pool.west) -| (rc-blocking-pool);	
+% rc-input-pool -> rect rc-nonblocking-pool
+\draw [->] (rc-input-pool.east) -| (rc-nonblocking-pool);	
+% rect rc-rnd-int-sec	
+\node (rc-rnd-int-sec) [rectangle, rounded corners, above=4mm of rc-input-pool.north, fill=rc-rnd-int-sec-vect-col!30, draw, minimum width=45mm, minimum height=3mm] {random int secret vector};
+% rc-nonblocking-pool -> rc-rnd-int-sec
+\draw [<-] (rc-rnd-int-sec.east) -| ($(rc-nonblocking-pool.west)!1/2!(rc-nonblocking-pool.west -| rc-rnd-int-sec.east)$) coordinate (C4) -| (rc-nonblocking-pool.west);
+% rc-rnd-int-sec -> rect get_random_int/long
+\draw [->] (rc-rnd-int-sec.north) -- (rc-getrandomintlong.south);
+\node[above right=5mm and -8mm of rc-getrandomintlong.west] (lentp) {\large interfaces / conditioning pools };
+\begin{pgfonlayer}{background}
+% background - pre-processing
+\path (rc-blocking-pool.west |- rc-blocking-pool.north)+(-0.8,0.9) node (a) {};
+\path (rc-nonblocking-pool.east |- rc-nonblocking-pool.south)+(0.4,-0.4) node (b) {};
+\path [fill=rc-user-pool!40,rounded corners, draw=black!50, dashed] (a) rectangle (b); 
+\end{pgfonlayer}
+		
+
+%	\draw [->] (rc-nonblocking-pool.west) -| (rc-rnd-int-sec.north);
+
+% rect rc-interrupt-inp
+\node (rc-interrupt-inp) [rectangle, rounded corners, below=70mm of rc-blocking-pool.west, fill=rc-input, draw, minimum 
+width=30mm, minimum height=10mm, anchor= west] {\shortstack{interrupt input}};
+% rect rc-device-inp	
+\node (rc-device-inp) [rectangle, rounded corners, right=3mm of rc-interrupt-inp.east, fill=rc-input, draw, minimum width=30mm, minimum height=10mm, anchor= west] {\shortstack{device input}};
+% rect rc-key-inp	
+\node (rc-key-inp) [rectangle, rounded corners, right=3mm of rc-device-inp.east, fill=rc-input, draw, minimum width=30mm, minimum height=10mm, anchor= west] {\shortstack{keyborad input}};
+% rect rc-disk-inp	
+\node (rc-disk-inp) [rectangle, rounded corners, right=3mm of rc-key-inp.east, fill=rc-input, draw, minimum width=20mm, minimum height=10mm, anchor= west] {\shortstack{disk input}};
+
+% rect rc-fast-pool	
+\node (rc-fast-pool) [rectangle, rounded corners, above right=22mm and 10mm of rc-interrupt-inp.west, fill=rc-fast-pool-col, draw, minimum width=30mm, minimum height=10mm, anchor= west] {\shortstack{fast pool}};
+% rc-interrupt-inp -> rc-fast-pool
+\draw [->] (rc-interrupt-inp.north) -- (rc-fast-pool.south);
+% rc-fast-pool -> rc-input-pool
+\draw [->] (rc-fast-pool) -- (rc-input-pool);
+% rc-device-inp -> rc-input-pool
+\draw [->] (rc-device-inp) -- (rc-input-pool);
+\node[above right=4mm and -6mm of rc-fast-pool.west] (lentp) {\large post-processing};
+\begin{pgfonlayer}{background}
+% background - pre-processing
+\path (rc-fast-pool.west |- rc-fast-pool.north)+(-0.8,0.7) node (a) {};
+\path (rc-fast-pool.east |- rc-fast-pool.south)+(0.4,-0.4) node (b) {};
+\path [fill=rc-fast-pool-col!40,rounded corners, draw=black!50, dashed] (a) rectangle (b); 
+\end{pgfonlayer}
+
+
+rc-fast-pool-col
+
+% rect rc-timer-inp	
+\node (rc-timer-inp) [rectangle, rounded corners, above right=22mm and 8mm of rc-key-inp.west, fill=rc-input, draw, minimum width=35mm, minimum height=10mm, anchor= west] {timer input};	
+% rc-key-inp -> rc-timer-inp
+\draw [->] (rc-key-inp) -- (rc-timer-inp);
+% rc-disk-inp -> rc-timer-inp
+\draw [->] (rc-disk-inp) -- (rc-timer-inp);
+% rc-timer-inp -> rc-input-pool
+\draw [->] (rc-timer-inp) -- (rc-input-pool);
+
+\node[below right=5mm and 8mm of rc-device-inp.west] (lentp) {\large entropy input sources};
+\begin{pgfonlayer}{background}
+% background - entropy input sources
+\path (rc-interrupt-inp.west |- rc-interrupt-inp.north)+(-0.4,0.4) node (a) {};
+\path (rc-disk-inp.east |- rc-disk-inp.south)+(0.4,-0.8) node (b) {};
+\path [fill=gr-input!40,rounded corners, draw=black!50, dashed] (a) rectangle (b); 
+\end{pgfonlayer}
+
+
+\end{tikzpicture}		

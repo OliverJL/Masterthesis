@@ -1,0 +1,56 @@
+    \begin{tikzpicture}[scale=0.7, every node/.style={scale=0.7},font=\sffamily,>=triangle 45]
+    \tikzstyle{sum} = [draw, shape=circle, node distance=1.5cm, line width=1pt, minimum width=1.25em]    
+    %\Huge
+    \def\N{7}  % Number of Flip-Flops minus one
+    \def\BW{1.8} % Byte Width
+    
+    % colors
+    \definecolor{col-dom0u-app}{HTML}{E8B50C}
+    \definecolor{col-dom0u-krnl}{HTML}{0DFF11}
+    \definecolor{col-dom0u-bckg}{HTML}{52ABE8}
+    \definecolor{col-xen-hyperv}{HTML}{4B0CE8}    
+    \definecolor{col-hardware}{HTML}{CFD2D4}
+    
+    % dom 0
+    \node (rc-dom0-app) [rectangle, fill=col-dom0u-app!80, draw, minimum width=56mm, minimum height=10mm, rounded corners=1mm] at (0,0){\Large{\textbf{Applications/Services}}};
+    \node (rc-dom0-krnl) [rectangle, below= 2mm of rc-dom0-app, fill=col-dom0u-krnl!80, draw, minimum width=56mm, minimum height=10mm, rounded corners=1mm] {\Large{\textbf{OS / Kernel}}};
+    \begin{pgfonlayer}{background}    
+    \path (rc-dom0-app.west |- rc-dom0-app.north)+(-0.4,1.2) node (dom0-nw) {};
+    \path (rc-dom0-krnl.east |- rc-dom0-krnl.south)+(0.4,-0.4) node (dom0-se) {};
+    \path [fill=col-dom0u-bckg!80,rounded corners, draw=black!50, dashed] (dom0-nw) rectangle (dom0-se); 
+    \node[black, below right=4mm and 14mm of dom0-nw, anchor=west] (lbl-dom0) {\huge{\textbf{Dom 0}}};    
+    \end{pgfonlayer}
+    
+    % dom U 1
+    \node (rc-domu1-app) [rectangle, right=15mm of rc-dom0-app.east, fill=col-dom0u-app!80, draw, minimum width=56mm, minimum height=10mm, rounded corners=1mm]{\Large{\textbf{Applications/Services}}};
+    \node (rc-domu1-krnl) [rectangle, below= 2mm of rc-domu1-app, fill=col-dom0u-krnl!80, draw, minimum width=56mm, minimum height=10mm, rounded corners=1mm] {\Large{\textbf{OS / Kernel}}};
+    \begin{pgfonlayer}{background}    
+    \path (rc-domu1-app.west |- rc-domu1-app.north)+(-0.4,1.2) node (domu1-nw) {};
+    \path (rc-domu1-krnl.east |- rc-domu1-krnl.south)+(0.4,-0.4) node (domu1-se) {};
+    \path [fill=col-dom0u-bckg!80,rounded corners, draw=black!50, dashed] (domu1-nw) rectangle (domu1-se); 
+    \node[black, below right=4mm and 14mm of domu1-nw, anchor=west] (lbl-dom0) {\huge{\textbf{Dom U$_1$}}};    
+    \end{pgfonlayer}    
+    
+    % dom U n
+    \node (rc-domun-app) [rectangle, right=8mm of rc-domu1-app.east, fill=col-dom0u-app!80, draw, minimum width=56mm, minimum height=10mm, rounded corners=1mm]{\Large{\textbf{Applications/Services}}};
+    \node (rc-domun-krnl) [rectangle, below= 2mm of rc-domun-app, fill=col-dom0u-krnl!80, draw, minimum width=56mm, minimum height=10mm, rounded corners=1mm] {\Large{\textbf{OS / Kernel}}};
+    \begin{pgfonlayer}{background}    
+    \path (rc-domun-app.west |- rc-domun-app.north)+(-0.4,1.2) node (domun-nw) {};
+    \path (rc-domun-krnl.east |- rc-domun-krnl.south)+(0.4,-0.4) node (domun-se) {};
+    \path [fill=col-dom0u-bckg!80,rounded corners, draw=black!50, dashed] (domun-nw) rectangle (domun-se); 
+    \node[black, below right=4mm and 14mm of domun-nw, anchor=west] (lbl-dom0) {\huge{\textbf{Dom U$_n$}}};    
+    \end{pgfonlayer}    
+    
+    % Xen-Hypervisor
+    \node (rc-xen-hyperv) [rectangle, below right = 32mm and 1mm of dom0-nw.south, fill=col-xen-hyperv!40, draw, minimum width=205mm, minimum height=23mm, rounded corners=1mm]{};    
+    \node[black, below right=3mm and 60mm of rc-xen-hyperv.north west] (lbl-xen-hyperv) {\huge{\textbf{Xen-Hypervisor}}};
+    \node[black, below left=0mm and -42mm of lbl-xen-hyperv.south] (lbl-xen-hyperv-detail) {\Large{\textbf{Hardware Management/Event Scheduling/Event Simulation}}};
+    
+    % Hardware
+    \node (rc-hardware) [rectangle, below right = 2mm and 0mm of rc-xen-hyperv.south west, fill=col-hardware!40, draw, minimum width=205mm, minimum height=23mm, rounded corners=1mm]{};    
+    \node[black, below right=3mm and 65mm of rc-hardware.north west] (lbl-hardware) {\huge{\textbf{Hardware}}};
+    \node[black, below left=0mm and -42mm of lbl-hardware.south] (lbl-hardware-detail) {\Large{\textbf{CPUs/volatile \& persistent Memory/Network-Interfaces/etc. }}};    
+    
+    %    \draw [->] (jiff0.south) -- (xjlch0.north);    
+    %    \draw [->,black, line width=2pt] (rc-dom0-app.east)+(0.5,0.0) -- (rc-dom0-app.east)+(0.0,0.0);
+    \end{tikzpicture}   

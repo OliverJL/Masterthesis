@@ -1,0 +1,142 @@
+    \begin{tikzpicture}[scale=1.0, every node/.style={scale=0.8},font=\sffamily,>=triangle 45]
+    \tikzstyle{sum} = [draw, shape=circle, node distance=1.5cm, line width=1pt, minimum width=1.25em]
+    \def\N{7}  % Number of Flip-Flops minus one
+    
+    \definecolor{c-stc-b}{HTML}{CFD2D4}
+    \definecolor{c-try-byte}{HTML}{0DFF11}    
+    \definecolor{c-try-byte-loop}{HTML}{000000}    
+    \definecolor{c-fix-byte}{HTML}{52ABE8}        
+    \definecolor{c-att-byte}{HTML}{F9473E}
+    \definecolor{c-s-line}{HTML}{000000}
+    \definecolor{c-leg-rect}{HTML}{FFF200}
+    
+    
+%    stcan b3
+%	\fontsize{7mm}{5.5cm}\selectfont
+    \node [shape=dff, fill=c-att-byte!80] (rc-stcan-b3-3) at ($ 1.0*(4,0) $) {\textit{i}};
+    \node [shape=dff, fill=c-stc-b, right=0mm of rc-stcan-b3-3.east, draw] (rc-stcan-b3-2) {0F};
+    \node [shape=dff, fill=c-stc-b, right=0mm of rc-stcan-b3-2.east, draw] (rc-stcan-b3-1) {74};
+    \node [shape=dff, fill=c-stc-b, right=0mm of rc-stcan-b3-1.east, draw] (rc-stcan-b3-0) {2D};
+    \node[above=0mm of rc-stcan-b3-3.north] (lentp) {\scriptsize  3};                
+    \node[above=0mm of rc-stcan-b3-2.north] (lentp) {\scriptsize  2};                    
+    \node[above=0mm of rc-stcan-b3-1.north] (lentp) {\scriptsize  1};                    
+    \node[above=0mm of rc-stcan-b3-0.north] (lentp) {\scriptsize  0};    
+    \node [shape=dff, fill=c-try-byte, below=1cm of rc-stcan-b3-3.south, draw] (try-b3-3) {}; 
+    \begingroup\makeatletter\def\f@size{5}\check@mathfonts
+    \node (try-b3-3-inc) at (try-b3-3) {$\sum\limits_{i=0}^{n<=FF} i$};   
+	\endgroup  
+    
+    \path (try-b3-3.west |- try-b3-3.north)+(-0.25,0.25) node (a) {};
+    \path (try-b3-3.east |- try-b3-3.south)+(0.25,-0.25) node (b) {};
+    \path [rounded corners=3mm, draw=c-try-byte-loop!80, line width=0.9mm, dotted] (a) rectangle (b);     
+    \node[isosceles triangle, isosceles triangle apex angle=44,draw,
+    inner sep=0pt,anchor=lower side,rotate=-90,draw=black, color=c-try-byte-loop!80,
+    line width=1.3pt, minimum height=4mm, above right=1.5mm and 1.5mm of try-b3-3.east, fill=c-try-byte-loop!80] (try-byte-loop-b3) {};
+    \node[below right=8mm and -7mm of try-byte-loop-b3.south] (lentp) {\small  Match when \textit{i}=AC};
+    \draw [->, line width=2pt] (try-b3-3) -- (rc-stcan-b3-3);
+                    
+%%    stcan b2
+    \node [shape=dff, fill=c-att-byte!80, right=3cm of rc-stcan-b3-0.east, draw] (rc-stcan-b2-3) {AC};
+    \node [shape=dff, fill=c-att-byte!80, right=0mm of rc-stcan-b2-3.east, draw] (rc-stcan-b2-2) {\textit{i}};
+    \node [shape=dff, fill=c-stc-b, right=0mm of rc-stcan-b2-2.east, draw] (rc-stcan-b2-1) {74};
+    \node [shape=dff, fill=c-stc-b, right=0mm of rc-stcan-b2-1.east, draw] (rc-stcan-b2-0) {2D};            
+    \node[above=0mm of rc-stcan-b2-3.north] (lentp) {\scriptsize  3};                
+    \node[above=0mm of rc-stcan-b2-2.north] (lentp) {\scriptsize  2};                    
+    \node[above=0mm of rc-stcan-b2-1.north] (lentp) {\scriptsize  1};                    
+    \node[above=0mm of rc-stcan-b2-0.north] (lentp) {\scriptsize  0};                    
+    \node [shape=dff, fill=c-fix-byte, below=1cm of rc-stcan-b2-3.south, draw] (try-b2-3) {AC};    
+    \node [shape=dff, fill=c-try-byte, right=0mm of try-b2-3.east, draw] (try-b2-2) {};
+    \begingroup\makeatletter\def\f@size{5}\check@mathfonts
+    \node (try-b2-2-inc) at (try-b2-2) {$\sum\limits_{i=0}^{n<=FF} i$};   
+    \endgroup          
+    \path (try-b2-3.west |- try-b2-3.north)+(-0.25,0.25) node (a) {};
+    \path (try-b2-2.east |- try-b2-2.south)+(0.25,-0.25) node (b) {};
+    \path [rounded corners=3mm, draw=c-try-byte-loop!80, line width=0.9mm, dotted] (a) rectangle (b);     
+    \node[isosceles triangle, isosceles triangle apex angle=44,draw,
+    inner sep=0pt,anchor=lower side,rotate=-90,draw=black, color=c-try-byte-loop!80,
+    line width=1.3pt, minimum height=4mm, above right=1.5mm and 1.5mm of try-b2-2.east, fill=c-try-byte-loop!80] (try-byte-loop-b2) {};
+    \node[below right=8mm and -18mm of try-byte-loop-b2.south] (lentp) {\small  Match when \textit{i}=0F};
+    \draw [->, line width=2pt] (try-b2-3) -- (rc-stcan-b2-3);
+    \draw [->, line width=2pt] (try-b2-2) -- (rc-stcan-b2-2);    
+
+%%    stcan b1
+    \node [shape=dff, fill=c-att-byte!80, below=4cm of rc-stcan-b3-3.south, draw] (rc-stcan-b1-3) {AC};
+    \node [shape=dff, fill=c-att-byte!80, right=0mm of rc-stcan-b1-3.east, draw] (rc-stcan-b1-2) {0F};
+    \node [shape=dff, fill=c-att-byte!80, right=0mm of rc-stcan-b1-2.east, draw] (rc-stcan-b1-1) {\textit{i}};
+    \node [shape=dff, fill=c-stc-b, right=0mm of rc-stcan-b1-1.east, draw] (rc-stcan-b1-0) {2D};            
+    \node[above=0mm of rc-stcan-b1-3.north] (lentp) {\scriptsize  3};                
+    \node[above=0mm of rc-stcan-b1-2.north] (lentp) {\scriptsize  2};                    
+    \node[above=0mm of rc-stcan-b1-1.north] (lentp) {\scriptsize  1};                    
+    \node[above=0mm of rc-stcan-b1-0.north] (lentp) {\scriptsize  0};        
+    
+    \node [shape=dff, fill=c-fix-byte, below=1cm of rc-stcan-b1-3.south, draw] (try-b1-3) {AC};    
+    \node [shape=dff, fill=c-fix-byte, right=0mm of try-b1-3.east, draw] (try-b1-2) {0F};    
+    \node [shape=dff, fill=c-try-byte, right=0mm of try-b1-2.east, draw] (try-b1-1) {};    
+    \begingroup\makeatletter\def\f@size{5}\check@mathfonts
+    \node (try-b1-1-inc) at (try-b1-1) {$\sum\limits_{i=0}^{n<=FF} i$};   
+    \endgroup              
+    \path (try-b1-3.west |- try-b1-3.north)+(-0.25,0.25) node (a) {};
+    \path (try-b1-1.east |- try-b1-1.south)+(0.25,-0.25) node (b) {};
+    \path [rounded corners=3mm, draw=c-try-byte-loop!80, line width=0.9mm, dotted] (a) rectangle (b);     
+    \node[isosceles triangle, isosceles triangle apex angle=44,draw,
+    inner sep=0pt,anchor=lower side,rotate=-90,draw=black, color=c-try-byte-loop!80,
+    line width=1.3pt, minimum height=4mm, above right=1.5mm and 1.5mm of try-b1-1.east, fill=c-try-byte-loop!80] (try-byte-loop-b1) {};
+    \node[below right=8mm and -25mm of try-byte-loop-b1.south] (lentp) {\small  Match when \textit{i}=74};
+    \draw [->, line width=2pt] (try-b1-3) -- (rc-stcan-b1-3);
+    \draw [->, line width=2pt] (try-b1-2) -- (rc-stcan-b1-2);        
+    \draw [->, line width=2pt] (try-b1-1) -- (rc-stcan-b1-1);    
+                
+    
+%%    stcan b0
+    \node [shape=dff, fill=c-att-byte!80, right=3cm of rc-stcan-b1-0.east, draw] (rc-stcan-b0-3) {AC};
+    \node [shape=dff, fill=c-att-byte!80, right=0mm of rc-stcan-b0-3.east, draw] (rc-stcan-b0-2) {0F};
+    \node [shape=dff, fill=c-att-byte!80, right=0mm of rc-stcan-b0-2.east, draw] (rc-stcan-b0-1) {74};
+    \node [shape=dff, fill=c-att-byte!80, right=0mm of rc-stcan-b0-1.east, draw] (rc-stcan-b0-0) {\textit{i}};            
+    \node[above=0mm of rc-stcan-b0-3.north] (lentp) {\scriptsize  3};                
+    \node[above=0mm of rc-stcan-b0-2.north] (lentp) {\scriptsize  2};                    
+    \node[above=0mm of rc-stcan-b0-1.north] (lentp) {\scriptsize  1};                    
+    \node[above=0mm of rc-stcan-b0-0.north] (lentp) {\scriptsize  0};                    
+    \node [shape=dff, fill=c-fix-byte, below=1cm of rc-stcan-b0-3.south, draw] (try-b0-3) {AC};    
+    \node [shape=dff, fill=c-fix-byte, right=0mm of try-b0-3.east, draw] (try-b0-2) {0F};    
+    \node [shape=dff, fill=c-fix-byte, right=0mm of try-b0-2.east, draw] (try-b0-1) {74};        
+    \node [shape=dff, fill=c-try-byte, right=0mm of try-b0-1.east, draw] (try-b0-0) {};   
+    \begingroup\makeatletter\def\f@size{5}\check@mathfonts
+    \node (try-b0-0-inc) at (try-b0-0) {$\sum\limits_{i=0}^{n<=FF} i$};   
+    \endgroup              
+    \path (try-b0-3.west |- try-b0-3.north)+(-0.25,0.25) node (a) {};
+    \path (try-b0-0.east |- try-b0-0.south)+(0.25,-0.25) node (b) {};
+    \path [rounded corners=3mm, draw=c-try-byte-loop!80, line width=0.9mm, dotted] (a) rectangle (b);     
+    \node[isosceles triangle, isosceles triangle apex angle=44,draw,
+    inner sep=0pt,anchor=lower side,rotate=-90,draw=black, color=c-try-byte-loop!80,
+    line width=1.3pt, minimum height=4mm, above right=1.5mm and 1.5mm of try-b0-0.east, fill=c-try-byte-loop!80] (try-byte-loop-b0) {};
+    \node[below right=8mm and -30mm of try-byte-loop-b0.south] (lentp) {\small  Match when \textit{i}=2D};
+    \draw [->, line width=2pt] (try-b0-3) -- (rc-stcan-b0-3);
+    \draw [->, line width=2pt] (try-b0-2) -- (rc-stcan-b0-2);        
+    \draw [->, line width=2pt] (try-b0-1) -- (rc-stcan-b0-1);
+    \draw [->, line width=2pt] (try-b0-0) -- (rc-stcan-b0-0);
+    \node  (xxx) [below right=1.5cm and 1cm of rc-stcan-b3-0.south]{}; 
+    \node  (yyy) [below right=0.5cm and 1.5cm of xxx]{}; 
+    \node  (qqq) [below left=0.5cm and 1.5 cm of yyy]{}; 
+    \node  (zzz) [below right=0.5cm and 1.5cm of qqq]{};     
+    \draw [->, c-s-line!70, xshift=4cm, line width=1.3pt] plot [smooth, tension=1] coordinates { (xxx) (yyy) (qqq) (zzz)};
+    
+%    \begin{scope}[transform canvas={scale=0.8}]
+    \begin{scope}[scale=0.8, every node/.style={scale=0.8},font=\sffamily,>=triangle 45]
+    \tikzstyle{sum} = [draw, shape=circle, node distance=1.5cm, line width=1pt, minimum width=1.25em]
+    \node [shape=dff, fill=c-stc-b, below left=8.0cm and 5mm of rc-stcan-b3-3.west, draw] (rc-leg-stc) {};
+    \node[above=0mm of rc-leg-stc.north] (lentp) {\scriptsize  n};        
+    \node[right=0.5cm of rc-leg-stc.east] (txt-leg-stc) {\Large{Value of byte \textit{n} at stack canary memory location (original state)}};        
+    \node [shape=dff, fill=c-try-byte, below right=4mm and 0mm of rc-leg-stc.south west, draw] (rc-leg-try) {};
+    %\node[above=0mm of rc-leg-try.north] (sdfdf) {\scriptsize  n};        
+    \node[right=0.5cm of rc-leg-try] (txt-leg-try) {\Large{Byte value choosen to overwritte \textit{unknown} stack canary byte \textit{n}}};        
+    \node [shape=dff, fill=c-fix-byte, below right=4mm and 0mm of rc-leg-try.south west, draw] (rc-leg-knw) {};
+    %\node[above=0mm of rc-leg-knw.north] (sdfdf) {\scriptsize  n};    
+    \node[right=0.5cm of rc-leg-knw] (txt-leg-knw) {\Large{Byte value to overwritte \textit{known} stack canary byte \textit{n} (gained in previous cycle)}};        
+    \node [shape=dff, fill=c-att-byte!80, below right=4mm and 0mm of rc-leg-knw.south west, draw] (rc-leg-att) {};
+    \node[above=0mm of rc-leg-att.north] (sdfdf) {\scriptsize  n};        
+    \node[right=0.5cm of rc-leg-att] (txt-leg-att) {\Large{Value of byte \textit{n} at stack canaries memory location (overwritten state)}};    
+    
+    \draw[black] ([xshift=-5mm, yshift=5mm ]rc-leg-stc.north west) rectangle ([xshift=18mm, yshift=-4mm]txt-leg-att.south east);
+    
+    \end{scope}    
+    \end{tikzpicture}
